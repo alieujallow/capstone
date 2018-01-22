@@ -23,11 +23,11 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-  <link rel="stylesheet" href="../css/customStyle.css">
 
+  <link rel="stylesheet" href="../css/customStyle.css">
   <script src="../js/jQuery/jquery.min.js"></script>
 
-  <script> 
+   <script> 
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -35,7 +35,6 @@
       $("#footer").load("../layout/footer.html"); 
     });
   </script> 
-
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -58,7 +57,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Products
+        Products In Process
         <small>Preview</small>
       </h1>
       <ol class="breadcrumb">
@@ -78,13 +77,10 @@
             <div class="box-header with-border">
               <h3 class="box-title">Bordered Table</h3>
               <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 300px;">
+                <div class="input-group input-group-sm" style="width: 150px;">
                   <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                    </button>
-                    <button style="margin-left: 20px;" type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
-                        Add Product
                     </button>
                   </div>
                 </div>
@@ -95,30 +91,22 @@
               <table class="table table-bordered">
                 <tr>
                   <th style="width: 10px">#</th>
-                  <th>Batch #</th>
-                  <th>Category</th>
+                  <th>Date</th>
                   <th>Name</th>
                   <th>Quantity(kg)</th>
-                  <th>Source</th>
-                  <th>Supplier</th>
-                  <th>Storage Location</th>
-                  <th>Order Date</th>
-                  <th>Inventory Date</th>
-                  <th>Description</th>
-                  <th style="width: 110px">Operations</th>
+                  <th>Name of Processor</th>
+                  <th>Expected Pickup Date</th>
+                  <th>Status</th>
+                  <th>Operations</th>
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                   <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -137,44 +125,12 @@
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
-                  <td>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-default">Action</button>
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
-                        <li><a href="#">Process</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                     <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -193,16 +149,12 @@
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                     <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -221,16 +173,12 @@
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                     <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -249,16 +197,12 @@
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                     <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -277,16 +221,12 @@
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                     <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -305,16 +245,36 @@
                 </tr>
                 <tr>
                   <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
+                  <td>
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-default">Action</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
+                      <li><a href="#">Process</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
+                    </ul>
+                  </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>1.</td>
+                  <td>25/08/2017</td>
+                  <td>Groundnut</td>
+                  <td>89</td>
+                  <td>Amadou</td>
+                  <td>25/08/2017</td>
+                  <td><span class="label label-success">Active</span></td>
                   <td>
                     <div class="btn-group">
                     <button type="button" class="btn btn-default">Action</button>
@@ -357,11 +317,10 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
-  <div id="footer">
+   <div id="footer">
     <!-- footer is displayed here -->
   </div>
-  
+
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Create the tabs -->
