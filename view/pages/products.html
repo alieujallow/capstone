@@ -128,7 +128,7 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
-                      <li><a href="#">Process</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#process_product_modal">Process</a></li>
                       <li class="divider"></li>
                       <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
                     </ul>
@@ -156,7 +156,7 @@
                       </button>
                       <ul class="dropdown-menu" role="menu">
                         <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
-                        <li><a href="#">Process</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#process_product_modal">Process</a></li>
                         <li class="divider"></li>
                         <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
                       </ul>
@@ -184,7 +184,35 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
-                      <li><a href="#">Process</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#process_product_modal">Process</a></li>
+                      <li class="divider"></li>
+                      <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
+                    </ul>
+                  </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>1.</td>
+                  <td>05879</td>
+                  <td>Vegetable</td>
+                  <td>Cassava</td>
+                  <td>20</td>
+                  <td>Tamale</td>
+                  <td>Alieu</td>
+                  <td>Accra</td>
+                  <td>25/08/2018</td>
+                  <td>25/08/2018</td>
+                  <td>its a tube</td>
+                  <td>
+                    <div class="btn-group">
+                    <button type="button" class="btn btn-default">Action</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#process_product_modal">Process</a></li>
                       <li class="divider"></li>
                       <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
                     </ul>
@@ -240,35 +268,7 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
-                      <li><a href="#">Process</a></li>
-                      <li class="divider"></li>
-                      <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
-                    </ul>
-                  </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>1.</td>
-                  <td>05879</td>
-                  <td>Vegetable</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>Tamale</td>
-                  <td>Alieu</td>
-                  <td>Accra</td>
-                  <td>25/08/2018</td>
-                  <td>25/08/2018</td>
-                  <td>its a tube</td>
-                  <td>
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default">Action</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      <span class="caret"></span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="#" data-toggle="modal" data-target="#modal-default">Edit</a></li>
-                      <li><a href="#">Process</a></li>
+                      <li><a href="#" data-toggle="modal" data-target="#process_product_modal">Process</a></li>
                       <li class="divider"></li>
                       <li><a href="#" data-toggle="modal" data-target="#delete-modal">Delete</a></li>
                     </ul>
@@ -485,6 +485,74 @@
         </div>
         <!-- /.modal -->
         <!-- DELETE PRODUCT MODAL ENDS-->
+
+        <!-- Process product modal-->
+        <div class="modal fade" id="process_product_modal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Info</h4>
+              </div>
+              <div class="modal-body">
+                     <div class="row">     
+                  <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                      <div class="box-header with-border">
+                        <h3 class="box-title">information</h3>
+                      </div>
+                      <!-- /.box-header -->
+                      <!-- form start -->
+                      <form role="form">
+                        <div class="box-body">
+                          <div class="form-group">
+                            <label>Qunatity(Kg)</label>
+                            <input type="text" class="form-control" id="code" placeholder="Enter Code">
+                          </div>
+                          <div class="form-group">
+                            <label>Name of Processor</label>
+                            <select class="form-control select2" style="width: 100%;">
+                              <option selected="selected">Tema</option>
+                              <option>Berekuso</option>
+                              <option>Adenkrebi</option>
+                            </select>
+                          </div>
+                          <div class="form-group">
+                            <label>Expected Pick up date</label>
+                            <input type="text" class="form-control" id="price" placeholder="Enter Price">
+                          </div>
+                          <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control select2" style="width: 100%;">
+                              <option selected="selected">Active</option>
+                              <option>Pending</option>
+                              <option>Complete</option>
+                            </select>
+                          </div>
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer">
+                          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                          <button type="button" class="btn btn-primary pull-right">Submit</button>
+                        </div>
+
+                      </form>
+                    </div>
+                    <!-- /.box -->
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!-- process product modal-->
 
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
