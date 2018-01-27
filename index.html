@@ -10,9 +10,6 @@
   <link rel="stylesheet" href="view/css/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="view/css/ionicons.min.css">
-
   <!-- Theme style -->
   <link rel="stylesheet" href="view/css/theme/AdminLTE.min.css">
 
@@ -23,7 +20,8 @@
 
   <link rel="stylesheet" href="view/css/customStyle.css">
 
-  <script src="view/js/adminlte.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
   <script src="view/js/jQuery/jquery.min.js"></script>
 
   <script> 
@@ -67,6 +65,7 @@
 
     <!-- Main content -->
     <section class="content">
+
       <!-- Small boxes (Stat box) -->
       <div class="row">
         <div class="col-lg-3 col-xs-6">
@@ -75,12 +74,12 @@
             <div class="inner">
               <h3>150</h3>
 
-              <p>New Orders</p>
+              <p>Products</p>
             </div>
             <div class="icon">
               <i class="ion ion-bag"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="view/pages/products.html" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -88,14 +87,14 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>258</h3>
+              <h3>25</h3>
 
-              <p>New Supplies</p>
+              <p>customers</p>
             </div>
             <div class="icon">
               <i class="ion ion-bag"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="view/pages/customers.html" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -106,12 +105,28 @@
             <div class="inner">
               <h3>4</h3>
 
-              <p>Users</p>
+              <p>Suppliers</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="view/pages/suppliers.html" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-yellow">
+            <div class="inner">
+              <h3>4</h3>
+
+              <p>Products in Process</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="view/pages/inProcess.html" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
       </div>
@@ -124,49 +139,262 @@
           <div class="nav-tabs-custom">
             <!-- Tabs within a box -->
             <ul class="nav nav-tabs pull-right">
-              <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
-              <li><a href="#sales-chart" data-toggle="tab">Donut</a></li>
-              <li class="pull-left header"><i class="fa fa-inbox"></i> Sales</li>
+              <li class="active"><a href="#revenue-chart" data-toggle="tab">Bar Graph</a></li>
+              <li><a href="#sales-chart" data-toggle="tab">Pie Chart</a></li>
+              <li class="pull-left header"><i class="fa fa-inbox"></i>Sales</li>
             </ul>
             <div class="tab-content no-padding">
               <!-- Morris chart - Sales -->
-              <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
-              <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
+              <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;">
+                <canvas id="mychart"> </canvas>
+                <script>
+                  var ctx = document.getElementById("mychart").getContext('2d');
+                  var myChart = new Chart(ctx, {
+                    type: 'bar',  //type of chart
+                    data: {
+                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"], //x axis data
+
+                        datasets: [{
+                            label: '# of Votes',                     //title of graph
+                            data: [30, 19, 3, 5, 2, 3],              //data to be plotted
+
+                            //background color of the bars
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+
+                            //border color of the bars
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+
+                            //border width of the bars
+                            borderWidth: 1
+                        }]
+                    },
+
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+
+                        //tittle
+                        //legend
+                        //layout
+                        //tooltips
+
+                    }
+                });
+                </script>
+              </div>
+              <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
+                <canvas id="mychart2"> </canvas>
+                <script>
+                  var ctx = document.getElementById("mychart2").getContext('2d');
+                  var myChart = new Chart(ctx, {
+                    type: 'pie',  //type of chart
+                    data: {
+                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"], //x axis data
+
+                        datasets: [{
+                            label: '# of Votes',                     //title of graph
+                            data: [30, 19, 3, 5, 2, 3],              //data to be plotted
+
+                            //background color of the bars
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+
+                            //border color of the bars
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+
+                            //border width of the bars
+                            borderWidth: 1
+                        }]
+                    },
+
+                    options: {
+                        //tittle
+                        //legend
+                        legend:
+                        {
+                          display:true,
+                          position:"right",
+                          labels:
+                          {
+                            fontColor:"black"
+                          }
+                        }
+                        //layout
+                        //tooltips
+
+                    }
+                });
+                </script>
+              </div>
+            </div>
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </section>
+
+        <section class="col-lg-6 connectedSortable">
+          <!-- Custom tabs (Charts with tabs)-->
+          <div class="nav-tabs-custom">
+            <!-- Tabs within a box -->
+            <ul class="nav nav-tabs pull-right">
+              <li><a href="#purchase-chart1" data-toggle="tab">Bar Graph</a></li>
+              <li class="active"><a href="#purchase-chart2" data-toggle="tab">Pie Chart</a></li>
+              <li class="pull-left header"><i class="fa fa-inbox"></i>Purchases</li>
+            </ul>
+            <div class="tab-content no-padding">
+              <!-- Morris chart - Sales -->
+              <div class="chart tab-pane" id="purchase-chart1" style="position: relative; height: 300px;">
+                 <canvas id="mychart4"> </canvas>
+                <script>
+                  var ctx = document.getElementById("mychart4").getContext('2d');
+                  var myChart = new Chart(ctx, {
+                    type: 'bar',  //type of chart
+                    data: {
+                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"], //x axis data
+
+                        datasets: [{
+                            label: '# of Votes',                     //title of graph
+                            data: [30, 19, 3, 5, 2, 3],              //data to be plotted
+
+                            //background color of the bars
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+
+                            //border color of the bars
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+
+                            //border width of the bars
+                            borderWidth: 1
+                        }]
+                    },
+
+                    options: {
+                        //tittle
+                        //legend
+                        legend:
+                        {
+                          display:false,
+                          position:"right",
+                          labels:
+                          {
+                            fontColor:"black"
+                          }
+                        }
+                        //layout
+                        //tooltips
+
+                    }
+                });
+                </script>
+              </div>
+              <div class="chart tab-pane active" id="purchase-chart2" style="position: relative; height: 300px;">
+                 <canvas id="mychart3"> </canvas>
+                <script>
+                  var ctx = document.getElementById("mychart3").getContext('2d');
+                  var myChart = new Chart(ctx, {
+                    type: 'pie',  //type of chart
+                    data: {
+                        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"], //x axis data
+
+                        datasets: [{
+                            label: '# of Votes',                     //title of graph
+                            data: [30, 19, 3, 5, 2, 3],              //data to be plotted
+
+                            //background color of the bars
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+
+                            //border color of the bars
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+
+                            //border width of the bars
+                            borderWidth: 1
+                        }]
+                    },
+
+                    options: {
+                        //tittle
+                        //legend
+                        legend:
+                        {
+                          display:true,
+                          position:"right",
+                          labels:
+                          {
+                            fontColor:"black"
+                          }
+                        }
+                        //layout
+                        //tooltips
+
+                    }
+                });
+                </script>
+              </div>
             </div>
           </div>
           <!-- /.nav-tabs-custom -->
         </section>
         <!-- /.Left col -->
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
-        <section class="col-lg-6 connectedSortable">
-
-          <!-- solid sales graph -->
-          <div class="box box-solid bg-teal-gradient">
-            <div class="box-header">
-              <i class="fa fa-th"></i>
-
-              <h3 class="box-title">Purchases Graph</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn bg-teal btn-sm" data-widget="remove"><i class="fa fa-times"></i>
-                </button>
-              </div>
-            </div>
-            <div class="box-body border-radius-none">
-              <div class="chart" id="line-chart" style="height: 250px;"></div>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer no-border">
-              <!-- /.row -->
-            </div>
-            <!-- /.box-footer -->
-          </div>
-          <!-- /.box -->
-
-        </section>
-        <!-- right col -->
+       
       </div>
       <!-- /.row (main row) -->
 
@@ -182,14 +410,6 @@
 
 <!-- jQuery 3 -->
 <script src="view/js/jQuery/jquery.min.js"></script>
-
-<!-- jQuery UI 1.11.4 -->
-<script src="view/js/jQuery/jquery-ui.min.js"></script>
-
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
 
 <!-- Bootstrap 3.3.7 -->
 <script src="view/js/bootstrap/bootstrap.min.js"></script>
