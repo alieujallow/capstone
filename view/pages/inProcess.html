@@ -75,7 +75,7 @@
       <div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">Bordered Table</h3>
+              <h3 class="box-title">Products in process</h3>
               <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
                   <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
@@ -116,13 +116,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li>
-                        <a href="#" data-toggle="modal" data-target="#modal-default">
+                        <a href="#" data-toggle="modal" data-target="#process_modal">
                           <i class="glyphicon glyphicon-edit"></i>
                           Edit
                         </a>
                       </li>
                       <li>
-                        <a href="#" data-toggle="modal" data-target="#delete-modal">
+                        <a href="#" data-toggle="modal" data-target="#process_delete_modal">
                           <i class="glyphicon glyphicon-trash"></i>
                           Delete
                         </a>
@@ -148,13 +148,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li>
-                        <a href="#" data-toggle="modal" data-target="#modal-default">
+                        <a href="#" data-toggle="modal" data-target="#process_modal">
                           <i class="glyphicon glyphicon-edit"></i>
                           Edit
                         </a>
                       </li>
                       <li>
-                        <a href="#" data-toggle="modal" data-target="#delete-modal">
+                        <a href="#" data-toggle="modal" data-target="#process_delete_modal">
                           <i class="glyphicon glyphicon-trash"></i>
                           Delete
                         </a>
@@ -180,13 +180,13 @@
                     </button>
                     <ul class="dropdown-menu" role="menu">
                       <li>
-                        <a href="#" data-toggle="modal" data-target="#modal-default">
+                        <a href="#" data-toggle="modal" data-target="#process_modal">
                           <i class="glyphicon glyphicon-edit"></i>
                           Edit
                         </a>
                       </li>
                       <li>
-                        <a href="#" data-toggle="modal" data-target="#delete-modal">
+                        <a href="#" data-toggle="modal" data-target="#process_delete_modal">
                           <i class="glyphicon glyphicon-trash"></i>
                           Delete
                         </a>
@@ -227,14 +227,14 @@
 </div>
 <!-- ./wrapper -->
 
-<!-- ADD PRODUCT MODAL BEGINS-->
-<div class="modal fade" id="modal-default">
+<!--PROCESS MODAL BEGINS-->
+<div class="modal fade" id="process_modal">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Default Modal</h4>
+                <h4 class="modal-title">Edit Process</h4>
               </div>
               <div class="modal-body">
                 <div class="row">     
@@ -284,7 +284,8 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                          <button type="submit" class="btn btn-primary form-control">Save</button>
+                           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary pull-right">Save changes</button>
                         </div>
 
                       </form>
@@ -293,33 +294,29 @@
                   </div>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
             </div>
             <!-- /.modal-content -->
           </div>
           <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
-<!-- ADD PRODUCT MODAL ENDS-->
+<!-- ADD PROCESS MODAL ENDS-->
 
-        <!-- DELETE PRODUCT MODAL BEGINS-->
-        <div class="modal fade" id="delete-modal">
+        <!-- DELETE PROCESS MODAL BEGINS-->
+        <div class="modal fade" id="process_delete_modal">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Default Modal</h4>
+                <h4 class="modal-title">Delete Process</h4>
               </div>
               <div class="modal-body">
-                <p>One fine body&hellip;</p>
+                <p>Are you sure you want to delete this process?</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Delete</button>
+                <button type="button" class="btn btn-danger">Delete</button>
               </div>
             </div>
             <!-- /.modal-content -->
@@ -327,7 +324,7 @@
           <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
-        <!-- DELETE PRODUCT MODAL ENDS-->
+        <!-- DELETE PROCESS MODAL ENDS-->
 
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
