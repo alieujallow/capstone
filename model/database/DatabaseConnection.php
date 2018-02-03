@@ -14,8 +14,8 @@ require('DatabaseCredentials.php');
 class DatabaseConnection
 {
 	//properties
-	private $connection;
-	private $result;
+	public $connection;
+	public $result;
 
 	//methods
 	/*
@@ -63,7 +63,7 @@ class DatabaseConnection
 			if($this->result)
 			{
 				//close connection
-				closeConnection();
+				//closeConnection();
 
 				//returns the result
 			    return $this->result;
@@ -102,7 +102,10 @@ class DatabaseConnection
 	}
 
 }
+	/*$sql = "INSERT INTO users(username,email,role,status,password) VALUES('alieu','sfd','24','pending','good');";
 	//var_dump($this ->connection);
-	//$db = new DatabaseConnection;
-	//$db -> connect();
+	$db = new DatabaseConnection;
+
+	var_dump($db -> query($sql));
+	//var_dump($db -> connect());*/
 ?>
