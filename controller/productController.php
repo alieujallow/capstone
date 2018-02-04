@@ -11,16 +11,44 @@ if ($requestMethod=="GET")
     //returns all the products from the database
     if (isset($_GET['action']) & !empty($_GET['action']))
     {
-        $sql="SELECT *FROM products;";
-
-        //creates an object of the product class
-        $product = new Product;
-
-        $result = $product->getProducts($sql);
-
-        if ($result) 
+        $action = $_GET['action'];
+        if ($action =="products") 
         {
-            echo json_encode($result);
+            $sql="SELECT *FROM products;";
+
+            //creates an object of the product class
+            $product = new Product;
+
+            $result = $product->getProducts($sql);
+
+            if ($result) 
+            {
+                echo json_encode($result);
+            }
+        }
+        elseif ($action =="options")
+        {
+            $sql1="SELECT supplier_id as id, name FROM suppliers;";
+            $sql2="SELECT category_id as id, name FROM category;";
+            $sql3="SELECT source_id as id,   name FROM source;";
+            $sql4="SELECT storage_id as id, name FROM storage;";
+
+            //creates an object of the product class
+            $product = new Product;
+            $suppliers = $product->getSelectOptions($sql1);
+            $category = $product->getSelectOptions($sql2);
+            $source = $product->getSelectOptions($sql3);
+            $storage = $product->getSelectOptions($sql4);
+
+            if ($suppliers&$category&$source&$storage) 
+            {
+                $response = array();
+                $response["suppliers"] = $suppliers;
+                $response["category"] = $category;
+                $response["source"] = $source;
+                $response["storage"] = $storage;
+                echo json_encode($response);
+            }
         }
     } 
 }

@@ -84,7 +84,7 @@
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
                     </button>
-                    <button style="margin-left: 20px;" type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
+                    <button style="margin-left: 20px;" type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default" onclick="displayProductSelectOptions();">
                         Add Product
                     </button>
                   </div>
@@ -340,9 +340,6 @@
                               <div class="form-group">
                                 <label>Category</label>
                                 <select class="form-control select2" style="width: 100%;" id="category" name="category">
-                                  <option selected="selected" value="">Select...</option>
-                                  <option>Grains</option>
-                                  <option>Tubes</option>
                                 </select>
                                 <span id="category_span" style="color:red;"></span>
                               </div>
@@ -359,9 +356,6 @@
                               <div class="form-group">
                                 <label>Source</label>
                                 <select class="form-control select2" style="width: 100%;" id="source" name="source">
-                                  <option selected="selected" value="">Select...</option>
-                                  <option>Berekuso</option>
-                                  <option>Adenkrebi</option>
                                 </select>
                                 <span id="source_span" style="color:red;"></span>
                               </div>
@@ -370,18 +364,12 @@
                               <div class="form-group">
                                 <label>Supplier</label>
                                 <select class="form-control select2" style="width: 100%;" id="supplier" name="supplier">
-                                  <option selected="selected" value="">Select...</option>
-                                  <option>Koffi</option>
-                                  <option>Jobe</option>
                                 </select>
                                 <span id="supplier_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Storage Location</label>
                                 <select class="form-control select2" style="width: 100%;" id="storage" name="storage">
-                                  <option selected="selected" value="">Select...</option>
-                                  <option>Adenta</option>
-                                  <option>Accra</option>
                                 </select>
                                 <span id="storage_span" style="color:red;"></span>
                               </div>
@@ -523,6 +511,7 @@
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/custom.js"></script>
+
 <script src="../js/validations.js"></script>
 </body>
 </html>

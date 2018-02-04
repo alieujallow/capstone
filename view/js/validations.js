@@ -302,6 +302,60 @@ function displayUsers()
   });
 }
 
+
+//displays users
+function displayProductSelectOptions()
+{
+  var data = {action:'options'};
+  var serverUrl='/capstone/controller/productController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      var suppliers="";
+      var count = 0;
+      $.each(data, function(key,value){
+
+        if (key=="suppliers") 
+        {
+           buildOptions(value,"supplier");
+        }
+        else if(key=="category")
+        {
+          buildOptions(value,"category");
+        }
+        else if(key=="source")
+        {
+           buildOptions(value,"source");
+        }
+        else if(key=="storage")
+        {
+           buildOptions(value,"storage");
+        }
+      });
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+//a function that buils the list of options
+function buildOptions(value,selectId)
+{
+  var storage ="";
+  storage +="<option selected=\"selected\" value=\"\">Select...</option>";
+  $.each(value,function(key2,value2){
+    storage +="<option value="+value2.id+">"+value2.name+"</option>";
+  });
+  document.getElementById(selectId).innerHTML=storage;
+}
 //**************************************************
 //				 INDIVIDUAL FORM FIELD VALIDATIONS
 //**************************************************
