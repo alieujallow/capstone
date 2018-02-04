@@ -61,6 +61,17 @@ class User extends DatabaseConnection
 
 
 	//login
+	function loginUser($sql)
+	{
+		$result = $this->query($sql);
+		if($result)
+		{
+			$result = array();
+			$result[] = $this->getRow();
+			return $result;
+		}
+		return false;
+	}
 
 	//logout
 }	
