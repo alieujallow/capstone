@@ -2,10 +2,25 @@
 //				  FORM VALIDATIONS
 //**************************************************
 
+//validate add product form
+function validateAddProductForm()
+{
+  var supplier = validateSelectInputField("add_product_form","supplier","supplier_span");
+  var source= validateSelectInputField("add_product_form","source","source_span");
+  var category = validateSelectInputField("add_product_form","category","category_span");
+  var storage = validateSelectInputField("add_product_form","storage","storage_span");
+  var inventoryDate = validateDate("add_product_form","inventory_date","inventory_date_span");
+  var orderDate = validateDate("add_product_form","order_date","order_date_span");
+  var quantity = validateQuantity("add_product_form","quantity","quantity_span");
+  var name = validateName("add_product_form","name","name_span");
 
-
-
-
+  if (supplier==false || source==false || category==false|| storage==false || inventoryDate==false 
+    || orderDate==false || quantity==false || name==false)
+  {
+    return false;
+  }
+  return true;
+}
 
 
 //validates the login form
@@ -290,6 +305,57 @@ function displayUsers()
 //**************************************************
 //				 INDIVIDUAL FORM FIELD VALIDATIONS
 //**************************************************
+
+//validates quantity
+function validateQuantity(form_name,field_name,span_name)
+{
+  var quantity = document.forms[form_name][field_name];
+  var span = document.getElementById(span_name);
+
+  if (quantity.value=="") 
+  {
+    span.innerHTML = "*required";
+    quantity.style.border= "1px solid red";
+    return false; 
+  }
+  else
+  {
+    //checks if the quantity is a number
+    if (!isNaN(quantity.value))
+    {
+        span.innerHTML = "";
+        quantity.style.border= "";
+        return quantity.value;
+    }
+    else
+    {
+      span.innerHTML = "*invalid quantity";
+      quantity.style.border= "1px solid red";
+      return false; 
+    }
+  }
+}
+
+//validates dates
+//validates the date
+function validateDate(form_name,field_name,span_name)
+{
+  var date = document.forms[form_name][field_name];
+  var span = document.getElementById(span_name);
+
+  if (date.value=="") 
+  {
+    span.innerHTML = "*required";
+    date.style.border= "1px solid red";
+    return false; 
+  }
+  else
+  {
+    date.style.border= "";
+    span.innerHTML = "";
+    return true; 
+  }
+}
 
 //validates password
 function validatePassword(form_name,field_name,span_name)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Dzigua Enterprise | Products</title>
+  <title>Dzigua Enterprise | Inventory</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -59,7 +59,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Products
+        Inventory
         <small>Preview</small>
       </h1>
       <ol class="breadcrumb">
@@ -328,68 +328,86 @@
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
-                      <form role="form">
+                      <form role="form" id="add_product_form" name="add_product_form" onsubmit="return validateAddProductForm();">
                         <div class="box-body">
-                          <div class="form-group">
-                            <label>Batch #</label>
-                            <input type="text" class="form-control" id="code" placeholder="Enter Code">
-                          </div>
-                          <div class="form-group">
-                            <label>Category</label>
-                            <select class="form-control select2" style="width: 100%;">
-                              <option selected="selected">Vegetables</option>
-                              <option>Grains</option>
-                              <option>Tubes</option>
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Name">
-                          </div>
-                          <div class="form-group">
-                            <label>Quantity(Kg)</label>
-                            <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity">
-                          </div>
-                          <div class="form-group">
-                            <label>Source</label>
-                            <select class="form-control select2" style="width: 100%;">
-                              <option selected="selected">Tema</option>
-                              <option>Berekuso</option>
-                              <option>Adenkrebi</option>
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <label>Supplier</label>
-                            <select class="form-control select2" style="width: 100%;">
-                              <option selected="selected">Alieu</option>
-                              <option>Koffi</option>
-                              <option>Jobe</option>
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <label>Storage Location</label>
-                            <input type="text" class="form-control" id="price" placeholder="Enter Price">
-                          </div>
-                          <div class="form-group">
-                            <label>Order date</label>
-                            <input type="date" class="form-control" id="price" placeholder="Enter Price">
-                          </div>
-                          <div class="form-group">
-                            <label>Inventory date</label>
-                            <input type="date" class="form-control" id="price" placeholder="Enter Price">
-                          </div>
-                          <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control" id="description" placeholder="Enter Description"></textarea>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Batch #</label>
+                                <input type="text" class="form-control" id="code" placeholder="Enter Code" id="batch_number" name="batch_number">
+                                <span id="batch_number_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Category</label>
+                                <select class="form-control select2" style="width: 100%;" id="category" name="category">
+                                  <option selected="selected" value="">Select...</option>
+                                  <option>Grains</option>
+                                  <option>Tubes</option>
+                                </select>
+                                <span id="category_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name" name="name">
+                                <span id="name_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Quantity(Kg)</label>
+                                <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity" name="quantity">
+                                <span id="quantity_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Source</label>
+                                <select class="form-control select2" style="width: 100%;" id="source" name="source">
+                                  <option selected="selected" value="">Select...</option>
+                                  <option>Berekuso</option>
+                                  <option>Adenkrebi</option>
+                                </select>
+                                <span id="source_span" style="color:red;"></span>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Supplier</label>
+                                <select class="form-control select2" style="width: 100%;" id="supplier" name="supplier">
+                                  <option selected="selected" value="">Select...</option>
+                                  <option>Koffi</option>
+                                  <option>Jobe</option>
+                                </select>
+                                <span id="supplier_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Storage Location</label>
+                                <select class="form-control select2" style="width: 100%;" id="storage" name="storage">
+                                  <option selected="selected" value="">Select...</option>
+                                  <option>Adenta</option>
+                                  <option>Accra</option>
+                                </select>
+                                <span id="storage_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Order date</label>
+                                <input type="date" class="form-control" id="order_date" name="order_date">
+                                <span id="order_date_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Inventory date</label>
+                                <input type="date" class="form-control" id="inventory_date" name="inventory_date">
+                                <span id="inventory_date_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" id="description" name="description" placeholder="Enter Description"></textarea>
+                                <span id="description_span" style="color:red;"></span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <!-- /.box-body -->
-
                         <div class="box-footer">
                           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary pull-right">Save changes</button>
+                          <button type="submit" class="btn btn-primary pull-right">Save changes</button>
                         </div>
-
                       </form>
                     </div>
                     <!-- /.box -->
@@ -504,8 +522,7 @@
 
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
-
 <script src="../js/custom.js"></script>
-
+<script src="../js/validations.js"></script>
 </body>
 </html>
