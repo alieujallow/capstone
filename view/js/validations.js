@@ -1,6 +1,25 @@
 //**************************************************
 //				  FORM VALIDATIONS
 //**************************************************
+
+
+
+
+
+
+
+//validates the login form
+function validateLoginForm()
+{
+  var usernameValidation = validateName("login_form","username","username_span");
+  var passwordValidation = validatePassword("login_form","password","password_span");
+  if (usernameValidation==false || passwordValidation==false)
+   {
+    return false;
+   }
+   return true;
+}
+
 //validates the add user form
 function validateAddUserForm()
 {
@@ -43,8 +62,9 @@ function validateCustomerForm()
 	 {
 	 	return false;
 	 }
-	 addSupplier(nameValidation,phoneValidation,emailValidation,addressValidation);
+   addCustomer(nameValidation,phoneValidation,emailValidation,addressValidation);
 }
+
 //*****************************************************
 //					ACTIONS
 //******************************************************
@@ -53,7 +73,8 @@ function validateCustomerForm()
 //takes username, email and role
 function addUser(username,email,role)
 {
-   var data = {username:username, email:email, role:role, action:'add_user'};
+   var action="add_user";
+   var data = {username:username, email:email, role:role, action:action};
    var serverUrl='/capstone/controller/userController.php';
  
    $.ajax({ // jQuery Ajax
@@ -62,11 +83,11 @@ function addUser(username,email,role)
     data: data, // We send the data string
     dataType: 'json', // Json format
     timeout: 3000,
-    success: function(data)
+    success: function(response)
     {
-      console.log(data);
+      console.log(response);
       alert("success");
-      console.log(data);
+      console.log(response);
   	},
   	error: function (request, status, error)
   	{
@@ -270,6 +291,53 @@ function displayUsers()
 //				 INDIVIDUAL FORM FIELD VALIDATIONS
 //**************************************************
 
+//validates password
+function validatePassword(form_name,field_name,span_name)
+{
+  var password = document.forms[form_name][field_name];
+  var span = document.getElementById(span_name);
+
+  if (password.value == "") 
+   {
+    span.innerHTML = "*required";
+    password.style.border = "1px solid red";
+    return false; 
+   }
+   else
+  {
+
+    /*//if password is not empty do the following
+    //checks the length of the password
+    if (password.value.length>=6 & password.value.length<13)
+    {
+
+      //if the password meets the length, check for an Uppercase letter, symbol, nummber, 
+      var pattern = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$");
+      if(pattern.test(password.value))
+      {
+        span.innerHTML = "";
+        password.style.border = "";
+        return password.value; 
+      }
+      else
+      {
+        span.innerHTML = "*invalid password";
+        password.style.border = "1px solid red";
+        return false; 
+      }
+    }
+    else
+    {
+      span.innerHTML = "*invalid password";
+      password.style.border = "1px solid red";
+      return false; 
+    }*/
+
+    span.innerHTML = "";
+    password.style.border = "";
+    return password.value; 
+  }
+}
 //validates a name
 function validateName(form_name,field_name,span_name)
 {

@@ -1,51 +1,48 @@
 <?php
+header("Content-Type: application/json");
 //requires the user class
 require('../model/customer.php');
 
 
+//gets the request method
+$requestMethod = $_SERVER["REQUEST_METHOD"];
 
-
-/*if (isset($_POST['action']) & !empty($_POST['action']))
+if($requestMethod =="GET") 
 {
-    //gets the values
-    $name= strip_tags($_POST['name']);
-    $phone= strip_tags($_POST['phone']);
-    $email= strip_tags($_POST['email']);
-    $address= strip_tags($_POST['address']);
-
-    $sql = "INSERT INTO suppliers(name,phone,email,address) VALUES('$name','$phone','$email','$address');";
-
-    //creates a suppleir object
-    $supplier = new Supplier;
-	$results = $supplier->addSupplier($sql);
-	if ($results)
+	if (isset($_GET['action']) & !empty($_GET['action']))
 	{
-		$dataBack = array('response' =>'success');
-		echo json_encode($dataBack);
-	}
-	else
+		//sets the sql
+	    $sql = "SELECT * FROM customers;";
+
+	    //creates a customer object
+	    $customer = new Customer;
+
+		$results = $customer->getCustomers($sql);
+		if ($results)
+		{
+			echo json_encode($results);
+		}
+  	}
+}
+elseif($requestMethod =="POST")
+{
+	if (isset($_POST['action']) & !empty($_POST['action']))
 	{
-		$dataBack = array('response' =>'failure');
-		echo json_encode($dataBack);
-	}
-}*/
-    
+    	//gets the values
+	    $name= strip_tags($_POST['name']);
+	    $phone= strip_tags($_POST['phone']);
+	    $email= strip_tags($_POST['email']);
+	    $address= strip_tags($_POST['address']);
 
+	    $sql = "INSERT INTO customers(name,phone,email,address) VALUES('$name','$phone','$email','$address');";
 
-    $sql = "INSERT INTO suppliers(name,phone,email,address) VALUES('jama43','02547','4987987','fds');";
-
-    //creates a suppleir object
-    $supplier = new Supplier;
-
-	//$results = $supplier->addSupplier($sql);
-	
-	if (true)
-	{
-		$dataBack = array('response' =>'success');
-		echo json_encode($dataBack);
-	}
-	else
-	{
-		echo json_encode("failure");
-	}  
+	    //creates a customer object
+	    $customer = new Customer;
+		$results = $customer->addCustomer($sql);
+		if ($results)
+		{
+			echo json_encode($results);
+		}
+  	}
+}
 ?>

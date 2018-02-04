@@ -3,19 +3,40 @@
 //requires the database connection file
 require('database/DatabaseConnection.php');
 
-class Supplier extends DatabaseConnection
+class Customer extends DatabaseConnection
 {
-	
 	
 	//adds a user
 	//takes sql and returns either true or false
-	function addSupplier($sql)
+	function addCustomer($sql)
 	{
-		if ($this->query($sql))
+		$result = $this->query($sql);
+		if ($result)
 		{
-			return true; 
+			//gets the id of the last inserted record
+			$last_id = mysqli_insert_id($this->connection);
+
+			//sets sql to get last inserted record
+			$sql="SELECT * FROM customers WHERE customer_id='$last_id';";
+			$resutlt = $this->getCustomers($sql);
+			return $resutlt;
 		}
 		return false;
+	}
+
+	//gets all the customers
+	function getCustomers($sql)
+	{
+		$result = $this->query($sql);
+		if ($result)
+		{
+			$result = array();
+			while ($row = $this->getRow())
+			{
+				$result[] = $row;
+			}
+			return $result;
+		}
 	}
 }	
 ?>

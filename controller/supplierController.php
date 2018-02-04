@@ -1,56 +1,48 @@
 <?php
-//requires the user class
+header("Content-Type: application/json");
+//requires the supplier class
 require('../model/supplier.php');
 
 
+//gets the request method
+$requestMethod = $_SERVER["REQUEST_METHOD"];
 
-
-/*if (isset($_POST['action']) & !empty($_POST['action']))
+if($requestMethod =="GET") 
 {
-    //gets the values
-    $name= strip_tags($_POST['name']);
-    $phone= strip_tags($_POST['phone']);
-    $email= strip_tags($_POST['email']);
-    $address= strip_tags($_POST['address']);
-
-    $sql = "INSERT INTO suppliers(name,phone,email,address) VALUES('$name','$phone','$email','$address');";
-
-    //creates a suppleir object
-    $supplier = new Supplier;
-	$results = $supplier->addSupplier($sql);
-	if ($results)
+	if (isset($_GET['action']) & !empty($_GET['action']))
 	{
-		$dataBack = array('response' =>'success');
-		echo json_encode($dataBack);
-	}
-	else
+		//sets the sql
+	    $sql = "SELECT * FROM suppliers;";
+
+	    //creates a customer object
+	    $supplier = new Supplier;
+
+		$results = $supplier->getSuppliers($sql);
+		if ($results)
+		{
+			echo json_encode($results);
+		}
+  	}
+}
+elseif($requestMethod =="POST")
+{
+	if (isset($_POST['action']) & !empty($_POST['action']))
 	{
-		$dataBack = array('response' =>'failure');
-		echo json_encode($dataBack);
-	}
-}*/
-    
+    	//gets the values
+	    $name= strip_tags($_POST['name']);
+	    $phone= strip_tags($_POST['phone']);
+	    $email= strip_tags($_POST['email']);
+	    $address= strip_tags($_POST['address']);
 
+	    $sql = "INSERT INTO suppliers(name,phone,email,address) VALUES('$name','$phone','$email','$address');";
 
-    $sql = "INSERT INTO suppliers(name,phone,email,address) VALUES('jamayyy43','02547','4987987','fds');";
-
-    //creates a suppleir object
-    $supplier = new Supplier;
-
-	$results = $supplier->addSupplier($sql);
-	
-	if (true)
-	{
-		$dataBack = array('response' =>'success');
-		echo json_encode($dataBack);
-		//echo "success3";
-	}
-	else
-	{
-		//echo json_encode("failure");
-		//echo "fail";
-	}
-
-	//echo password_hash("Doap@ssw0rd", PASSWORD_DEFAULT);
-	
+	    //creates a supplier object
+	    $supplier = new Supplier;
+		$results = $supplier->addSupplier($sql);
+		if ($results)
+		{
+			echo json_encode($results);
+		}
+  	}
+}
 ?>
