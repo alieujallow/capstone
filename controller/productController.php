@@ -16,7 +16,7 @@ if ($requestMethod=="GET")
         {
             $sql="SELECT *FROM products;";
 
-            //creates an object of the product class
+            //creates an object of the product class to get the products
             $product = new Product;
 
             $result = $product->getProducts($sql);
