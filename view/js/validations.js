@@ -171,7 +171,7 @@ function addSupplier(name,phone,email,address)
     });*/
 
 	var data = {name:name, phone:phone, email:email, address:address, action:'add_supplier'};
-  	var serverUrl='/capstone/controller/supplierController.php';
+  var serverUrl='/capstone/controller/supplierController.php';
  
   	$.ajax({ // jQuery Ajax
 	    type: 'POST',

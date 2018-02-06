@@ -28,17 +28,10 @@ if ($requestMethod=="GET")
         }
         elseif ($action =="options")
         {
-            $sql1="SELECT supplier_id as id, name FROM suppliers;";
-            $sql2="SELECT category_id as id, name FROM category;";
-            $sql3="SELECT source_id as id,   name FROM source;";
-            $sql4="SELECT storage_id as id, name FROM storage;";
-
-            //creates an object of the product class
-            $product = new Product;
-            $suppliers = $product->getSelectOptions($sql1);
-            $category = $product->getSelectOptions($sql2);
-            $source = $product->getSelectOptions($sql3);
-            $storage = $product->getSelectOptions($sql4);
+            $suppliers = returnSelectList("suppliers"); //gets the suppliers
+            $category = returnSelectList("category");  //gets the categories
+            $source = returnSelectList("source"); //gets the sources
+            $storage = returnSelectList("storage"); //gets the storage locations
 
             if ($suppliers&$category&$source&$storage) 
             {
@@ -86,5 +79,13 @@ elseif ($requestMethod=="POST")
             }
         } 
     }
+}
+
+//takes a table name and constructs a query
+function returnSelectList($tableName)
+{
+    $sql="SELECT id, name FROM ".$tableName.";";
+    $product = new Product;
+    return $product->getSelectOptions($sql);
 }
 ?>
