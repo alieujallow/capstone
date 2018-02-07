@@ -23,8 +23,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
   <script src="view/js/jQuery/jquery.min.js"></script>
-
+  <script src="view/js/validations.js"></script>
   <script> 
+    checkUserLogin();
     $(function()
     {
       $("#header").load("view/layout/header.html"); 
@@ -32,7 +33,6 @@
       $("#footer").load("view/layout/footer.html"); 
     });
   </script> 
-
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -412,6 +412,7 @@
 
 <!-- AdminLTE App -->
 <script src="view/js/adminlte.min.js"></script>
+<script src="view/js/validations.js"></script>
 
 </body>
 </html>

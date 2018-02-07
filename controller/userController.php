@@ -74,6 +74,34 @@ elseif ($requestMethod=="POST")
             }
             
         }
+        //checks if a user is logged in
+        elseif ($action=="checklogin") 
+        {
+            $response=array();
+
+            session_start();
+            if(isset($_SESSION['username']) && !empty($_SESSION['username'])) 
+            {
+                $response["status"]="success";
+                $response["username"]=$_SESSION['username'];
+            }
+            else
+            {
+                $response["status"]="fail";
+            }
+            echo json_encode($response);
+        }
+        //logs out the user by destroying all the sessions
+        elseif ($action=="logout") 
+        {
+            $response=array();
+            session_start();
+            session_unset(); 
+            session_destroy(); 
+
+            $response["status"]="success";
+            echo json_encode($response);
+        }
         elseif ($action=="addUser")
         {
             //gets the values

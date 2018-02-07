@@ -395,6 +395,66 @@ function loginUser(username, password)
   });
 }
 
+//checks if a user is logged in or not
+function checkUserLogin()
+{
+  var data = {action:'checklogin'};
+  var serverUrl='/capstone/controller/userController.php';
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.status=="success")
+       {
+          setTimeout(function()
+          {
+            //write the username
+            document.getElementById("header_username").innerHTML=data.username;
+          }, 100);
+       }
+       else if (data.status=="fail")
+       {
+          //redirects user to the login page
+          window.location.href="/capstone/view/pages/login/login.html";
+       }
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+//logs out the user from the system
+function logoutUser()
+{
+  var data = {action:'logout'};
+  var serverUrl='/capstone/controller/userController.php';
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.status=="success")
+       {
+          //redirects user to the login page
+          window.location.href="/capstone/view/pages/login/login.html";
+       }
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
 //
 function printResponse(field_id,span_id,value)
 {
