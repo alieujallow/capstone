@@ -2,3 +2,22 @@
 {
     content: "";
 }
+
+
+
+
+
+
+
+.test:hover
+ {
+    background-color: #ffff99;
+    cursor: pointer;
+    cursor: hand;
+ }
+
+ .test
+ {
+ 	cursor: pointer;
+    cursor: hand;
+ }

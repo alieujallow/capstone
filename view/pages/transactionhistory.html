@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Dzigua Enterprise | Inventory</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../css/theme/AdminLTE.min.css">
+
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="../css/skin/_all-skins.min.css">
+
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+  <link rel="stylesheet" href="../css/customStyle.css">
+
+  <script src="../js/jQuery/jquery.min.js"></script>
+
+  <script> 
+    $(function()
+    {
+      $("#header").load("../layout/header.html"); 
+      $("#left_sidebar").load("../layout/leftSideBar.html"); 
+      $("#footer").load("../layout/footer.html"); 
+    });
+  </script> 
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('products_menu');">
+<div class="wrapper">
+
+  <header class="main-header" id="header">
+   <!-- header is displayed here-->
+  </header>
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar" id="left_sidebar">
+    
+    </section>
+  </aside>
+  <!-- /.sidebar ends here-->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        Transaction History of Cassava
+        <small>Preview</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Forms</a></li>
+        <li class="active">General Elements</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+
+        <!-- left column -->
+      <div class="col-md-12">
+          <div class="box">
+            <div class="box-body table-responsive">
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 10px">#</th>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Order#</th>
+                  <th>Supplier</th>
+                  <th>Quantity(kg)</th>
+                  <th>Location</th>
+                  <th>Reason</th>
+                </tr>
+                <tr>
+                  <td>1.</td>
+                  <td>2018-02-08</td>
+                  <td>Stock In</td>
+                  <td>008</td>
+                  <td>Alieu</td>
+                  <td>20</td>
+                  <td>Accra</td>
+                  <td>adding to stock</td>
+                </tr>
+                <tr>
+                  <td>2.</td>
+                  <td>2018-02-18</td>
+                  <td>Stock Out</td>
+                  <td>001</td>
+                  <td>Richard</td>
+                  <td>200</td>
+                  <td>Tema</td>
+                  <td>To process</td>
+                </tr>
+                <tr>
+                  <td>3.</td>
+                  <td>2016-02-08</td>
+                  <td>Stock Adjustment</td>
+                  <td>008</td>
+                  <td>Joseph</td>
+                  <td>280</td>
+                  <td>Berekuso</td>
+                  <td>Theft</td>
+                </tr>
+                <tr>
+                  <td>4.</td>
+                  <td>2018-07-08</td>
+                  <td>Stock Movement</td>
+                  <td>018</td>
+                  <td>Issic</td>
+                  <td>200</td>
+                  <td>Tema</td>
+                  <td>Storage Full</td>
+                </tr>
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="#">&laquo;</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        <!--/.col (left) -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div id="footer">
+    <!-- footer is displayed here -->
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="../js/jQuery/jquery.min.js"></script>
+
+<!-- Bootstrap 3.3.7 -->
+<script src="../js/bootstrap/bootstrap.min.js"></script>
+
+<!-- AdminLTE App -->
+<script src="../js/adminlte.min.js"></script>
+<script src="../js/custom.js"></script>
+
+<script src="../js/validations.js"></script>
+</body>
+</html>

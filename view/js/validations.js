@@ -26,13 +26,15 @@ function validateAddProductForm()
 //validates the login form
 function validateLoginForm()
 {
-  var usernameValidation = validateName("login_form","username","username_span");
-  var passwordValidation = validatePassword("login_form","password","password_span");
-  if (usernameValidation==false || passwordValidation==false)
+  var username = validateName("login_form","username","username_span");
+  var password = validatePassword("login_form","password","password_span");
+
+  if (username==false || password==false)
    {
-    return false;
+     return false;
    }
-   return true;
+   loginUser(username, password);
+   return false;
 }
 
 //validates the add user form
@@ -356,6 +358,50 @@ function buildOptions(value,selectId)
   });
   document.getElementById(selectId).innerHTML=storage;
 }
+
+//logins the user to the system
+function loginUser(username, password)
+{
+  var data = {username:username, password:password, action:'login'};
+  var serverUrl='/capstone/controller/userController.php';
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      $.each(data,function(key,value){
+        if (value=="wrong username")
+         {
+            printResponse("username","username_span",value);
+         }
+         else if(value=="wrong password")
+         {
+            printResponse("password","password_span",value);
+         }
+         else if (value=="correct credentials")
+         {
+            //redirects the user
+            window.location.href="/capstone/";
+         }
+      });
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+//
+function printResponse(field_id,span_id,value)
+{
+  document.getElementById(field_id).style.border= "1px solid red";
+  document.getElementById(span_id).innerHTML=value;
+}
+
 //**************************************************
 //				 INDIVIDUAL FORM FIELD VALIDATIONS
 //**************************************************
