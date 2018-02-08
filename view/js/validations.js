@@ -82,9 +82,154 @@ function validateCustomerForm()
    addCustomer(nameValidation,phoneValidation,emailValidation,addressValidation);
 }
 
+//validates the category form
+function validateCategoryForm()
+{
+  var name  = validateName("category_form","category_name","category_span");
+  if (name==false)
+  {
+    return false;
+  }
+
+  var id = document.getElementById("category_saveBtn").value;
+  if (id=="")
+  {
+     postCategory(name,"addCategory","");
+  }
+  else
+  {
+    postCategory(name,"updateCategory",id);
+  }
+  return false;
+}
+
 //*****************************************************
 //					ACTIONS
 //******************************************************
+
+//fill the edit category form
+function fillEditCategoryForm(id)
+{
+  //splits the id
+  var result = id.split(" ");
+
+  modal_category_name = document.forms["category_form"]["category_name"];
+  document.getElementById("category_header").innerHTML="Update Category";
+  document.getElementById("category_saveBtn").value=result[0];
+  modal_category_name.value=result[1];
+
+  //triger the modal
+  $('#category_modal').modal('show'); 
+}
+
+//it fills the delecategory form
+function fillDeleteCategoryModal(id)
+{
+  document.getElementById("delete_category_btn").value=id;
+
+  //triger the modal
+  $('#category_delete_modal').modal('show'); 
+}
+
+
+function postCategory(name,action,id)
+{
+    if (action=="addCategory")
+    {
+      var data = {name:name, action:action};
+    }
+    else
+    {
+      var data = {name:name, id:id, action:action};
+    }
+
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 4000,
+      success: function(data)
+      {
+        getCategory();
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function getCategory()
+{
+    var data = {name:name, action:'getCategory'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+         var list="";
+         var count = 0;
+         //deletes all table rows except the first one
+         $("#category_list").find("tr:gt(0)").remove();
+         
+         $.each(data,function(key,value){
+          count++
+          list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditCategoryForm(this.id);\" id=\""+value.id+" "+value.name+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteCategoryModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+         });
+         $("#category_list").append(list);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 //a function that adds a user
 //takes username, email and role
@@ -396,7 +541,7 @@ function loginUser(username, password)
 }
 
 //checks if a user is logged in or not
-function checkUserLogin()
+/*function checkUserLogin()
 {
   var data = {action:'checklogin'};
   var serverUrl='/capstone/controller/userController.php';
@@ -427,7 +572,7 @@ function checkUserLogin()
       alert("error : "+error);
     }
   });
-}
+}*/
 
 //logs out the user from the system
 function logoutUser()
