@@ -28,7 +28,7 @@ if($requestMethod =="GET")
 		    }
 
 			//sets the sql
-		    $sql1 = "SELECT * FROM suppliers  LIMIT $start,$numItemsPerPage;";
+		    $sql1 = "SELECT * FROM suppliers ORDER BY id DESC LIMIT $start,$numItemsPerPage;";
 		    $sql2 = "SELECT count(id) as num FROM suppliers";
 
 		    //creates a customer object
@@ -39,11 +39,20 @@ if($requestMethod =="GET")
 
 			$numPage = ceil($numberOfSuppliers / $numItemsPerPage); // Total number of page
 
-			if ($suppliers)
+			if (sizeof($suppliers)>1)
 			{
 				$array=array();
+				$array["status"]="not empty";
 				$array["num_page"]=$numPage;
-				$suppliers[]=$array;
+				$suppliers[0]=$array;
+				echo json_encode($suppliers);
+			}
+			else
+			{
+				$array=array();
+				$array["status"]="empty";
+				$array["num_page"]=$numPage;
+				$suppliers[0]=$array;
 				echo json_encode($suppliers);
 			}
 		}
@@ -127,7 +136,6 @@ elseif($requestMethod =="POST")
 		{
 			//gets the values
 		    $id= strip_tags($_POST['id']);
-
 		    $sql = "DELETE FROM suppliers WHERE id='$id';";
 
 		    //creates a supplier object

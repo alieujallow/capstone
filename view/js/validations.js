@@ -6,7 +6,15 @@ $('document').ready(function()
   //implements the live search here
   $("#search_name").keyup(function(){
     var name = document.getElementById("search_name").value;
-    searchSupplier(name);
+    if (name=="")
+    {
+      displaySuppliers(1);
+    }
+    else
+    {
+      //validate the name before calling search function
+      searchSupplier(name);
+    }
   });
 });
 
@@ -468,9 +476,7 @@ function searchSupplier(name)
       timeout: 3000,
       success: function(data)
       {
-         var object = data[0];
-         var status = object.status;
-         constructSuppliersTable(data);
+        constructSuppliersTable(data);
       },
       error: function (request, status, error)
     {
@@ -523,7 +529,7 @@ function displayMessage(message,dispayAreaId)
   var displayArea = document.getElementById(dispayAreaId);
   displayArea.innerHTML="<i class=\"glyphicon glyphicon-ok\"></i>"+message+"<span style=\"float:right;\">x</span>";
   displayArea.style.display ="block";
-  displaySuppliers(); 
+  displaySuppliers(1); 
   $("#"+dispayAreaId).fadeOut(6000);     
 }
 
@@ -561,10 +567,9 @@ function constructPagination(data,current_page)
   var pagination = ''; // Init pagination
 
   //getting the numpage
-  var numPage = data[6];
+  var numPage = data[0];
   numPage= numPage.num_page;
 
-    
   // Pagination system
   if (current_page == 1)
   {
@@ -603,42 +608,46 @@ function constructSuppliersTable(data)
   var count = 0;
   //deletes all table rows except the first one
   $("#supplier_list").find("tr:gt(0)").remove();
+  var flag = false;
   $.each(data, function(key,value){
-    if (count>data.length-2)
+    if (flag)
     {
-      return false;
-    }
-    count++;
-    supplier_list+="<tr>";
-    supplier_list+="<td>"+count+"</td>";
-    supplier_list+="<td>"+value.name+"</td>";
-    supplier_list+="<td>"+value.phone+"</td>";
-    supplier_list+="<td>"+value.email+"</td>";
-    supplier_list+="<td>"+value.address+"</td>";
-    supplier_list+="<td><div class=\"btn-group\">"+
-                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
-                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
-                      "<span class=\"caret\"></span>"+
-                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
-                    "</button>"+
-                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
-                      "<li>"+
-                        "<a href=\"#\" onclick=\"fillEditSupplierForm(this.id);\" id=\""+value.id+" "+value.name+" "+value.phone+" "+value.email+" "+value.address+"\">"+
-                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
-                          "Edit"+
-                        "</a>"+
-                      "</li>"+
-                      "<li>"+
-                        "<a href=\"#\" onclick=\"fillDeleteSupplierModal(this.id);\" id=\""+value.id+"\">"+
-                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
-                         " Delete"+
-                        "</a>"+
-                      "</li>"+
-                    "</ul>"+
-                  "</div>"+
-                  "</td>";
-    supplier_list+="</tr>";
-  });
+      count++;
+      supplier_list+="<tr>";
+      supplier_list+="<td>"+count+"</td>";
+      supplier_list+="<td>"+value.name+"</td>";
+      supplier_list+="<td>"+value.phone+"</td>";
+      supplier_list+="<td>"+value.email+"</td>";
+      supplier_list+="<td>"+value.address+"</td>";
+      supplier_list+="<td><div class=\"btn-group\">"+
+                      "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                      "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                        "<span class=\"caret\"></span>"+
+                        "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                      "</button>"+
+                      "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                        "<li>"+
+                          "<a href=\"#\" onclick=\"fillEditSupplierForm(this.id);\" id=\""+value.id+" "+value.name+" "+value.phone+" "+value.email+" "+value.address+"\">"+
+                            "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                            "Edit"+
+                          "</a>"+
+                        "</li>"+
+                        "<li>"+
+                          "<a href=\"#\" onclick=\"fillDeleteSupplierModal(this.id);\" id=\""+value.id+"\">"+
+                            "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                           " Delete"+
+                          "</a>"+
+                        "</li>"+
+                      "</ul>"+
+                    "</div>"+
+                    "</td>";
+      supplier_list+="</tr>";
+  }
+  else
+  {
+    flag=true;
+  }
+});
   $("#supplier_list").append(supplier_list);
 }
 
@@ -675,6 +684,10 @@ function openSupplierForm()
 {
   //rests the supplier form
   document.getElementById("supplier_form").reset();
+
+  //resets the supplier form save button
+  document.getElementById("supplier_saveBtn").value="";
+  
   document.getElementById("supplier_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Supplier";
   document.getElementById("supplier_saveBtn").innerHTML="Add Supplier";
   //triger the modal
@@ -703,7 +716,7 @@ function deleteSupplier(id)
     },
     error: function (request, status, error)
     {
-      alert("error : "+error);
+      alert("error paaa : "+error);
     }
   });
 }
