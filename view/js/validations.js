@@ -55,16 +55,18 @@ function validateAddUserForm()
 //validates the add supplier form
 function validateSupplierForm()
 {
-	var nameValidation  = validateName("supplier_form","supplier_name","supplier_name_span");
-	var phoneValidation  = validatePhone("supplier_form","supplier_phone","supplier_phone_span");
-	var emailValidation  = validateEmail("supplier_form","supplier_email","supplier_email_span");
-	var addressValidation  = validateAddress("supplier_form","supplier_address","supplier_address_span");
+	var name= validateName("supplier_form","supplier_name","supplier_name_span");
+	var phone= validatePhone("supplier_form","supplier_phone","supplier_phone_span");
+	var email= validateEmail("supplier_form","supplier_email","supplier_email_span");
+	var address= validateAddress("supplier_form","supplier_address","supplier_address_span");
 
-	if (nameValidation==false || phoneValidation==false || emailValidation==false || addressValidation==false)
-	 {
+	if (name==false || phone==false || email==false || address==false)
+	{
 	 	return false;
-	 }
-	 addSupplier(nameValidation,phoneValidation,emailValidation,addressValidation);
+	}
+  var id = document.getElementById("supplier_saveBtn").value;
+  postSupplier(name,phone,email,address,id);
+  return false;
 }
 
 //validates the add supplier form
@@ -107,6 +109,10 @@ function validateCategoryForm()
 //					ACTIONS
 //******************************************************
 
+
+//*******************************************************
+//                     CATEGORY
+//********************************************************
 //fill the edit category form
 function fillEditCategoryForm(id)
 {
@@ -177,6 +183,7 @@ function getCategory()
       {
          var list="";
          var count = 0;
+
          //deletes all table rows except the first one
          $("#category_list").find("tr:gt(0)").remove();
          
@@ -219,21 +226,12 @@ function getCategory()
     });
 }
 
+//*******************************************************
+//                     USER
+//********************************************************
 
-
-
-
-
-
-
-
-
-
-
-
-//a function that adds a user
 //takes username, email and role
-function addUser(username,email,role)
+function postUser(username,email,role)
 {
    var action="add_user";
    var data = {username:username, email:email, role:role, action:action};
@@ -257,132 +255,6 @@ function addUser(username,email,role)
       alert("error");
   	}
   });
-
-    //ajax(serverUrl, userResponse);
-
-	/*var form_data = new FormData();  
-
-    //appending the form data
-    form_data.append('username',username);
-    form_data.append('email',email);
-    form_data.append('role',role);
-    form_data.append('action','add_user');
-
-
-  $.ajax({
-      url: serverUrl, 
-      type: "POST",            
-      data: form_data, 
-      dataType: 'text',
-      contentType: false,       
-      cache: false,             
-      processData:false,       
-      success: function(data)   
-      {
-        alert("success: "+data);
-      },
-      error: function (request, status, error)
-  	  {
-    	alert("error : "+error);
-  	  }
-    });*/
-}
-
-//adds a supplier
-function addSupplier(name,phone,email,address)
-{
-	/*//jquery ajax
-    var form_data = new FormData();  
-
-    //appending the form data
-    form_data.append('name',name);
-    form_data.append('phone',phone);
-    form_data.append('email',email);
-    form_data.append('address',address);
-    form_data.append('action','add_supplier');
-    var serverUrl='/capstone/controller/supplierController.php';
-
-    //sending the data via ajax
-    $.ajax({
-      url: serverUrl, 
-      type: "POST",            
-      data: form_data, 
-      dataType: 'text',
-      contentType: false,       
-      cache: false,             
-      processData:false,        
-      success: function(data)   
-      {
-        alert("success: "+data);
-      }
-    });*/
-
-	var data = {name:name, phone:phone, email:email, address:address, action:'add_supplier'};
-  var serverUrl='/capstone/controller/supplierController.php';
- 
-  	$.ajax({ // jQuery Ajax
-	    type: 'POST',
-	    url: serverUrl, // URL to the PHP file which will insert new value in the database
-	    data: data, // We send the data string
-	    dataType: 'json', // Json format
-	    timeout: 3000,
-	    success: function(data)
-	    {
-	      alert("success: "+data.response);
-	  	},
-	  	error: function (request, status, error)
-	  	{
-	    	alert("error : "+error);
-	  	}
-  	});
-}
-
-//adds a supplier
-function addCustomer(name,phone,email,address)
-{
-	var data = {name:name, phone:phone, email:email, address:address, action:'add_customer'};
-  	var serverUrl='/capstone/controller/customerController.php';
- 
-  	$.ajax({ // jQuery Ajax
-	    type: 'POST',
-	    url: serverUrl, // URL to the PHP file which will insert new value in the database
-	    data: data, // We send the data string
-	    dataType: 'json', // Json format
-	    timeout: 3000,
-	    success: function(data)
-	    {
-	      alert("success: "+data.response);
-	  	},
-	  	error: function (request, status, error)
-	  	{
-	    	alert("error : "+error);
-	  	}
-  	});
-}
-
-
-//displays roles
-function displayRoles()
-{
-  var data = {action:'display_roles'};
-  var serverUrl='/capstone/controller/roleController.php';
- 
-  $.ajax({ // jQuery Ajax
-    type: 'POST',
-    url: serverUrl, // URL to the PHP file which will insert new value in the database
-    data: data, // We send the data string
-    dataType: 'json', // Json format
-    timeout: 3000,
-    success: function(data)
-    {
-      document.getElementById("user_role").innerHTML=data.roleList;
-  	},
-  	error: function (request, status, error)
-  	{
-    	alert("error : "+error);
-
-  	}
-  });
 }
 
 //displays users
@@ -401,6 +273,10 @@ function displayUsers()
     {
       var user_list="";
       var count = 0;
+
+      //deletes all table rows except the first one
+      $("#user_list").find("tr:gt(0)").remove();
+
       $.each(data, function(key,value){
         count++;
         user_list+="<tr>";
@@ -449,61 +325,6 @@ function displayUsers()
   });
 }
 
-
-//displays users
-function displayProductSelectOptions()
-{
-  var data = {action:'options'};
-  var serverUrl='/capstone/controller/productController.php';
- 
-  $.ajax({ // jQuery Ajax
-    type: 'GET',
-    url: serverUrl, // URL to the PHP file which will insert new value in the database
-    data: data, // We send the data string
-    dataType: 'json', // Json format
-    timeout: 3000,
-    success: function(data)
-    {
-      var suppliers="";
-      var count = 0;
-      $.each(data, function(key,value){
-
-        if (key=="suppliers") 
-        {
-           buildOptions(value,"supplier");
-        }
-        else if(key=="category")
-        {
-          buildOptions(value,"category");
-        }
-        else if(key=="source")
-        {
-           buildOptions(value,"source");
-        }
-        else if(key=="storage")
-        {
-           buildOptions(value,"storage");
-        }
-      });
-    },
-    error: function (request, status, error)
-    {
-      alert("error : "+error);
-    }
-  });
-}
-
-//a function that buils the list of options
-function buildOptions(value,selectId)
-{
-  var storage ="";
-  storage +="<option selected=\"selected\" value=\"\">Select...</option>";
-  $.each(value,function(key2,value2){
-    storage +="<option value="+value2.id+">"+value2.name+"</option>";
-  });
-  document.getElementById(selectId).innerHTML=storage;
-}
-
 //logins the user to the system
 function loginUser(username, password)
 {
@@ -539,7 +360,6 @@ function loginUser(username, password)
     }
   });
 }
-
 //checks if a user is logged in or not
 /*function checkUserLogin()
 {
@@ -598,6 +418,440 @@ function logoutUser()
       alert("error : "+error);
     }
   });
+}
+
+//*******************************************************
+//                     SUPPLIER
+//********************************************************
+
+function postSupplier(name,phone,email,address,id)
+{
+  if (id=="")
+  {
+     var data = {name:name, phone:phone, email:email, address:address, action:"add_supplier"};
+  }
+  else
+  {
+     var data = {name:name, phone:phone, email:email, address:address, id:id, action:"update_supplier"};
+  }
+ 
+  var serverUrl='/capstone/controller/supplierController.php';
+ 
+  	$.ajax({ // jQuery Ajax
+	    type: 'POST',
+	    url: serverUrl, // URL to the PHP file which will insert new value in the database
+	    data: data, // We send the data string
+	    dataType: 'json', // Json format
+	    timeout: 3000,
+	    success: function(data)
+	    {
+	       if (data.response=="add_successful") 
+         {
+           document.getElementById("supplier_form").reset();
+           displayMessage(" Supplier is successfully added.","add_message_area");       
+         }
+         else if (data.response=="update_successful")
+         {
+          displayMessage(" Chnanges are successfully saved.","add_message_area");
+         }
+	  	},
+	  	error: function (request, status, error)
+	  	{
+	    	
+	  	}
+  	});
+}
+
+//function
+function displayMessage(message,dispayAreaId)
+{
+  var displayArea = document.getElementById(dispayAreaId);
+  displayArea.innerHTML="<i class=\"glyphicon glyphicon-ok\"></i>"+message+"<span style=\"float:right;\">x</span>";
+  displayArea.style.display ="block";
+  displaySuppliers(); 
+  $("#"+dispayAreaId).fadeOut(6000);     
+}
+
+//function tha displays suppliers
+function displaySuppliers()
+{
+  $('document').ready(function()
+  {
+      $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+  });
+ 
+  $('#pagination').on('click', 'a', function(e) {
+
+  var current_page = this.id; // Page number is the id of the 'a' element
+  var pagination = ''; // Init pagination
+
+  var data = {current_page:current_page, num_items:6, action:'display_suppliers'};
+  var serverUrl='/capstone/controller/supplierController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      var supplier_list="";
+      var count = 0;
+
+      //deletes all table rows except the first one
+      $("#supplier_list").find("tr:gt(0)").remove();
+
+      $.each(data, function(key,value){
+        count++;
+        supplier_list+="<tr>";
+        supplier_list+="<td>"+count+"</td>";
+        supplier_list+="<td>"+value.name+"</td>";
+        supplier_list+="<td>"+value.phone+"</td>";
+        supplier_list+="<td>"+value.email+"</td>";
+        supplier_list+="<td>"+value.address+"</td>";
+        supplier_list+="<td><div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditSupplierForm(this.id);\" id=\""+value.id+" "+value.name+" "+value.phone+" "+value.email+" "+value.address+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteSupplierModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                         " Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>";
+        supplier_list+="</tr>";
+      });
+      $("#supplier_list").append(supplier_list);
+
+
+      // Pagination system
+      if (page == 1)
+      {
+        pagination += '<div class="cell_disabled"><span>First</span></div><div class="cell_disabled"><span>Previous</span></div>';
+      }
+      else
+      {
+        pagination += '<div class="cell"><a href="#" id="1">First</a></div><div class="cell"><a href="#" id="' + (page - 1) + '">Previous</span></a></div>';
+      }
+ 
+      for (var i=parseInt(page)-3; i<=parseInt(page)+3; i++) 
+      {
+        if (i >= 1 && i <= data.numPage) 
+        {
+          pagination += '<div';
+          if (i == page) pagination += ' class="cell_active"><span>' + i + '</span>';
+          else pagination += ' class="cell"><a href="#" id="' + i + '">' + i + '</a>';
+          pagination += '</div>';
+        }
+      }
+ 
+      if (page == data.numPage)
+      {
+        pagination += '<div class="cell_disabled"><span>Next</span></div><div class="cell_disabled"><span>Last</span></div>';
+      }
+      else
+      {
+        pagination += '<div class="cell"><a href="#" id="' + (parseInt(page) + 1) + '">Next</a></div><div class="cell"><a href="#" id="' + data.numPage + '">Last</span></a></div>';
+        }
+      
+      $('#pagination').html(pagination); // We update the pagination DIV
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+  return false;
+ });
+}
+
+function fillEditSupplierForm(id)
+{
+  //rests the supplier form
+  document.getElementById("supplier_form").reset();
+
+  //splits the id
+  var result = id.split(" ");
+  document.getElementById("supplier_saveBtn").value=result[0];
+  document.forms["supplier_form"]["supplier_name"].value=result[1];
+  document.forms["supplier_form"]["supplier_phone"].value=result[2];
+  document.forms["supplier_form"]["supplier_email"].value=result[3];
+  document.forms["supplier_form"]["supplier_address"].value=result[4];
+  document.getElementById("supplier_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Supplier";
+  document.getElementById("supplier_saveBtn").innerHTML="Save Changes";
+
+  //triger the modal
+  $('#supplier_modal').modal('show');
+}
+
+function fillDeleteSupplierModal(id)
+{
+   document.getElementById("delete_supplier_btn").value=id;
+  //triger the modal
+  $('#supplier_delete_modal').modal('show');
+}
+
+
+//resets and triggers the supplier form 
+function openSupplierForm()
+{
+  //rests the supplier form
+  document.getElementById("supplier_form").reset();
+  document.getElementById("supplier_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Supplier";
+  document.getElementById("supplier_saveBtn").innerHTML="Add Supplier";
+  //triger the modal
+  $('#supplier_modal').modal('show'); 
+}
+
+//deletes a supplier
+function deleteSupplier(id)
+{
+  var data = {id:id, action:'delete_supplier'};
+  var serverUrl='/capstone/controller/supplierController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Supplier successfully Deleted.","delete_message_area");
+        $('#supplier_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+
+
+
+//*******************************************************
+//                     CUSTOMERS
+//********************************************************
+//adds a supplier
+function postCustomer(name,phone,email,address,id)
+{
+  if (id=="")
+  {
+     var data = {name:name, phone:phone, email:email, address:address, action:"add_customer"};
+  }
+  else
+  {
+     var data = {name:name, phone:phone, email:email, address:address, id:id, action:"update_customer"};
+  }
+ 
+  var serverUrl='/capstone/controller/customerController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+         if (data.response=="success") 
+         {
+          displayCustomers();
+         }
+      },
+      error: function (request, status, error)
+      {
+        
+      }
+    });
+}
+
+//function tha displays suppliers
+function displayCustomers()
+{
+  var data = {action:'display_customers'};
+  var serverUrl='/capstone/controller/customerController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      var customer_list="";
+      var count = 0;
+
+      //deletes all table rows except the first one
+      $("#customer_list").find("tr:gt(0)").remove();
+
+      $.each(data, function(key,value){
+        count++;
+        customer_list+="<tr>";
+        customer_list+="<td>"+count+"</td>";
+        customer_list+="<td>"+value.name+"</td>";
+        customer_list+="<td>"+value.phone+"</td>";
+        customer_list+="<td>"+value.email+"</td>";
+        customer_list+="<td>"+value.address+"</td>";
+        customer_list+="<td><div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditCustomerForm(this.id); id=\""+value.id+" "+value.name+" "+value.phone+" "+value.email+" "+value.address+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteCustomerModal(this.id); id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                         " Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>";
+        customer_list+="</tr>";
+      });
+      $("#customer_list").append(customer_list);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+function fillEditCustomerForm(id)
+{
+  //splits the id
+  var result = id.split(" ");
+
+  document.getElementById("customer_saveBtn").value=result[0];
+  document.forms["customer_form"]["customer_name"].value=result[1];
+  document.forms["customer_form"]["customer_phone"].value=result[2];
+  document.forms["customer_form"]["customer_email"].value=result[3];
+  document.forms["customer_form"]["customer_address"].value=result[4];
+  document.getElementById("customer_header").innerHTML="Update Customer";
+
+  //triger the modal
+  $('#customer_modal').modal('show'); 
+}
+
+/*function fillDeleteSupplierModal(id)
+{
+  document.getElementById("delete_customer_btn").value=id;
+
+  //triger the modal
+  $('#customer_delete_modal').modal('show'); 
+}*/
+
+
+//*******************************************************
+//                     PRODUCTS
+//********************************************************
+
+//displays users
+function displayProductSelectOptions()
+{
+  var data = {action:'options'};
+  var serverUrl='/capstone/controller/productController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      var suppliers="";
+      var count = 0;
+      $.each(data, function(key,value){
+
+        if (key=="suppliers") 
+        {
+           buildOptions(value,"supplier");
+        }
+        else if(key=="category")
+        {
+          buildOptions(value,"category");
+        }
+        else if(key=="source")
+        {
+           buildOptions(value,"source");
+        }
+        else if(key=="storage")
+        {
+           buildOptions(value,"storage");
+        }
+      });
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+//displays roles
+function displayRoles()
+{
+  var data = {action:'display_roles'};
+  var serverUrl='/capstone/controller/roleController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      document.getElementById("user_role").innerHTML=data.roleList;
+  	},
+  	error: function (request, status, error)
+  	{
+    	alert("error : "+error);
+
+  	}
+  });
+}
+
+
+
+
+
+//a function that buils the list of options
+function buildOptions(value,selectId)
+{
+  var storage ="";
+  storage +="<option selected=\"selected\" value=\"\">Select...</option>";
+  $.each(value,function(key2,value2){
+    storage +="<option value="+value2.id+">"+value2.name+"</option>";
+  });
+  document.getElementById(selectId).innerHTML=storage;
 }
 
 //

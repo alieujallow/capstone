@@ -57,7 +57,7 @@
   </script> 
  
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('people_menu');">
+<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('people_menu'); displayCustomers();">
 <div class="wrapper">
 
  <header class="main-header" id="header">
@@ -110,7 +110,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="customer_list">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Name</th>
@@ -118,96 +118,6 @@
                   <th>Email</th>
                   <th>Address</th>
                   <th>Action</th>
-                </tr>
-                <tr>
-                  <td>1.</td>
-                  <td>Alieu</td>
-                  <td>0572274469</td>
-                  <td>alieujallow93@gmail.com</td>
-                  <td>Berekuso</td>
-                  <td>
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default">Action</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      <span class="caret"></span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#customer_modal">
-                          <i class="glyphicon glyphicon-edit"></i>
-                          Edit
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#customer_delete_modal">
-                          <i class="glyphicon glyphicon-trash"></i>
-                          Delete
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2.</td>
-                  <td>Bass</td>
-                  <td>05732234469</td>
-                  <td>bass@gmail.com</td>
-                  <td>adenkrebi</td>
-                  <td>
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default">Action</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      <span class="caret"></span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#customer_modal">
-                          <i class="glyphicon glyphicon-edit"></i>
-                          Edit
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#customer_delete_modal">
-                          <i class="glyphicon glyphicon-trash"></i>
-                          Delete
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3.</td>
-                  <td>barry</td>
-                  <td>033242344469</td>
-                  <td>barry@gmail.com</td>
-                  <td>Ashesi</td>
-                  <td>
-                    <div class="btn-group">
-                    <button type="button" class="btn btn-default">Action</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      <span class="caret"></span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#customer_modal">
-                          <i class="glyphicon glyphicon-edit"></i>
-                          Edit
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#customer_delete_modal">
-                          <i class="glyphicon glyphicon-trash"></i>
-                          Delete
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  </td>
                 </tr>
               </table>
             </div>
@@ -253,7 +163,7 @@
                     <!-- general form elements -->
                     <div class="box box-primary">
                       <div class="box-header with-border">
-                        <h3 class="box-title">Add Customer</h3>
+                        <h3 class="box-title" id="customer_header">Add Customer</h3>
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
@@ -284,7 +194,7 @@
 
                         <div class="box-footer">
                           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary pull-right">Save changes</button>
+                          <button type="submit" class="btn btn-primary pull-right" id="customer_saveBtn" value="">Save changes</button>
                         </div>
                       </form>
                     </div>
@@ -314,7 +224,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-danger" id="delete_customer_btn" value="">Delete</button>
               </div>
             </div>
             <!-- /.modal-content -->

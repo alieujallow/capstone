@@ -8,18 +8,12 @@ class Supplier extends DatabaseConnection
 	
 	//adds a user
 	//takes sql and returns either true or false
-	function addSupplier($sql)
+	function updateSupplier($sql)
 	{
 		$result = $this->query($sql);
 		if ($result)
 		{
-			//gets the id of the last inserted record
-			$last_id = mysqli_insert_id($this->connection);
-
-			//sets sql to get last inserted record
-			$sql="SELECT * FROM suppliers WHERE supplier_id='$last_id';";
-			$resutlt = $this->getSuppliers($sql);
-			return $resutlt;
+			return $result;
 		}
 		return false;
 	}
@@ -38,5 +32,21 @@ class Supplier extends DatabaseConnection
 			return $result;
 		}
 	}
+
+	//gets the total number of suppliers
+	function getTotalNumSuppliers($sql)
+	{
+		$result = $this->query($sql);
+		if ($result)
+		{
+			$row = $this->getRow();
+			return $row["num"];
+		}
+	}
 }	
+
+/*$sql = "SELECT count(id) as num FROM suppliers";
+$supplier = new Supplier;
+$results = $supplier->getTotalNumSuppliers($sql);
+echo $results;*/
 ?>

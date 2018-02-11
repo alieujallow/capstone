@@ -40,7 +40,7 @@
   </script> 
  
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('people_menu');">
+<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('people_menu');displayUsers();">
 <div class="wrapper">
 
  <header class="main-header" id="header">
@@ -82,7 +82,7 @@
                 <div class="input-group input-group-sm" style="width: 300px;">
                   <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
                   <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default" onclick="displayUsers();"><i class="glyphicon glyphicon-search"></i>
+                    <button type="submit" class="btn btn-default" onclick=""><i class="glyphicon glyphicon-search"></i>
                     </button>
                     <button style="margin-left: 20px;" type="button" class="btn btn-success" data-toggle="modal" data-target="#add_user_modal" onclick="displayRoles();">
                         Add User

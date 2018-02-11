@@ -28,20 +28,48 @@ elseif($requestMethod =="POST")
 {
 	if (isset($_POST['action']) & !empty($_POST['action']))
 	{
-    	//gets the values
-	    $name= strip_tags($_POST['name']);
-	    $phone= strip_tags($_POST['phone']);
-	    $email= strip_tags($_POST['email']);
-	    $address= strip_tags($_POST['address']);
+		$action=$_POST['action'];
 
-	    $sql = "INSERT INTO customers(name,phone,email,address) VALUES('$name','$phone','$email','$address');";
-
-	    //creates a customer object
-	    $customer = new Customer;
-		$results = $customer->addCustomer($sql);
-		if ($results)
+		if ($action=="add_customer")
 		{
-			echo json_encode($results);
+			//gets the values
+		    $name= strip_tags($_POST['name']);
+		    $phone= strip_tags($_POST['phone']);
+		    $email= strip_tags($_POST['email']);
+		    $address= strip_tags($_POST['address']);
+
+		    $sql = "INSERT INTO customers(name,phone,email,address) VALUES('$name','$phone','$email','$address');";
+
+		    //creates a customer object
+		    $customer = new Customer;
+			$results = $customer->updateCustomer($sql);
+			if ($results)
+			{
+				$array=array();
+				$array["response"]="success";
+				echo json_encode($array);
+			}
+		}
+		elseif ($action=="update_customer")
+		{
+			//gets the values
+		    $name= strip_tags($_POST['name']);
+		    $phone= strip_tags($_POST['phone']);
+		    $email= strip_tags($_POST['email']);
+		    $address= strip_tags($_POST['address']);
+		    $id= strip_tags($_POST['id']);
+
+		    $sql = "UPDATE customers SET name='$name', phone='$phone', email='$email',address='$address' WHERE id='$id';";
+
+		    //creates a supplier object
+		    $customer = new Customer;
+			$results = $customer->updateCustomer($sql);
+			if ($results)
+			{
+				$array=array();
+				$array["response"]="success";
+				echo json_encode($array);
+			}
 		}
   	}
 }
