@@ -25,6 +25,7 @@ class Supplier extends DatabaseConnection
 		if ($result)
 		{
 			$result = array();
+			$result[0] ="";
 			while ($row = $this->getRow())
 			{
 				$result[] = $row;

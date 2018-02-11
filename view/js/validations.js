@@ -1,3 +1,22 @@
+//we have to do this when the page is loaded
+$('document').ready(function()
+{
+  $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+
+  //implements the live search here
+  $("#search_name").keyup(function(){
+    var name = document.getElementById("search_name").value;
+    searchSupplier(name);
+  });
+});
+
+$('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
+  var page = this.id; // Page number is the id of the 'a' element
+  displaySuppliers(page);
+  return false;
+});
+
+
 //**************************************************
 //				  FORM VALIDATIONS
 //**************************************************
@@ -105,6 +124,17 @@ function validateCategoryForm()
   return false;
 }
 
+//validates search form
+function valiateSearchForm()
+{
+  var name  = validateName("search_form","search_name","search_span");
+  if (name==false)
+  {
+    return false;
+  }
+  searchSupplier(name);
+  return false;
+}
 //*****************************************************
 //					ACTIONS
 //******************************************************
@@ -424,6 +454,31 @@ function logoutUser()
 //                     SUPPLIER
 //********************************************************
 
+//searches suppliers and displays them 
+function searchSupplier(name)
+{
+  var data = {name:name, action:"search_supplier"};
+  var serverUrl='/capstone/controller/supplierController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+         var object = data[0];
+         var status = object.status;
+         constructSuppliersTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
 function postSupplier(name,phone,email,address,id)
 {
   if (id=="")
@@ -473,19 +528,12 @@ function displayMessage(message,dispayAreaId)
 }
 
 //function tha displays suppliers
-function displaySuppliers()
+function displaySuppliers(id)
 {
-  $('document').ready(function()
-  {
-      $("#pagination a").trigger('click'); // When page is loaded we trigger a click
-  });
- 
-  $('#pagination').on('click', 'a', function(e) {
+  var current_page = id// Page number is the id of the 'a' element
+  var num_items=6;
 
-  var current_page = this.id; // Page number is the id of the 'a' element
-  var pagination = ''; // Init pagination
-
-  var data = {current_page:current_page, num_items:6, action:'display_suppliers'};
+  var data = {current_page:current_page, num_items:num_items, action:'display_suppliers'};
   var serverUrl='/capstone/controller/supplierController.php';
  
   $.ajax({ // jQuery Ajax
@@ -496,21 +544,78 @@ function displaySuppliers()
     timeout: 3000,
     success: function(data)
     {
-      var supplier_list="";
-      var count = 0;
+      constructSuppliersTable(data);
+      constructPagination(data,current_page);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
 
-      //deletes all table rows except the first one
-      $("#supplier_list").find("tr:gt(0)").remove();
 
-      $.each(data, function(key,value){
-        count++;
-        supplier_list+="<tr>";
-        supplier_list+="<td>"+count+"</td>";
-        supplier_list+="<td>"+value.name+"</td>";
-        supplier_list+="<td>"+value.phone+"</td>";
-        supplier_list+="<td>"+value.email+"</td>";
-        supplier_list+="<td>"+value.address+"</td>";
-        supplier_list+="<td><div class=\"btn-group\">"+
+//constructs pagination for the supplier table
+function constructPagination(data,current_page)
+{
+  var pagination = ''; // Init pagination
+
+  //getting the numpage
+  var numPage = data[6];
+  numPage= numPage.num_page;
+
+    
+  // Pagination system
+  if (current_page == 1)
+  {
+    pagination += '<div class="cell_disabled"><span>First</span></div><div class="cell_disabled"><span>Previous</span></div>';
+  }
+  else
+  {
+    pagination += '<div class="cell"><a href="#" id="1">First</a></div><div class="cell"><a href="#" id="' + (current_page - 1) + '">Previous</span></a></div>';
+  }
+ 
+  for (var i=parseInt(current_page)-3; i<=parseInt(current_page)+3; i++) 
+  {
+    if (i >= 1 && i <= numPage) 
+    {
+      pagination += '<div';
+      if (i == current_page) pagination += ' class="cell_active"><span>' + i + '</span>';
+      else pagination += ' class="cell"><a href="#" id="' + i + '">' + i + '</a>';
+      pagination += '</div>';
+    }
+  }
+  if (current_page == numPage)
+  {
+    pagination += '<div class="cell_disabled"><span>Next</span></div><div class="cell_disabled"><span>Last</span></div>';
+  }
+  else
+  {
+    pagination += '<div class="cell"><a href="#" id="' + (parseInt(current_page) + 1) + '">Next</a></div><div class="cell"><a href="#" id="' +numPage+ '">Last</span></a></div>';
+  }
+  $('#pagination').html(pagination); // We update the pagination DIV
+}
+
+//construct suppliers table
+function constructSuppliersTable(data)
+{
+  var supplier_list="";
+  var count = 0;
+  //deletes all table rows except the first one
+  $("#supplier_list").find("tr:gt(0)").remove();
+  $.each(data, function(key,value){
+    if (count>data.length-2)
+    {
+      return false;
+    }
+    count++;
+    supplier_list+="<tr>";
+    supplier_list+="<td>"+count+"</td>";
+    supplier_list+="<td>"+value.name+"</td>";
+    supplier_list+="<td>"+value.phone+"</td>";
+    supplier_list+="<td>"+value.email+"</td>";
+    supplier_list+="<td>"+value.address+"</td>";
+    supplier_list+="<td><div class=\"btn-group\">"+
                     "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
                     "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
                       "<span class=\"caret\"></span>"+
@@ -532,51 +637,11 @@ function displaySuppliers()
                     "</ul>"+
                   "</div>"+
                   "</td>";
-        supplier_list+="</tr>";
-      });
-      $("#supplier_list").append(supplier_list);
-
-
-      // Pagination system
-      if (page == 1)
-      {
-        pagination += '<div class="cell_disabled"><span>First</span></div><div class="cell_disabled"><span>Previous</span></div>';
-      }
-      else
-      {
-        pagination += '<div class="cell"><a href="#" id="1">First</a></div><div class="cell"><a href="#" id="' + (page - 1) + '">Previous</span></a></div>';
-      }
- 
-      for (var i=parseInt(page)-3; i<=parseInt(page)+3; i++) 
-      {
-        if (i >= 1 && i <= data.numPage) 
-        {
-          pagination += '<div';
-          if (i == page) pagination += ' class="cell_active"><span>' + i + '</span>';
-          else pagination += ' class="cell"><a href="#" id="' + i + '">' + i + '</a>';
-          pagination += '</div>';
-        }
-      }
- 
-      if (page == data.numPage)
-      {
-        pagination += '<div class="cell_disabled"><span>Next</span></div><div class="cell_disabled"><span>Last</span></div>';
-      }
-      else
-      {
-        pagination += '<div class="cell"><a href="#" id="' + (parseInt(page) + 1) + '">Next</a></div><div class="cell"><a href="#" id="' + data.numPage + '">Last</span></a></div>';
-        }
-      
-      $('#pagination').html(pagination); // We update the pagination DIV
-    },
-    error: function (request, status, error)
-    {
-      alert("error : "+error);
-    }
+    supplier_list+="</tr>";
   });
-  return false;
- });
+  $("#supplier_list").append(supplier_list);
 }
+
 
 function fillEditSupplierForm(id)
 {

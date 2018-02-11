@@ -11,35 +11,68 @@ if($requestMethod =="GET")
 {
 	if (isset($_GET['action']) & !empty($_GET['action']))
 	{
-		$currentPage = $_GET['current_page'];
-	    $numItemsPerPage = $_GET['num_items'];
-	    if ($currentPage != 1)
-	    {
-	    	$start = ($currentPage-1) * $numItemsPerPage;
-	    }
-	    else
-	    {
-	    	$start=0;
-	    }
+		//gets the action
+		$action=$_GET['action'];
 
-		//sets the sql
-	    $sql1 = "SELECT * FROM suppliers  LIMIT $start,$numItemsPerPage;";
-	    $sql2 = "SELECT count(id) as num FROM suppliers";
-
-	    //creates a customer object
-	    $supplier = new Supplier;
-
-		$suppliers = $supplier->getSuppliers($sql1);
-		$numberOfSuppliers = $supplier->getTotalNumSuppliers($sql2);
-
-		$numPage = ceil($numberOfSuppliers / $numItemsPerPage); // Total number of page
-
-		if ($suppliers)
+		if ($action=="display_suppliers")
 		{
-			$array=array();
-			$array["num_page"]=$numPage;
-			$suppliers[]=$array;
-			echo json_encode($suppliers);
+			$currentPage = $_GET['current_page'];
+		    $numItemsPerPage = $_GET['num_items'];
+		    if ($currentPage != 1)
+		    {
+		    	$start = ($currentPage-1) * $numItemsPerPage;
+		    }
+		    else
+		    {
+		    	$start=0;
+		    }
+
+			//sets the sql
+		    $sql1 = "SELECT * FROM suppliers  LIMIT $start,$numItemsPerPage;";
+		    $sql2 = "SELECT count(id) as num FROM suppliers";
+
+		    //creates a customer object
+		    $supplier = new Supplier;
+
+			$suppliers = $supplier->getSuppliers($sql1);
+			$numberOfSuppliers = $supplier->getTotalNumSuppliers($sql2);
+
+			$numPage = ceil($numberOfSuppliers / $numItemsPerPage); // Total number of page
+
+			if ($suppliers)
+			{
+				$array=array();
+				$array["num_page"]=$numPage;
+				$suppliers[]=$array;
+				echo json_encode($suppliers);
+			}
+		}
+		elseif ($action=="search_supplier")
+		{
+			//gets the name
+			$name= $_GET['name'];
+
+			//sets the sql
+		    $sql = "SELECT * FROM suppliers  WHERE name LIKE '%$name%';";
+		  
+		    //creates a supplier object
+		    $supplier = new Supplier;
+			$suppliers = $supplier->getSuppliers($sql);
+			
+			if (sizeof($suppliers)>1)
+			{
+				$array= array();
+				$array["status"]="not empty";
+				$suppliers[0]=$array;
+				echo json_encode($suppliers);
+			}
+			else
+			{
+				$array= array();
+				$array["status"]="empty";
+				$suppliers[0]=$array;
+				echo json_encode($suppliers);
+			}
 		}
   	}
 }
