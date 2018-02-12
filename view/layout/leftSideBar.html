@@ -14,13 +14,7 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-          <!--<li id="">
-          <a href="#">
-            <i class="glyphicon glyphicon-list-alt"></i>
-            <span>Reports</span>
-          </a>
-        </li> -->
-        <li class="treeview" id="people_menu">
+          <li class="treeview" id="operation_menu">
           <a href="#">
             <i class="glyphicon glyphicon-user"></i>
             <span>Operations</span>
@@ -29,36 +23,76 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="/capstone/view/pages/users.html"><i class=""></i>Inventory</a></li>
-            <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Returns</a></li>
-            <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Order Processing</a></li>
-            <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Sale</a></li>
-            <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>People</a></li>
+            <li class="treeview">
+              <a href="#"">
+                 <i class="icon"><img src="/capstone/view/img/icons/boxes.png"></i>
+                <span>Inventory</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/receivestock.html"><i class=""></i>Receive Stock</a></li>
+                <li><a href="/capstone/view/pages/adjuststock.html"><i class=""></i>Adjust Stock</a></li>
+                <li><a href="/capstone/view/pages/location.html"><i class=""></i>Move Stock (Locations)</a></li>
+                <li><a href="/capstone/view/pages/toprocess.html"><i class=""></i>Move Stock (To Process)</a></li>
+                <li><a href="/capstone/view/pages/tosell.html"><i class=""></i>Move Stock (To Sell)</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#"">
+                <i class="icon"><img src="/capstone/view/img/icons/back.png"></i>
+                <span>Returns</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Returns</a></li>
+                <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Order Processing</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#"">
+                <i class="icon"><img src="/capstone/view/img/icons/process.png"></i>
+                <span>Order Processing</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Returns</a></li>
+                <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Order Processing</a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+              <a href="#"">
+                <i class="icon"><img src="/capstone/view/img/icons/sales.png"></i>
+                <span>Sales</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Returns</a></li>
+                <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Order Processing</a></li>
+              </ul>
+            </li>
+            <li class="treeview" id="people_menu">
+              <a href="#"">
+                <i class="icon"><img src="/capstone/view/img/icons/collaboration.png"></i>
+                <span>People</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Suppliers</a></li>
+                <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Customers</a></li>
+                <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Users</a></li>
+              </ul>
+            </li>
           </ul>
-        </li>
-         <li class="treeview" id="people_menu">
-          <a href="#">
-            <i class="glyphicon glyphicon-user"></i>
-            <span>Configuration</span>
-            <span class="pull-right-container">
-              <i class="glyphicon glyphicon-menu-down pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="/capstone/view/pages/users.html"><i class=""></i>Users</a></li>
-            <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Suppliers</a></li>
-            <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Customers</a></li>
-          </ul>
-        </li>
-        <li id="products_menu">
-          <a href="/capstone/view/pages/inventory.html">
-            <i class="glyphicon glyphicon-shopping-cart"></i> <span>Inventory</span>
-          </a>
-        </li>
-        <li id="inprocess_menu">
-          <a href="/capstone/view/pages/operations.html">
-            <i class="glyphicon glyphicon-refresh"></i> <span>Operations</span>
-          </a>
         </li>
         <li class="treeview" id="configuration_menu">
           <a href="#">
@@ -69,7 +103,6 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="/capstone/view/pages/category.html"><i class=""></i>Category</a></li>
-            <li><a href="/capstone/view/pages/subcategory.html"><i class=""></i>Sub Category</a></li>
             <li><a href="/capstone/view/pages/source.html"><i class=""></i>Source</a></li>
             <li><a href="/capstone/view/pages/packagetype.html"><i class=""></i>Package Type</a></li>
             <li><a href="/capstone/view/pages/unitofmeasurement.html"><i class=""></i>Unit of Measurement</a></li>
