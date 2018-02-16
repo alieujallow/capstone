@@ -14,20 +14,12 @@ class User extends DatabaseConnection
 	
 	//adds a user
 	//takes sql and returns either true or false
-	function addUser($sql)
+	function updateUser($sql)
 	{
-		if($this->query($sql))
+		$result = $this->query($sql);
+		if ($result)
 		{
-			//getting the last inserted id
-			$last_id = mysqli_insert_id($this->connection);
-
-			$sql="SELECT *FROM users WHERE user_id='$last_id';";
-
-			$result = $this->getUsers($sql);
-			if ($result)
-			{
-				return $result;
-			}
+			return $result;
 		}
 		return false;
 	}
@@ -47,16 +39,16 @@ class User extends DatabaseConnection
 	function getUsers($sql)
 	{
 		$result = $this->query($sql);
-		if($result)
+		if ($result)
 		{
 			$result = array();
+			$result[0] ="";
 			while ($row = $this->getRow())
 			{
 				$result[] = $row;
 			}
 			return $result;
 		}
-		return false;
 	}
 
 
@@ -73,6 +65,15 @@ class User extends DatabaseConnection
 		return false;
 	}
 
+	function getTotalNumItems($sql)
+	{
+		$result = $this->query($sql);
+		if ($result)
+		{
+			$row = $this->getRow();
+			return $row["num"];
+		}
+	}
 	//logout
 }	
 ?>
