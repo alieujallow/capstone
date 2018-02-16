@@ -45,9 +45,4 @@ class Supplier extends DatabaseConnection
 		}
 	}
 }	
-
-/*$sql = "SELECT count(id) as num FROM suppliers";
-$supplier = new Supplier;
-$results = $supplier->getTotalNumSuppliers($sql);
-echo $results;*/
 ?>

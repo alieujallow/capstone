@@ -5,9 +5,6 @@ require('database/DatabaseConnection.php');
 
 class Customer extends DatabaseConnection
 {
-	
-	//adds a user
-	//takes sql and returns either true or false
 	function updateCustomer($sql)
 	{
 		$result = $this->query($sql);
@@ -18,18 +15,29 @@ class Customer extends DatabaseConnection
 		return false;
 	}
 
-	//gets all the customers
 	function getCustomers($sql)
 	{
 		$result = $this->query($sql);
 		if ($result)
 		{
 			$result = array();
+			$result[0] ="";
 			while ($row = $this->getRow())
 			{
 				$result[] = $row;
 			}
 			return $result;
+		}
+	}
+
+
+	function getTotalNumCustomers($sql)
+	{
+		$result = $this->query($sql);
+		if ($result)
+		{
+			$row = $this->getRow();
+			return $row["num"];
 		}
 	}
 }	

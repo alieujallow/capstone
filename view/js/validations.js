@@ -11,13 +11,15 @@ $('document').ready(function()
       displaySuppliers(1);
       displayCategory(1);
       displayUsers(1);
+      displayCustomers(1);
     }
     else
     {
       //validate the name before calling search function
       searchSupplier(name);
       searchCategory(name);
-      searchUser(name)
+      searchUser(name);
+      searchCustomer(name);
     }
   });
 });
@@ -28,6 +30,7 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displaySuppliers(page);
   displayCategory(page);
   displayUsers(page);
+  displayCustomers(page);
   return false;
 });
 
@@ -126,16 +129,19 @@ function validateSupplierForm()
 //validates the add supplier form
 function validateCustomerForm()
 {
-	var nameValidation  = validateName("customer_form","customer_name","customer_name_span");
-	var phoneValidation  = validatePhone("customer_form","customer_phone","customer_phone_span");
-	var emailValidation  = validateEmail("customer_form","customer_email","customer_email_span");
-	var addressValidation  = validateAddress("customer_form","customer_address","customer_address_span");
+	var name = validateName("customer_form","customer_name","customer_name_span");
+	var phone= validatePhone("customer_form","customer_phone","customer_phone_span");
+	var email= validateEmail("customer_form","customer_email","customer_email_span");
+	var address = validateAddress("customer_form","customer_address","customer_address_span");
 
-	if (nameValidation==false || phoneValidation==false || emailValidation==false || addressValidation==false)
+	if (name==false || phone==false || email==false || address==false)
 	 {
 	 	return false;
 	 }
-   addCustomer(nameValidation,phoneValidation,emailValidation,addressValidation);
+
+  var id = document.getElementById("customer_saveBtn").value;
+  postCustomer(name,phone,email,address,id);
+  return false;
 }
 
 //validates the category form
@@ -589,7 +595,7 @@ function constructUsersTable(data)
                       "</button>"+
                       "<ul class=\"dropdown-menu\" role=\"menu\">"+
                         "<li>"+
-                          "<a href=\"#\" onclick=\"fillEditUserForm(this.id);\" id=\""+value.id+" "+value.username+" "+value.email+" "+value.phone+" "+value.roleId+" "+value.statusId+"\">"+
+                          "<a href=\"#\" onclick=\"fillEditUserForm(this.id);\" id=\""+value.id+"&"+value.username+"&"+value.email+"&"+value.phone+"&"+value.roleId+"&"+value.statusId+"\">"+
                             "<i class=\"glyphicon glyphicon-edit\"></i>"+
                             "Edit"+
                           "</a>"+
@@ -622,7 +628,7 @@ function fillEditUserForm(id)
   document.getElementById("user_form").reset();
 
   //splits the id
-  var result = id.split(" ");
+  var result = id.split("&");
   document.getElementById("user_saveBtn").value=result[0];
   document.forms["user_form"]["username"].value=result[1];
   document.forms["user_form"]["user_email"].value=result[2];
@@ -847,13 +853,13 @@ function constructSuppliersTable(data)
     if (flag)
     {
       count++;
-      supplier_list+="<tr>";
-      supplier_list+="<td>"+count+"</td>";
-      supplier_list+="<td>"+value.name+"</td>";
-      supplier_list+="<td>"+value.phone+"</td>";
-      supplier_list+="<td>"+value.email+"</td>";
-      supplier_list+="<td>"+value.address+"</td>";
-      supplier_list+="<td><div class=\"btn-group\">"+
+      supplier_list+="<tr>"+
+      "<td>"+count+"</td>"+
+      "<td>"+value.name+"</td>"+
+      "<td>"+value.phone+"</td>"+
+      "<td>"+value.email+"</td>"+
+      "<td>"+value.address+"</td>"+
+      "<td><div class=\"btn-group\">"+
                       "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
                       "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
                         "<span class=\"caret\"></span>"+
@@ -861,7 +867,7 @@ function constructSuppliersTable(data)
                       "</button>"+
                       "<ul class=\"dropdown-menu\" role=\"menu\">"+
                         "<li>"+
-                          "<a href=\"#\" onclick=\"fillEditSupplierForm(this.id);\" id=\""+value.id+" "+value.name+" "+value.phone+" "+value.email+" "+value.address+"\">"+
+                          "<a href=\"#\" onclick=\"fillEditSupplierForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.phone+"&"+value.email+"&"+value.address+"\">"+
                             "<i class=\"glyphicon glyphicon-edit\"></i>"+
                             "Edit"+
                           "</a>"+
@@ -874,8 +880,8 @@ function constructSuppliersTable(data)
                         "</li>"+
                       "</ul>"+
                     "</div>"+
-                    "</td>";
-      supplier_list+="</tr>";
+                    "</td>"+
+                   "</tr>";
   }
   else
   {
@@ -892,7 +898,7 @@ function fillEditSupplierForm(id)
   document.getElementById("supplier_form").reset();
 
   //splits the id
-  var result = id.split(" ");
+  var result = id.split("&");
   document.getElementById("supplier_saveBtn").value=result[0];
   document.forms["supplier_form"]["supplier_name"].value=result[1];
   document.forms["supplier_form"]["supplier_phone"].value=result[2];
@@ -944,8 +950,8 @@ function deleteSupplier(id)
     {
       if (data.response=="delete_successful") 
       {
-        displayMessage(" Supplier successfully Deleted.","delete_message_area");
-        $('#supplier_delete_modal').modal('hide');
+        displayMessage(" Supplier successfully Deleted.","delete_message_area",displaySuppliers);
+        $('#supplier_delete_modal').modal('hide'); 
       }
     },
     error: function (request, status, error)
@@ -958,7 +964,29 @@ function deleteSupplier(id)
 //********************************************************************************************************
 //                                          CUSTOMERS
 //********************************************************************************************************
-//adds a supplier
+//searches suppliers and displays them 
+function searchCustomer(name)
+{
+  var data = {name:name, action:"search_customer"};
+  var serverUrl='/capstone/controller/customerController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructCustomersTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
 function postCustomer(name,phone,email,address,id)
 {
   if (id=="")
@@ -980,9 +1008,14 @@ function postCustomer(name,phone,email,address,id)
       timeout: 3000,
       success: function(data)
       {
-         if (data.response=="success") 
+         if (data.response=="add_successful") 
          {
-          displayCustomers();
+           document.getElementById("customer_form").reset();
+           displayMessage(" Customer is successfully added.","add_message_area",displayCustomers);       
+         }
+         else if (data.response=="update_successful")
+         {
+          displayMessage(" Chnanges are successfully saved.","add_message_area",displayCustomers);
          }
       },
       error: function (request, status, error)
@@ -992,10 +1025,13 @@ function postCustomer(name,phone,email,address,id)
     });
 }
 
-//function tha displays suppliers
-function displayCustomers()
+
+function displayCustomers(id)
 {
-  var data = {action:'display_customers'};
+  var current_page = id// Page number is the id of the 'a' element
+  var num_items=6;
+
+  var data = {current_page:current_page, num_items:num_items, action:'display_customers'};
   var serverUrl='/capstone/controller/customerController.php';
  
   $.ajax({ // jQuery Ajax
@@ -1006,45 +1042,8 @@ function displayCustomers()
     timeout: 3000,
     success: function(data)
     {
-      var customer_list="";
-      var count = 0;
-
-      //deletes all table rows except the first one
-      $("#customer_list").find("tr:gt(0)").remove();
-
-      $.each(data, function(key,value){
-        count++;
-        customer_list+="<tr>";
-        customer_list+="<td>"+count+"</td>";
-        customer_list+="<td>"+value.name+"</td>";
-        customer_list+="<td>"+value.phone+"</td>";
-        customer_list+="<td>"+value.email+"</td>";
-        customer_list+="<td>"+value.address+"</td>";
-        customer_list+="<td><div class=\"btn-group\">"+
-                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
-                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
-                      "<span class=\"caret\"></span>"+
-                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
-                    "</button>"+
-                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
-                      "<li>"+
-                        "<a href=\"#\" onclick=\"fillEditCustomerForm(this.id); id=\""+value.id+" "+value.name+" "+value.phone+" "+value.email+" "+value.address+"\">"+
-                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
-                          "Edit"+
-                        "</a>"+
-                      "</li>"+
-                      "<li>"+
-                        "<a href=\"#\" onclick=\"fillDeleteCustomerModal(this.id); id=\""+value.id+"\">"+
-                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
-                         " Delete"+
-                        "</a>"+
-                      "</li>"+
-                    "</ul>"+
-                  "</div>"+
-                  "</td>";
-        customer_list+="</tr>";
-      });
-      $("#customer_list").append(customer_list);
+      constructCustomersTable(data);
+      constructPagination(data,current_page);
     },
     error: function (request, status, error)
     {
@@ -1053,29 +1052,124 @@ function displayCustomers()
   });
 }
 
+function constructCustomersTable(data)
+{
+  var customer_list="";
+  var count = 0;
+  //deletes all table rows except the first one
+  $("#customer_list").find("tr:gt(0)").remove();
+  var flag = false;
+  $.each(data, function(key,value){
+    if (flag)
+    {
+      count++;
+      customer_list+="<tr>"+
+      "<td>"+count+"</td>"+
+      "<td>"+value.name+"</td>"+
+      "<td>"+value.phone+"</td>"+
+      "<td>"+value.email+"</td>"+
+      "<td>"+value.address+"</td>"+
+      "<td><div class=\"btn-group\">"+
+                      "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                      "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                        "<span class=\"caret\"></span>"+
+                        "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                      "</button>"+
+                      "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                        "<li>"+
+                          "<a href=\"#\" onclick=\"fillEditCustomerForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.phone+"&"+value.email+"&"+value.address+"\">"+
+                            "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                            "Edit"+
+                          "</a>"+
+                        "</li>"+
+                        "<li>"+
+                          "<a href=\"#\" onclick=\"fillDeleteCustomerModal(this.id);\" id=\""+value.id+"\">"+
+                            "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                           " Delete"+
+                          "</a>"+
+                        "</li>"+
+                      "</ul>"+
+                    "</div>"+
+                    "</td>"+
+                   "</tr>";
+  }
+  else
+  {
+    flag=true;
+  }
+});
+  $("#customer_list").append(customer_list);
+}
+
+
 function fillEditCustomerForm(id)
 {
-  //splits the id
-  var result = id.split(" ");
+  //rests the supplier form
+  document.getElementById("customer_form").reset();
 
+  //splits the id
+  var result = id.split("&");
   document.getElementById("customer_saveBtn").value=result[0];
   document.forms["customer_form"]["customer_name"].value=result[1];
   document.forms["customer_form"]["customer_phone"].value=result[2];
   document.forms["customer_form"]["customer_email"].value=result[3];
   document.forms["customer_form"]["customer_address"].value=result[4];
-  document.getElementById("customer_header").innerHTML="Update Customer";
+  document.getElementById("customer_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Customer";
+  document.getElementById("customer_saveBtn").innerHTML="Save Changes";
 
+  //triger the modal
+  $('#customer_modal').modal('show');
+}
+
+function fillDeleteCustomerModal(id)
+{
+   document.getElementById("delete_customer_btn").value=id;
+  //triger the modal
+  $('#customer_delete_modal').modal('show');
+}
+
+
+//resets and triggers the supplier form 
+function openCustomerForm()
+{
+  //rests the supplier form
+  document.getElementById("customer_form").reset();
+
+  //resets the supplier form save button
+  document.getElementById("customer_saveBtn").value="";
+  
+  document.getElementById("customer_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Customer";
+  document.getElementById("customer_saveBtn").innerHTML="Add Customer";
   //triger the modal
   $('#customer_modal').modal('show'); 
 }
 
-/*function fillDeleteSupplierModal(id)
+function deleteCustomer(id)
 {
-  document.getElementById("delete_customer_btn").value=id;
+  var data = {id:id, action:'delete_customer'};
+  var serverUrl='/capstone/controller/customerController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Customer successfully Deleted.","delete_message_area",displayCustomers);
+        $('#customer_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
 
-  //triger the modal
-  $('#customer_delete_modal').modal('show'); 
-}*/
 
 
 //**********************************************************************************************************
