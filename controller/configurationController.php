@@ -66,7 +66,7 @@ if ($requestMethod=="GET")
             $numPage = $startAndNumPage[1];
            
             //sets the sql
-            $sql = "SELECT * FROM products ORDER BY id DESC LIMIT $start,$numItemsPerPage;";
+            $sql = "SELECT products.id as id, products.name as name, category, order_point, warning_point, category.name as categoryName FROM products,category WHERE category=category.id ORDER BY products.id DESC LIMIT $start,$numItemsPerPage;";
             deliverGetResponse($sql,$numPage);
         }
         elseif ($action=="search_product")
@@ -74,7 +74,7 @@ if ($requestMethod=="GET")
              //gets the name
             $name= $_GET['name'];
             //sets the sql
-            $sql = "SELECT * FROM products  WHERE name LIKE '%$name%';";
+            $sql = "SELECT products.id as id, products.name as name, category, order_point, warning_point, category.name as categoryName FROM products,category WHERE category=category.id AND products.name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
 
@@ -200,7 +200,23 @@ elseif ($requestMethod=="POST")
         }
 
         /////////////////////////////////////////
-        //              INVENTORY
+        //              STORAGE
+        ////////////////////////////////////////
+
+        /////////////////////////////////////////
+        //              PROCESSOR
+        ////////////////////////////////////////
+
+        /////////////////////////////////////////
+        //              SOURCE
+        ////////////////////////////////////////
+
+        /////////////////////////////////////////
+        //              UNIT OF MEASUREMENT
+        ////////////////////////////////////////
+
+        /////////////////////////////////////////
+        //              PACKAGE TYPE
         ////////////////////////////////////////
     }
 }

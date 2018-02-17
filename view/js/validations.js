@@ -1302,7 +1302,7 @@ function constructProductTable(data)
           product_list+="<tr>"+
                   "<td>"+count+"</td>"+
                   "<td>"+value.name+"</td>"+
-                  "<td>"+value.category+"</td>"+
+                  "<td>"+value.categoryName+"</td>"+
                   "<td>"+value.order_point+"</td>"+
                   "<td>"+value.warning_point+"</td>"+
                   "<td>"+
