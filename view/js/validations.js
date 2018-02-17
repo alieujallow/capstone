@@ -12,6 +12,7 @@ $('document').ready(function()
       displayCategory(1);
       displayUsers(1);
       displayCustomers(1);
+      displayProducts(1);
     }
     else
     {
@@ -20,6 +21,7 @@ $('document').ready(function()
       searchCategory(name);
       searchUser(name);
       searchCustomer(name);
+      searchProduct(name);
     }
   });
 });
@@ -31,6 +33,7 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displayCategory(page);
   displayUsers(page);
   displayCustomers(page);
+  displayProducts(page);
   return false;
 });
 
@@ -170,6 +173,22 @@ function valiateSearchForm()
   return false;
 }
 
+function validateProductForm()
+{
+  var name = validateName("product_form","product_name","product_name_span");
+  var category = validateSelectInputField("product_form","product_category","product_category_span");
+  var orderPoint= validateOrderPoints("product_form","order_point","order_point_span");
+  var warningPoint= validateOrderPoints("product_form","warning","warning_span");
+
+  if(name==false || category==false || orderPoint==false || warningPoint==false)
+   {
+    return false;
+   }
+
+  var id = document.getElementById("product_saveBtn").value;
+  postProduct(name,category,orderPoint,warningPoint,id);
+  return false;
+}
 
 //*********************************************************************************************************
 //                                              CATEGORY
@@ -1171,10 +1190,249 @@ function deleteCustomer(id)
 }
 
 
-
 //**********************************************************************************************************
 //                                                PRODUCTS
 //***********************************************************************************************************
+
+function fillEditProductForm(id)
+{
+  
+  document.getElementById("product_form").reset();
+  var result = id.split("&");
+  document.getElementById("product_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Product";
+  document.getElementById("product_saveBtn").value=result[0];
+  document.forms["product_form"]["product_name"].value=result[1];
+  document.forms["product_form"]["product_category"].value=result[2];
+  document.forms["product_form"]["order_point"].value=result[3];
+  document.forms["product_form"]["warning"].value=result[4];
+  document.getElementById("product_saveBtn").innerHTML="Save Changes";
+
+  //triger the modal
+  $('#product_modal').modal('show'); 
+}
+
+
+function fillDeleteProductModal(id)
+{
+  document.getElementById("delete_product_btn").value=id;
+
+  //triger the modal
+  $('#product_delete_modal').modal('show'); 
+}
+
+
+function postProduct(name,category,order_point,warning_point,id)
+{
+    if (id=="")
+    {
+      var data = {name:name, category:category, order_point:order_point, warning_point:warning_point, action:"add_product"};
+    }
+    else
+    {
+      var data = {name:name, category:category, order_point:order_point, warning_point:warning_point, id:id, action:"update_product"};
+    }
+
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("product_form").reset();
+           displayMessage(" Product is successfully added.","add_message_area",displayProducts);       
+        }
+        else if (data.response=="update_successful") 
+        {
+           document.getElementById("product_form").reset();
+           displayMessage(" The Changes are successfully Saved.","add_message_area",displayProducts);   
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function displayProducts(id)
+{
+    var current_page = id// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {current_page:current_page, num_items:num_items, action:'display_products'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructProductTable(data);
+        constructPagination(data,current_page);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function constructProductTable(data)
+{
+    var product_list="";
+    var count = 0;
+    var flag = false;
+
+    //deletes all table rows except the first one
+    $("#product_list").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value){
+
+        if (flag) {
+          count++
+          product_list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+value.category+"</td>"+
+                  "<td>"+value.order_point+"</td>"+
+                  "<td>"+value.warning_point+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditProductForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.category+"&"+value.order_point+"&"+value.warning_point+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteProductModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+            }
+            else
+            {
+              flag = true;
+            }
+         });
+
+         $("#product_list").append(product_list);
+}
+
+function openProductForm()
+{
+  getCategory();
+
+  document.getElementById("product_form").reset();
+  document.getElementById("product_saveBtn").value="";
+  document.getElementById("product_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Product";
+  document.getElementById("product_saveBtn").innerHTML="Add Product";
+  //triger the modal
+  $('#product_modal').modal('show'); 
+}
+
+function searchProduct(name)
+{
+  var data = {name:name, action:"search_product"};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructProductTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
+//deletes a supplier
+function deleteProduct(id)
+{
+  var data = {id:id, action:'delete_product'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Product successfully Deleted.","delete_message_area",displayProducts);
+        $('#product_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//**********************************************************************************************************
+//                                                INVENTORY
+//***********************************************************************************************************
+
+
 
 //displays users
 function displayProductSelectOptions()
@@ -1266,6 +1524,54 @@ function getStatus()
 }
 
 
+function getCategory()
+{
+  var data = {action:'get_category'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+     constructCategoryOptions(data);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+
+    }
+  });
+}
+
+
+
+
+
+
+function constructCategoryOptions(data)
+{
+  var roleList="<option value=\"\" id=\"first_option\">Select...</option>";
+  var flag = false;
+  $.each(data, function(key,value){
+    if (flag)
+    {
+      roleList+="<option value=\""+value.id+"\">"+value.name+"</option>";
+    }
+   else
+   {
+     flag=true;
+   }
+  });
+  
+   document.getElementById("product_category").innerHTML=roleList;
+}
+
+
+
 //construct the role options
 function constructStatusOptions(data)
 {
@@ -1329,6 +1635,35 @@ function printResponse(field_id,span_id,value)
 
 //validates quantity
 function validateQuantity(form_name,field_name,span_name)
+{
+  var quantity = document.forms[form_name][field_name];
+  var span = document.getElementById(span_name);
+
+  if (quantity.value=="") 
+  {
+    span.innerHTML = "*required";
+    quantity.style.border= "1px solid red";
+    return false; 
+  }
+  else
+  {
+    //checks if the quantity is a number
+    if (!isNaN(quantity.value))
+    {
+        span.innerHTML = "";
+        quantity.style.border= "";
+        return quantity.value;
+    }
+    else
+    {
+      span.innerHTML = "*invalid quantity";
+      quantity.style.border= "1px solid red";
+      return false; 
+    }
+  }
+}
+
+function validateOrderPoints(form_name,field_name,span_name)
 {
   var quantity = document.forms[form_name][field_name];
   var span = document.getElementById(span_name);

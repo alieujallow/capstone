@@ -5,13 +5,6 @@ require('database/DatabaseConnection.php');
 
 class Configuration extends DatabaseConnection
 {
-	
-
-
-
-
-
-	
 	function updateItem($sql)
 	{
 		$result = $this->query($sql);
@@ -37,7 +30,6 @@ class Configuration extends DatabaseConnection
 		}
 	}
 
-	//gets the total number of suppliers
 	function getTotalNumItems($sql)
 	{
 		$result = $this->query($sql);
