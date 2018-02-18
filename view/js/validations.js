@@ -13,6 +13,7 @@ $('document').ready(function()
       displayUsers(1);
       displayCustomers(1);
       displayProducts(1);
+      displaySource(1);
     }
     else
     {
@@ -22,6 +23,7 @@ $('document').ready(function()
       searchUser(name);
       searchCustomer(name);
       searchProduct(name);
+      searchSource(name);
     }
   });
 });
@@ -34,6 +36,7 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displayUsers(page);
   displayCustomers(page);
   displayProducts(page);
+  displaySource(page);
   return false;
 });
 
@@ -190,6 +193,17 @@ function validateProductForm()
   return false;
 }
 
+function validateSourceForm()
+{
+  var name = validateName("source_form","source_name","source_name_span");
+  if(name==false)
+   {
+    return false;
+   }
+  var id = document.getElementById("source_saveBtn").value;
+  postSource(name,id);
+  return false;
+}
 //*********************************************************************************************************
 //                                              CATEGORY
 //*********************************************************************************************************
@@ -1400,40 +1414,215 @@ function deleteProduct(id)
   });
 }
 
+//**********************************************************************************************************
+//                                                SOURCE
+//***********************************************************************************************************
+//fill the edit category form
+function fillEditSourceForm(id)
+{
+  //rests the supplier form
+  document.getElementById("source_form").reset();
+  //splits the id
+  var result = id.split("&");
+  document.getElementById("source_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Source";
+  document.getElementById("source_saveBtn").value=result[0];
+  document.forms["source_form"]["source_name"].value=result[1];
+  document.getElementById("source_saveBtn").innerHTML="Save Changes";
+
+  //triger the modal
+  $('#source_modal').modal('show'); 
+}
+
+//it fills the delecategory form
+function fillDeleteSourceModal(id)
+{
+  document.getElementById("delete_source_btn").value=id;
+
+  //triger the modal
+  $('#source_delete_modal').modal('show'); 
+}
 
 
+function postSource(name,id)
+{
+    if (id=="")
+    {
+      var data = {name:name, action:"add_source"};
+    }
+    else
+    {
+      var data = {name:name, id:id, action:"update_source"};
+    }
 
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("source_form").reset();
+           displayMessage(" Source is successfully added.","add_message_area",displaySource);       
+        }
+        else if (data.response=="update_successful") 
+        {
+           //document.getElementById("Source_form").reset();
+           displayMessage(" The Changes are successfully Saved.","add_message_area",displaySource);   
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
 
+function displaySource(id)
+{
+    var current_page = id// Page number is the id of the 'a' element
+    var num_items=6;
 
+    var data = {current_page:current_page, num_items:num_items, action:'display_sources'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructSourceTable(data);
+        constructPagination(data,current_page);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
 
+//constructs the category table
+function constructSourceTable(data)
+{
+    var list="";
+    var count = 0;
+    var flag = false;
 
+    //deletes all table rows except the first one
+    $("#source_list").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value){
 
+        if (flag) {
+          count++
+          list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditSourceForm(this.id);\" id=\""+value.id+"&"+value.name+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteSourceModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+            }
+            else
+            {
+              flag = true;
+            }
+         });
 
+         $("#source_list").append(list);
+}
 
+//resets and triggers the supplier form 
+function openSourceForm()
+{
+  document.getElementById("source_form").reset();
+  document.getElementById("source_saveBtn").value="";
+  document.getElementById("source_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Source";
+  document.getElementById("source_saveBtn").innerHTML="Add Source";
 
+  //triger the modal
+  $('#source_modal').modal('show'); 
+}
 
+function searchSource(name)
+{
+  var data = {name:name, action:"search_source"};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructSourceTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//deletes a supplier
+function deleteSource(id)
+{
+  var data = {id:id, action:'delete_source'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Source successfully Deleted.","delete_message_area",displaySource);
+        $('#source_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
 
 //**********************************************************************************************************
 //                                                INVENTORY
 //***********************************************************************************************************
-
-
-
 //displays users
 function displayProductSelectOptions()
 {
