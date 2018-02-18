@@ -95,34 +95,30 @@
         <div class="col-md-12">
                  <!-- general form elements -->
                     <div class="box box-primary">
-                      <div class="box-header with-border">
-                        <h3 class="box-title">Add Product</h3>
+                      <div class="box-header with-border" style="color:#4F8A10;background-color:#DFF2BF;display:none;" id="add_message_area">
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
-                      <form role="form" id="add_product_form" name="add_product_form" onsubmit="return validateAddProductForm();">
+                      <form role="form" id="stock_form" name="stock_form" onsubmit="return validateStockForm();">
                         <div class="box-body">
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Select Product</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
-                                  <option>Groundnut</option>
-                                  <option>Cassava</option>
-                                  <option>Yam</option>
+                                <select class="form-control" style="width: 100%;" id="products" name="products">
                                 </select>
-                                <span id="source_span" style="color:red;"></span>
+                                <span id="products_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
-                                <label>Quantity(Kg)</label>
+                                <label>Quantity</label>
                                 <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity" name="quantity">
                                 <span id="quantity_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Supplier</label>
-                                <select class="form-control select2" style="width: 100%;" id="supplier" name="supplier">
+                                <select class="form-control select2" style="width: 100%;" id="suppliers" name="suppliers">
                                 </select>
-                                <span id="supplier_span" style="color:red;"></span>
+                                <span id="suppliers_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Order date</label>
@@ -138,20 +134,26 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Order Number</label>
-                                <input type="text" class="form-control" id="code" placeholder="Enter Code" id="batch_number" name="batch_number">
-                                <span id="batch_number_span" style="color:red;"></span>
+                                <input type="text" class="form-control" id="code" placeholder="Enter Code" id="order_number" name="order_number">
+                                <span id="order_number_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Storage Location</label>
-                                <select class="form-control select2" style="width: 100%;" id="storage" name="storage">
+                                <select class="form-control select2" style="width: 100%;" id="storages" name="storages">
                                 </select>
-                                <span id="storage_span" style="color:red;"></span>
+                                <span id="storages_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Unit of Measurement</label>
-                                <select class="form-control select2" style="width: 100%;" id="supplier" name="supplier">
+                                <select class="form-control select2" style="width: 100%;" id="measurements" name="measurements">
                                 </select>
-                                <span id="supplier_span" style="color:red;"></span>
+                                <span id="measurements_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Source</label>
+                                <select class="form-control select2" style="width: 100%;" id="sources" name="sources">
+                                </select>
+                                <span id="sources_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Description</label>
@@ -163,8 +165,8 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
-                          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary pull-right">Save changes</button>
+                          <button type="button" class="btn btn-danger pull-left">Cancel</button>
+                          <button type="submit" class="btn btn-primary pull-right" id="stock_save_btn" value="">Save changes</button>
                         </div>
                       </form>
                     </div>
@@ -193,7 +195,7 @@
 
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
+<script src="../js/validations.js"></script>
 <script src="../js/custom.js"></script>
-
 </body>
 </html>

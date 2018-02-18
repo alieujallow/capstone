@@ -1,6 +1,7 @@
 //we have to do this when the page is loaded
 $('document').ready(function()
 {
+  displayReceiveStockSelectOptions();
   $("#pagination a").trigger('click'); // When page is loaded we trigger a click
 
   //implements the live search here
@@ -58,23 +59,26 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
 //*****************************************************************************************************
 
 //validate add product form
-function validateAddProductForm()
+function validateStockForm()
 {
-  var supplier = validateSelectInputField("add_product_form","supplier","supplier_span");
-  var source= validateSelectInputField("add_product_form","source","source_span");
-  var category = validateSelectInputField("add_product_form","category","category_span");
-  var storage = validateSelectInputField("add_product_form","storage","storage_span");
-  var inventoryDate = validateDate("add_product_form","inventory_date","inventory_date_span");
-  var orderDate = validateDate("add_product_form","order_date","order_date_span");
-  var quantity = validateQuantity("add_product_form","quantity","quantity_span");
-  var name = validateName("add_product_form","name","name_span");
+  var product = validateSelectInputField("stock_form","products","products_span");
+  var quantity = validateQuantity("stock_form","quantity","quantity_span");
+  var supplier = validateSelectInputField("stock_form","suppliers","suppliers_span");
+  var orderDate = validateDate("stock_form","order_date","order_date_span");
+  var inventoryDate = validateDate("stock_form","inventory_date","inventory_date_span");
+  var orderNumber = validateQuantity("stock_form","order_number","order_number_span");
+  var storage = validateSelectInputField("stock_form","storages","storages_span");
+  var measurement = validateSelectInputField("stock_form","measurements","measurements_span");
+  var source= validateSelectInputField("stock_form","sources","sources_span");
+  var description=validateDescription("stock_form","description","description_span");
 
-  if (supplier==false || source==false || category==false|| storage==false || inventoryDate==false 
-    || orderDate==false || quantity==false || name==false)
+  if (product==false || quantity==false || supplier==false|| orderDate==false || inventoryDate==false 
+    || orderNumber==false || storage==false || measurement==false || source==false || description==false)
   {
     return false;
   }
-  return true;
+  addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,storage,measurement,source,description);
+  return false;
 }
 
 
@@ -873,7 +877,10 @@ function displayMessage(message,dispayAreaId,callBackFunction)
   var displayArea = document.getElementById(dispayAreaId);
   displayArea.innerHTML="<i class=\"glyphicon glyphicon-ok\"></i>"+message+"<span style=\"float:right;\">x</span>";
   displayArea.style.display ="block";
-  callBackFunction(1);
+  if (callBackFunction!="")
+  {
+     callBackFunction(1);
+  }
   $("#"+dispayAreaId).fadeOut(6000);     
 }
 
@@ -2509,15 +2516,58 @@ function deletePackage(id)
     }
   });
 }
+//**********************************************************************************************************
+//                                                STOCK
+//***********************************************************************************************************
+
+function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,storage,measurement,source,description)
+{
+    
+    var data = {
+      product:product, 
+      quantity:quantity,
+      supplier:supplier,
+      orderDate:orderDate, 
+      inventoryDate:inventoryDate,
+      orderNumber:orderNumber,
+      storage:storage,
+      measurement:measurement,
+      source:source,
+      description:description,
+      action:"add_stock"
+    };
+    var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("stock_form").reset();
+           displayMessage(" Stock is successfully added.","add_message_area","");       
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+
 
 //**********************************************************************************************************
 //                                                INVENTORY
 //***********************************************************************************************************
-//displays users
-function displayProductSelectOptions()
+function displayReceiveStockSelectOptions()
 {
   var data = {action:'options'};
-  var serverUrl='/capstone/controller/productController.php';
+  var serverUrl='/capstone/controller/selectOptionsController.php';
  
   $.ajax({ // jQuery Ajax
     type: 'GET',
@@ -2533,19 +2583,23 @@ function displayProductSelectOptions()
 
         if (key=="suppliers") 
         {
-           buildOptions(value,"supplier");
+           buildOptions(value,"suppliers");
         }
-        else if(key=="category")
+        else if(key=="sources")
         {
-          buildOptions(value,"category");
+           buildOptions(value,"sources");
         }
-        else if(key=="source")
+        else if(key=="storages")
         {
-           buildOptions(value,"source");
+           buildOptions(value,"storages");
         }
-        else if(key=="storage")
+        else if(key=="products")
         {
-           buildOptions(value,"storage");
+           buildOptions(value,"products");
+        }
+        else if(key=="measurements")
+        {
+           buildOptions(value,"measurements");
         }
       });
     },
@@ -2555,6 +2609,7 @@ function displayProductSelectOptions()
     }
   });
 }
+
 //displays roles
 function getRoles()
 {
@@ -2751,6 +2806,25 @@ function printResponse(field_id,span_id,value)
 //				                            INDIVIDUAL FORM FIELD VALIDATIONS
 //**************************************************************************************************************
 
+//fucntion that validates the description
+function validateDescription(form_name,field_name,span_name)
+{
+  var description = document.forms[form_name][field_name];
+  var span = document.getElementById(span_name);
+
+  if (description.value=="") 
+  {
+      span.innerHTML = "";
+      description.style.border= "";
+      return description.value; 
+    }
+    else
+    {
+      span.innerHTML = "";
+      description.style.border= "";
+      return description.value; 
+    }
+}
 //validates quantity
 function validateQuantity(form_name,field_name,span_name)
 {
