@@ -16,6 +16,7 @@ $('document').ready(function()
       displaySource(1);
       displayProcessor(1);
       displayStorage(1);
+      displayMeasurement(1);
     }
     else
     {
@@ -28,6 +29,7 @@ $('document').ready(function()
       searchSource(name);
       searchProcessor(name);
       searchStorage(name);
+      searchMeasurement(name);
     }
   });
 });
@@ -43,6 +45,7 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displaySource(page);
   displayProcessor(page);
   displayStorage(page);
+  displayMeasurement(page);
   return false;
 });
 
@@ -236,6 +239,20 @@ function validateStorageForm()
   }
   var id = document.getElementById("storage_saveBtn").value;
   postStorage(name,phone,address,id);
+  return false;
+}
+
+function validateMeasurementForm()
+{
+  var name = validateName("measurement_form","measurement_name","measurement_name_span");
+  var symbol= validateName("measurement_form","measurement_symbol","measurement_symbol_span");
+
+  if(name==false || symbol==false)
+  {
+    return false;
+  }
+  var id = document.getElementById("measurement_saveBtn").value;
+  postMeasurement(name,symbol,id);
   return false;
 }
 
@@ -2067,6 +2084,212 @@ function deleteStorage(id)
     }
   });
 }
+
+//**********************************************************************************************************
+//                                      MEASUREMENT UNIT
+//***********************************************************************************************************
+  
+function fillEditMeasurementForm(id)
+{
+  document.getElementById("measurement_form").reset();
+  var result = id.split("&");
+  document.getElementById("measurement_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Measurement";
+  document.getElementById("measurement_saveBtn").value=result[0];
+  document.forms["measurement_form"]["measurement_name"].value=result[1];
+  document.forms["measurement_form"]["measurement_symbol"].value=result[2];
+  document.getElementById("measurement_saveBtn").innerHTML="Save Changes";
+
+  //triger the modal
+  $('#measurement_modal').modal('show'); 
+}
+
+
+function fillDeleteMeasurementModal(id)
+{
+  document.getElementById("delete_measurement_btn").value=id;
+  //triger the modal
+  $('#measurement_delete_modal').modal('show'); 
+}
+
+
+function postMeasurement(name,symbol,id)
+{
+    if (id=="")
+    {
+      var data = {name:name, symbol:symbol, action:"add_measurement"};
+    }
+    else
+    {
+      var data = {name:name, symbol:symbol, id:id, action:"update_measurement"};
+    }
+
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("measurement_form").reset();
+           displayMessage(" Measurement is successfully added.","add_message_area",displayMeasurement);       
+        }
+        else if (data.response=="update_successful") 
+        {
+           //document.getElementById("measurement_form").reset();
+           displayMessage(" The Changes are successfully Saved.","add_message_area",displayMeasurement);   
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function displayMeasurement(id)
+{
+    var current_page = id// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {current_page:current_page, num_items:num_items, action:'display_measurements'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructMeasurementTable(data);
+        constructPagination(data,current_page);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function constructMeasurementTable(data)
+{
+    var list="";
+    var count = 0;
+    var flag = false;
+
+    //deletes all table rows except the first one
+    $("#measurement_list").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value){
+
+        if (flag) {
+          count++
+          list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+value.symbol+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditMeasurementForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.symbol+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteMeasurementModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+            }
+            else
+            {
+              flag = true;
+            }
+         });
+
+         $("#measurement_list").append(list);
+}
+
+function openMeasurementForm()
+{
+  document.getElementById("measurement_form").reset();
+  document.getElementById("measurement_saveBtn").value="";
+  document.getElementById("measurement_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Measurement";
+  document.getElementById("measurement_saveBtn").innerHTML="Add Measurement";
+  //triger the modal
+  $('#measurement_modal').modal('show'); 
+}
+
+function searchMeasurement(name)
+{
+  var data = {name:name, action:"search_measurement"};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructMeasurementTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
+function deleteMeasurement(id)
+{
+  var data = {id:id, action:'delete_measurement'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Measurement successfully Deleted.","delete_message_area",displayMeasurement);
+        $('#measurement_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
+//**********************************************************************************************************
+//                                       PACKAGE TYPE
+//***********************************************************************************************************
+
+
 //**********************************************************************************************************
 //                                                INVENTORY
 //***********************************************************************************************************
