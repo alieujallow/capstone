@@ -91,7 +91,7 @@ if ($requestMethod=="GET")
             $numPage = $startAndNumPage[1];
            
             //sets the sql
-            $sql = "SELECT id,name,phone FROM storage ORDER BY id DESC LIMIT $start,$numItemsPerPage;";
+            $sql = "SELECT id,name,phone,address FROM storage ORDER BY id DESC LIMIT $start,$numItemsPerPage;";
             deliverGetResponse($sql,$numPage);
         }
         elseif ($action=="search_storage")
@@ -99,7 +99,7 @@ if ($requestMethod=="GET")
              //gets the name
             $name= $_GET['name'];
             //sets the sql
-            $sql = "SELECT id,name,phone FROM storage WHERE name LIKE '%$name%';";
+            $sql = "SELECT id,name,phone,address FROM storage WHERE name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
 
@@ -379,9 +379,10 @@ elseif ($requestMethod=="POST")
             //gets the form items
             $name = $_POST['name'];
             $phone = $_POST['phone'];
+            $address = $_POST['address'];
            
             //sets the sql
-            $sql="INSERT INTO storage(name,phone) VALUES('$name','$phone');";
+            $sql="INSERT INTO storage(name,phone,address) VALUES('$name','$phone','$address');";
             deliverPostResponse($sql,"add_successful","add_failed");
         } 
         elseif ($action=="update_storage")
@@ -389,10 +390,11 @@ elseif ($requestMethod=="POST")
             //gets the form data
             $name = $_POST['name'];
             $phone = $_POST['phone'];
+            $address = $_POST['address'];
             $id = $_POST['id'];
 
             //sets the sql
-            $sql="UPDATE storage SET name='$name', phone='$phone' WHERE id='$id';";
+            $sql="UPDATE storage SET name='$name', phone='$phone', address='$address' WHERE id='$id';";
             deliverPostResponse($sql,"update_successful","update_failed");
         }
         elseif ($action=="delete_storage") 

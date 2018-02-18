@@ -14,6 +14,8 @@ $('document').ready(function()
       displayCustomers(1);
       displayProducts(1);
       displaySource(1);
+      displayProcessor(1);
+      displayStorage(1);
     }
     else
     {
@@ -24,6 +26,8 @@ $('document').ready(function()
       searchCustomer(name);
       searchProduct(name);
       searchSource(name);
+      searchProcessor(name);
+      searchStorage(name);
     }
   });
 });
@@ -37,6 +41,8 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displayCustomers(page);
   displayProducts(page);
   displaySource(page);
+  displayProcessor(page);
+  displayStorage(page);
   return false;
 });
 
@@ -204,6 +210,35 @@ function validateSourceForm()
   postSource(name,id);
   return false;
 }
+
+function validateProcessorForm()
+{
+  var name = validateName("processor_form","processor_name","processor_name_span");
+  var phone= validatePhone("processor_form","processor_phone","processor_phone_span");
+  var address = validateAddress("processor_form","processor_address","processor_address_span");
+  if(name==false || phone==false || address==false)
+  {
+    return false;
+  }
+  var id = document.getElementById("processor_saveBtn").value;
+  postProcessor(name,phone,address,id);
+  return false;
+}
+
+function validateStorageForm()
+{
+  var name = validateName("storage_form","storage_name","storage_name_span");
+  var phone= validatePhone("storage_form","storage_phone","storage_phone_span");
+  var address = validateAddress("storage_form","storage_address","storage_address_span");
+  if(name==false || phone==false || address==false)
+  {
+    return false;
+  }
+  var id = document.getElementById("storage_saveBtn").value;
+  postStorage(name,phone,address,id);
+  return false;
+}
+
 //*********************************************************************************************************
 //                                              CATEGORY
 //*********************************************************************************************************
@@ -1623,11 +1658,415 @@ function deleteSource(id)
 //**********************************************************************************************************
 //                                                PROCESSOR
 //***********************************************************************************************************
+  
+function fillEditProcessorForm(id)
+{
+  
+  document.getElementById("processor_form").reset();
+  var result = id.split("&");
+  document.getElementById("processor_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Processor";
+  document.getElementById("processor_saveBtn").value=result[0];
+  document.forms["processor_form"]["processor_name"].value=result[1];
+  document.forms["processor_form"]["processor_phone"].value=result[2];
+  document.forms["processor_form"]["processor_address"].value=result[3];
+  document.getElementById("processor_saveBtn").innerHTML="Save Changes";
+
+  //triger the modal
+  $('#processor_modal').modal('show'); 
+}
+
+
+function fillDeleteProcessorModal(id)
+{
+  document.getElementById("delete_processor_btn").value=id;
+
+  //triger the modal
+  $('#processor_delete_modal').modal('show'); 
+}
+
+
+function postProcessor(name,phone,address,id)
+{
+    if (id=="")
+    {
+      var data = {name:name, phone:phone, address:address, action:"add_processor"};
+    }
+    else
+    {
+      var data = {name:name, phone:phone, address:address, id:id, action:"update_processor"};
+    }
+
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("processor_form").reset();
+           displayMessage(" Processor is successfully added.","add_message_area",displayProcessor);       
+        }
+        else if (data.response=="update_successful") 
+        {
+           //document.getElementById("processor_form").reset();
+           displayMessage(" The Changes are successfully Saved.","add_message_area",displayProcessor);   
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function displayProcessor(id)
+{
+    var current_page = id// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {current_page:current_page, num_items:num_items, action:'display_processors'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructProcessorTable(data);
+        constructPagination(data,current_page);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function constructProcessorTable(data)
+{
+    var list="";
+    var count = 0;
+    var flag = false;
+
+    //deletes all table rows except the first one
+    $("#processor_list").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value){
+
+        if (flag) {
+          count++
+          list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+value.phone+"</td>"+
+                  "<td>"+value.address+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditProcessorForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.phone+"&"+value.address+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteProcessorModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+            }
+            else
+            {
+              flag = true;
+            }
+         });
+
+         $("#processor_list").append(list);
+}
+
+function openProcessorForm()
+{
+  document.getElementById("processor_form").reset();
+  document.getElementById("processor_saveBtn").value="";
+  document.getElementById("processor_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Processor";
+  document.getElementById("processor_saveBtn").innerHTML="Add Processor";
+
+  //triger the modal
+  $('#processor_modal').modal('show'); 
+}
+
+function searchProcessor(name)
+{
+  var data = {name:name, action:"search_processor"};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructProcessorTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
+//deletes a supplier
+function deleteProcessor(id)
+{
+  var data = {id:id, action:'delete_processor'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Processor successfully Deleted.","delete_message_area",displayProcessor);
+        $('#processor_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
+
 
 //**********************************************************************************************************
 //                                                STORAGE
 //***********************************************************************************************************
+  
+function fillEditStorageForm(id)
+{
+  document.getElementById("storage_form").reset();
+  var result = id.split("&");
+  document.getElementById("storage_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Storage";
+  document.getElementById("storage_saveBtn").value=result[0];
+  document.forms["storage_form"]["storage_name"].value=result[1];
+  document.forms["storage_form"]["storage_phone"].value=result[2];
+  document.forms["storage_form"]["storage_address"].value=result[3];
+  document.getElementById("storage_saveBtn").innerHTML="Save Changes";
 
+  //triger the modal
+  $('#storage_modal').modal('show'); 
+}
+
+
+function fillDeleteStorageModal(id)
+{
+  document.getElementById("delete_storage_btn").value=id;
+
+  //triger the modal
+  $('#storage_delete_modal').modal('show'); 
+}
+
+
+function postStorage(name,phone,address,id)
+{
+    if (id=="")
+    {
+      var data = {name:name, phone:phone, address:address, action:"add_storage"};
+    }
+    else
+    {
+      var data = {name:name, phone:phone, address:address, id:id, action:"update_storage"};
+    }
+
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("storage_form").reset();
+           displayMessage(" Storage is successfully added.","add_message_area",displayStorage);       
+        }
+        else if (data.response=="update_successful") 
+        {
+           //document.getElementById("storage_form").reset();
+           displayMessage(" The Changes are successfully Saved.","add_message_area",displayStorage);   
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function displayStorage(id)
+{
+    var current_page = id// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {current_page:current_page, num_items:num_items, action:'display_storages'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructStorageTable(data);
+        constructPagination(data,current_page);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function constructStorageTable(data)
+{
+    var list="";
+    var count = 0;
+    var flag = false;
+
+    //deletes all table rows except the first one
+    $("#storage_list").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value){
+
+        if (flag) {
+          count++
+          list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+value.phone+"</td>"+
+                  "<td>"+value.address+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditStorageForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.phone+"&"+value.address+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeleteStorageModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+            }
+            else
+            {
+              flag = true;
+            }
+         });
+
+         $("#storage_list").append(list);
+}
+
+function openStorageForm()
+{
+  document.getElementById("storage_form").reset();
+  document.getElementById("storage_saveBtn").value="";
+  document.getElementById("storage_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Storage";
+  document.getElementById("storage_saveBtn").innerHTML="Add Storage";
+
+  //triger the modal
+  $('#storage_modal').modal('show'); 
+}
+
+function searchStorage(name)
+{
+  var data = {name:name, action:"search_storage"};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructStorageTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
+function deleteStorage(id)
+{
+  var data = {id:id, action:'delete_storage'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Storage successfully Deleted.","delete_message_area",displayStorage);
+        $('#storage_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
 //**********************************************************************************************************
 //                                                INVENTORY
 //***********************************************************************************************************
