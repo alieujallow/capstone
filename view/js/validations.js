@@ -17,6 +17,7 @@ $('document').ready(function()
       displayProcessor(1);
       displayStorage(1);
       displayMeasurement(1);
+      displayPackage(1);
     }
     else
     {
@@ -30,6 +31,7 @@ $('document').ready(function()
       searchProcessor(name);
       searchStorage(name);
       searchMeasurement(name);
+      searchPackage(name);
     }
   });
 });
@@ -46,6 +48,7 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displayProcessor(page);
   displayStorage(page);
   displayMeasurement(page);
+  displayPackage(page);
   return false;
 });
 
@@ -253,6 +256,22 @@ function validateMeasurementForm()
   }
   var id = document.getElementById("measurement_saveBtn").value;
   postMeasurement(name,symbol,id);
+  return false;
+}
+
+
+function validatePackageForm()
+{
+  var name = validateName("package_form","package_name","package_name_span");
+  var measurement = validateSelectInputField("package_form","package_measurement","package_measurement_span");
+  var value= validateOrderPoints("package_form","package_value","package_value_span");
+
+  if(name==false || measurement==false || value==false)
+  {
+    return false;
+  }
+  var id = document.getElementById("package_saveBtn").value;
+  postPackage(name,measurement,value,id);
   return false;
 }
 
@@ -2289,6 +2308,207 @@ function deleteMeasurement(id)
 //                                       PACKAGE TYPE
 //***********************************************************************************************************
 
+function fillEditPackageForm(id)
+{
+  document.getElementById("package_form").reset();
+  var result = id.split("&");
+  document.getElementById("package_header").innerHTML="<i class=\"glyphicon glyphicon-edit\"></i> Update Package";
+  document.getElementById("package_saveBtn").value=result[0];
+  document.forms["package_form"]["package_name"].value=result[1];
+  document.forms["package_form"]["package_measurement"].value=result[2];
+  document.forms["package_form"]["package_value"].value=result[3];
+  document.getElementById("package_saveBtn").innerHTML="Save Changes";
+
+  //triger the modal
+  $('#package_modal').modal('show'); 
+}
+
+
+function fillDeletePackageModal(id)
+{
+  document.getElementById("delete_package_btn").value=id;
+  //triger the modal
+  $('#package_delete_modal').modal('show'); 
+}
+
+
+function postPackage(name,measurement_unit,value,id)
+{
+    if (id=="")
+    {
+      var data = {name:name, measurement_unit:measurement_unit, value:value, action:"add_package"};
+    }
+    else
+    {
+      var data = {name:name, measurement_unit:measurement_unit, value:value, id:id, action:"update_package"};
+    }
+
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="add_successful") 
+        {
+           document.getElementById("package_form").reset();
+           displayMessage(" Package is successfully added.","add_message_area",displayPackage);       
+        }
+        else if (data.response=="update_successful") 
+        {
+           //document.getElementById("package_form").reset();
+           displayMessage(" The Changes are successfully Saved.","add_message_area",displayPackage);   
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function displayPackage(id)
+{
+    var current_page = id// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {current_page:current_page, num_items:num_items, action:'display_packages'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructPackageTable(data);
+        constructPagination(data,current_page);
+
+        getmeasurement();
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function constructPackageTable(data)
+{
+    var list="";
+    var count = 0;
+    var flag = false;
+
+    //deletes all table rows except the first one
+    $("#package_list").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value){
+
+        if (flag) {
+          count++
+          list+="<tr>"+
+                  "<td>"+count+"</td>"+
+                  "<td>"+value.name+"</td>"+
+                  "<td>"+value.symbol+"</td>"+
+                  "<td>"+value.value+"</td>"+
+                  "<td>"+
+                    "<div class=\"btn-group\">"+
+                    "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                    "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                      "<span class=\"caret\"></span>"+
+                      "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                    "</button>"+
+                    "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillEditPackageForm(this.id);\" id=\""+value.id+"&"+value.name+"&"+value.measurement_unit+"&"+value.value+"\">"+
+                          "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                          "Edit"+
+                        "</a>"+
+                      "</li>"+
+                      "<li>"+
+                        "<a href=\"#\" onclick=\"fillDeletePackageModal(this.id);\" id=\""+value.id+"\">"+
+                          "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                          "Delete"+
+                        "</a>"+
+                      "</li>"+
+                    "</ul>"+
+                  "</div>"+
+                  "</td>"+
+                "</tr>";
+            }
+            else
+            {
+              flag = true;
+            }
+         });
+         $("#package_list").append(list);
+}
+
+function openPackageForm()
+{
+  getmeasurement();
+
+  document.getElementById("package_form").reset();
+  document.getElementById("package_saveBtn").value="";
+  document.getElementById("package_header").innerHTML="<i class=\"glyphicon glyphicon-plus\"></i> Add Package";
+  document.getElementById("package_saveBtn").innerHTML="Add Package";
+  //triger the modal
+  $('#package_modal').modal('show'); 
+}
+
+function searchPackage(name)
+{
+  var data = {name:name, action:"search_package"};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructPackageTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+    });
+}
+
+function deletePackage(id)
+{
+  var data = {id:id, action:'delete_package'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="delete_successful") 
+      {
+        displayMessage(" Package successfully Deleted.","delete_message_area",displayPackage);
+        $('#package_delete_modal').modal('hide');
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
+}
 
 //**********************************************************************************************************
 //                                                INVENTORY
@@ -2407,7 +2627,28 @@ function getCategory()
 }
 
 
+function getmeasurement()
+{
+  var data = {action:'get_measurement'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+     constructMeasurementOptions(data);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
 
+    }
+  });
+}
 
 
 
@@ -2450,6 +2691,24 @@ function constructStatusOptions(data)
    document.getElementById("user_status").innerHTML=roleList;
 }
 
+//construct the role options
+function constructMeasurementOptions(data)
+{
+  var list="<option value=\"\" id=\"first_option\">Select...</option>";
+  var flag = false;
+  $.each(data, function(key,value){
+    if (flag)
+    {
+      list+="<option value=\""+value.id+"\">"+value.symbol+"</option>";
+    }
+   else
+   {
+     flag=true;
+   }
+  });
+
+   document.getElementById("package_measurement").innerHTML=list;
+}
 //construct the role options
 function constructRoleOptions(data)
 {

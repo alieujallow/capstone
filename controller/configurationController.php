@@ -180,6 +180,12 @@ if ($requestMethod=="GET")
             $sql = "SELECT id,name,symbol FROM measurement WHERE name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
+        elseif ($action=="get_measurement")
+        {
+            //sets the sql
+            $sql = "SELECT * FROM measurement;";
+            deliverGetResponse($sql,0);
+        }
 
         /////////////////////////////////////////
         //         PACKAGE TYPES
@@ -195,7 +201,7 @@ if ($requestMethod=="GET")
             $numPage = $startAndNumPage[1];
            
             //sets the sql
-            $sql = "SELECT id,name,measurement_unit,value FROM package ORDER BY id DESC LIMIT $start,$numItemsPerPage;";
+            $sql = "SELECT package.id as id, package.name as name,value,symbol,measurement_unit FROM package,measurement WHERE measurement_unit=measurement.id ORDER BY id DESC LIMIT $start,$numItemsPerPage;";
             deliverGetResponse($sql,$numPage);
         }
         elseif ($action=="search_package")
@@ -203,7 +209,7 @@ if ($requestMethod=="GET")
              //gets the name
             $name= $_GET['name'];
             //sets the sql
-            $sql = "SELECT id,name,measurement_unit,value FROM package WHERE name LIKE '%$name%';";
+            $sql = "SELECT package.id as id, package.name as name,value,symbol,measurement_unit FROM package,measurement WHERE measurement_unit=measurement.id AND package.name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
 
