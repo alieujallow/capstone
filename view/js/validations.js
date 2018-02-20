@@ -2,6 +2,7 @@
 $('document').ready(function()
 {
   displayReceiveStockSelectOptions();
+  getStorageLocation();
   $("#pagination a").trigger('click'); // When page is loaded we trigger a click
 
   //implements the live search here
@@ -276,6 +277,23 @@ function validatePackageForm()
   }
   var id = document.getElementById("package_saveBtn").value;
   postPackage(name,measurement,value,id);
+  return false;
+}
+
+
+function validateAdjustStokcForm()
+{
+  var location = validateSelectInputField("adjust_stock_form","storage_location","storage_location_span");
+  var product = validateSelectInputField("adjust_stock_form","product_section","product_span");
+  var quantity= validateQuantity("adjust_stock_form","quantity","quantity_span");
+  var addDeduct= validateSelectInputField("adjust_stock_form","addDeduct","addDeduct_span");
+  var reason= validateSelectInputField("adjust_stock_form","reason","reason_span");
+
+  if(location==false ||product==false || quantity==false || addDeduct==false || reason==false)
+  {
+    return false;
+  }
+  adjustStock(location,product,quantity,addDeduct,reason);
   return false;
 }
 
@@ -617,7 +635,7 @@ function loginUser(username, password)
   });
 }
 //checks if a user is logged in or not
-/*function checkUserLogin()
+function checkUserLogin()
 {
   var data = {action:'checklogin'};
   var serverUrl='/capstone/controller/userController.php';
@@ -648,7 +666,7 @@ function loginUser(username, password)
       alert("error : "+error);
     }
   });
-}*/
+}
 
 //logs out the user from the system
 function logoutUser()
@@ -2624,7 +2642,7 @@ function getRoles()
     timeout: 3000,
     success: function(data)
     {
-     constructRoleOptions(data);
+     constructSelectOptions(data,"user_role");
   	},
   	error: function (request, status, error)
   	{
@@ -2647,7 +2665,7 @@ function getStatus()
     timeout: 3000,
     success: function(data)
     {
-     constructStatusOptions(data);
+     constructSelectOptions(data,"user_status");
     },
     error: function (request, status, error)
     {
@@ -2657,6 +2675,27 @@ function getStatus()
   });
 }
 
+function getStorageLocation()
+{
+  var data = {action:'get_storage'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      constructSelectOptions(data,"storage_location");
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
 
 function getCategory()
 {
@@ -2671,7 +2710,7 @@ function getCategory()
     timeout: 3000,
     success: function(data)
     {
-     constructCategoryOptions(data);
+     constructSelectOptions(data,"product_category");
     },
     error: function (request, status, error)
     {
@@ -2707,44 +2746,6 @@ function getmeasurement()
 
 
 
-function constructCategoryOptions(data)
-{
-  var roleList="<option value=\"\" id=\"first_option\">Select...</option>";
-  var flag = false;
-  $.each(data, function(key,value){
-    if (flag)
-    {
-      roleList+="<option value=\""+value.id+"\">"+value.name+"</option>";
-    }
-   else
-   {
-     flag=true;
-   }
-  });
-  
-   document.getElementById("product_category").innerHTML=roleList;
-}
-
-
-
-//construct the role options
-function constructStatusOptions(data)
-{
-  var roleList="<option value=\"\" id=\"first_option\">Select...</option>";
-  var flag = false;
-  $.each(data, function(key,value){
-    if (flag)
-    {
-      roleList+="<option value=\""+value.id+"\">"+value.name+"</option>";
-    }
-   else
-   {
-     flag=true;
-   }
-  });
-
-   document.getElementById("user_status").innerHTML=roleList;
-}
 
 //construct the role options
 function constructMeasurementOptions(data)
@@ -2764,25 +2765,51 @@ function constructMeasurementOptions(data)
 
    document.getElementById("package_measurement").innerHTML=list;
 }
-//construct the role options
-function constructRoleOptions(data)
+
+function constructSelectOptions(data,displayAreaId)
 {
-  var roleList="<option value=\"\" id=\"first_option\">Select...</option>";
+  var list="<option value=\"\" id=\"first_option\">Select...</option>";
   var flag = false;
   $.each(data, function(key,value){
     if (flag)
     {
-      roleList+="<option value=\""+value.id+"\">"+value.name+"</option>";
+      list+="<option value=\""+value.id+"\">"+value.name+"</option>";
     }
    else
    {
      flag=true;
    }
   });
-
-   document.getElementById("user_role").innerHTML=roleList;
+  document.getElementById(displayAreaId).innerHTML=list;
 }
 
+
+function getProduct(value)
+{
+  //checks if the value is not empty
+  if (value!="")
+  {
+    var data = {location_id:value, action:'get_product'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+       constructSelectOptions(data,"product_section");
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+
+      }
+    });
+  }
+}
 
 //a function that buils the list of options
 function buildOptions(value,selectId)

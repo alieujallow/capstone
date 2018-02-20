@@ -77,7 +77,7 @@ elseif ($requestMethod=="POST")
             $user = new User;
 
             //sets the sql
-            $sql = "SELECT user_id, username, password, role FROM users WHERE username='$username';";
+            $sql = "SELECT id, username, password, role FROM users WHERE username='$username';";
             $result = $user->loginUser($sql);
 
             if ($result)
@@ -96,11 +96,11 @@ elseif ($requestMethod=="POST")
                         //password is correct
                         //creating sessions
                         session_start();
-                        $_SESSION['user_id'] = $row['user_id'];
+                        $_SESSION['user_id'] = $row['id'];
                         $_SESSION['username'] = $row['username'];
                         $_SESSION['role'] = $row['role'];
 
-                        echo loginResponse("success",$row['username'],$row['role'],$row['user_id'],"correct credentials");
+                        echo loginResponse("success",$row['username'],$row['role'],$row['id'],"correct credentials");
                     }
                     else
                     {

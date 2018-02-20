@@ -96,50 +96,44 @@
                  <!-- general form elements -->
                     <div class="box box-primary">
                       <div class="box-header with-border">
-                        <h3 class="box-title">Add Product</h3>
+                        <h3 class="box-title">Adjust Stock</h3>
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
-                      <form role="form" id="add_product_form" name="add_product_form" onsubmit="return validateAddProductForm();">
+                      <form role="form" id="adjust_stock_form" name="adjust_stock_form" onsubmit="return validateAdjustStokcForm();">
                         <div class="box-body">
                               <div class="form-group">
-                                <label>Select Product</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
-                                  <option>Groundnut</option>
-                                  <option>Cassava</option>
-                                  <option>Yam</option>
-                                </select>
-                                <span id="source_span" style="color:red;"></span>
-                              </div>
-                              <div class="form-group">
                                 <label>Select Location</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
-                                  <option>Tema</option>
-                                  <option>Accra</option>
-                                  <option>Yam</option>
+                                <select onchange="getProduct(this.value)" class="form-control" style="width: 100%;" id="storage_location" name="storage_location">
                                 </select>
-                                <span id="source_span" style="color:red;"></span>
+                                <span id="storage_location_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
-                                <label>Quantity(Kg)</label>
+                                <label>Select Product</label>
+                                <select class="form-control" style="width: 100%;" id="product_section" name="product_section">
+                                </select>
+                                <span id="product_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Quantity</label>
                                 <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity" name="quantity">
                                 <span id="quantity_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Add or Deduct</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
+                                <select class="form-control" style="width: 100%;" id="addDeduct" name="addDeduct">
                                   <option>add</option>
                                   <option>deduct</option>
                                 </select>
-                                <span id="source_span" style="color:red;"></span>
+                                <span id="addDeduct_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Adjustment Reason</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
+                                <select class="form-control" style="width: 100%;" id="reason" name="reason">
                                   <option>Theft</option>
                                   <option>Spillage</option>
                                 </select>
-                                <span id="source_span" style="color:red;"></span>
+                                <span id="reason_span" style="color:red;"></span>
                               </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
@@ -174,6 +168,7 @@
 
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
+<script src="../js/validations.js"></script>
 <script src="../js/custom.js"></script>
 
 </body>

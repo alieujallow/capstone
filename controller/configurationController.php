@@ -77,6 +77,14 @@ if ($requestMethod=="GET")
             $sql = "SELECT products.id as id, products.name as name, category, order_point, warning_point, category.name as categoryName FROM products,category WHERE category=category.id AND products.name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
+        elseif ($action=="get_product")
+        {
+            $location_id= $_GET['location_id'];
+
+            //sets the sql
+            $sql = "SELECT products.id as id, products.name as name FROM products WHERE id IN (SELECT product_id FROM storage_has_product WHERE storage_id='$location_id');";
+            deliverGetResponse($sql,0);
+        }
         /////////////////////////////////////////
         //              STORAGE
         ////////////////////////////////////////
@@ -102,7 +110,12 @@ if ($requestMethod=="GET")
             $sql = "SELECT id,name,phone,address FROM storage WHERE name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
-
+        elseif ($action=="get_storage")
+        {
+            //sets the sql
+            $sql = "SELECT * FROM storage;";
+            deliverGetResponse($sql,0);
+        }
         /////////////////////////////////////////
         //              PROCESSOR
         ////////////////////////////////////////
