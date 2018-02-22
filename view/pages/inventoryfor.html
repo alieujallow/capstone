@@ -29,7 +29,7 @@
   <script src="../js/jQuery/jquery.min.js"></script>
   <script src="../js/validations.js"></script>
   <script> 
-    checkUserLogin();
+    //checkUserLogin();
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -39,7 +39,7 @@
   </script> 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('products_menu');">
+<body class="hold-transition skin-blue sidebar-mini" onload="displayLocationInventory()">
 <div class="wrapper">
 
   <header class="main-header" id="header">
@@ -59,9 +59,7 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-        Inventory For Cassava
-        <small>Preview</small>
+      <h1 id="inventoryForProductHeader">
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -78,56 +76,18 @@
       <div class="col-md-12">
           <div class="box">
             <div class="box-body table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="location_inventory_list">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Location</th>
                   <th>Quantity(kg)</th>
-                  <th>Action</th>
-                </tr>
-                <tr>
-                  <td>1.</td>
-                  <td>Accra</td>
-                  <td>50</td>
-                  <td>
-                    <a href="/capstone/view/pages/transactionhistory.html" type="button" class="btn btn-success">Transaction</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2.</td>
-                  <td>Berekuso</td>
-                  <td>50</td>
-                  <td>
-                    <a href="/capstone/view/pages/transactionhistory.html" type="button" class="btn btn-success">Transaction</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3.</td>
-                  <td>Tema</td>
-                  <td>500</td>
-                  <td>
-                   <a href="/capstone/view/pages/transactionhistory.html" type="button" class="btn btn-success">Transaction</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4.</td>
-                  <td>Tamale</td>
-                  <td>70</td>
-                  <td>
-                    <a href="/capstone/view/pages/transactionhistory.html" type="button" class="btn btn-success">Transaction</a>
-                  </td>
                 </tr>
               </table>
+              <button class="btn btn-success form-control" id="transaction_history_btn" value="" onclick="openTransactionForProduct(this.value)">Transaction History</button>
             </div>
             <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&raquo;</a></li>
-              </ul>
+            <div class="box-footer clearfix" id="pagination">
+              <div><a href="#" id="1"></a></div>
             </div>
           </div>
           <!-- /.box -->
@@ -156,7 +116,6 @@
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/custom.js"></script>
-
 <script src="../js/validations.js"></script>
 </body>
 </html>

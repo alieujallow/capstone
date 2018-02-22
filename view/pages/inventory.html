@@ -29,7 +29,7 @@
   <script src="../js/jQuery/jquery.min.js"></script>
   <script src="../js/validations.js"></script>
   <script> 
-    checkUserLogin();
+    //checkUserLogin();
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -94,7 +94,7 @@
             </div>-->
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="stock_list">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Category</th>
@@ -102,74 +102,11 @@
                   <th>Quantity(kg)</th>
                   <th>Description</th>
                 </tr>
-                <tr class="test" onclick="document.location='/capstone/view/pages/inventoryfor.html'">
-                  <td>1.</td>
-                  <td>Tube</td>
-                  <td>Cassava</td>
-                  <td>20</td>
-                  <td>its a tube</td>
-                  <!--<td>
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-default">Action</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      <span class="caret"></span>
-                      <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#modal-default">
-                          <i class="glyphicon glyphicon-edit"></i>
-                          Edit
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#process_product_modal">
-                          <i class="glyphicon glyphicon-refresh"></i> 
-                          Process
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" data-toggle="modal" data-target="#delete-modal">
-                          <i class="glyphicon glyphicon-trash"></i>
-                          Delete
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  </td>-->
-                </tr>
-                <tr class="test" onclick="document.location='/capstone/view/pages/inventoryfor.html'">
-                  <td>2.</td>
-                  <td>Tube</td>
-                  <td>yam</td>
-                  <td>20</td>
-                  <td>its a tube</td>
-                </tr>
-                <tr class="test" onclick="document.location='/capstone/view/pages/inventoryfor.html'">
-                  <td>3.</td>
-                  <td>Vegetables</td>
-                  <td>tomatoes</td>
-                  <td>20</td>
-                  <td>red and fresh</td>
-                </tr>
-                <tr class="test" onclick="document.location='/capstone/view/pages/inventoryfor.html'">
-                  <td>4.</td>
-                  <td>Grains</td>
-                  <td>Groundnuts</td>
-                  <td>20</td>
-                  <td>its fresh</td>
-                </tr>
               </table>
             </div>
             <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&raquo;</a></li>
-              </ul>
+             <div class="box-footer clearfix" id="pagination">
+              <div><a href="#" id="1"></a></div>
             </div>
           </div>
           <!-- /.box -->

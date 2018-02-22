@@ -29,7 +29,7 @@
   <script src="../js/jQuery/jquery.min.js"></script>
   <script src="../js/validations.js"></script>
   <script> 
-    checkUserLogin();
+    //checkUserLogin();
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -39,7 +39,7 @@
   </script> 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('products_menu');">
+<body class="hold-transition skin-blue sidebar-mini" onload="displayTransactionHistory()">
 <div class="wrapper">
 
   <header class="main-header" id="header">
@@ -59,9 +59,7 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-        Transaction History of Cassava
-        <small>Preview</small>
+      <h1 id="transactionHistoryHeader">
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -78,7 +76,7 @@
       <div class="col-md-12">
           <div class="box">
             <div class="box-body table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="transaction_history_list">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Date</th>
@@ -92,69 +90,11 @@
                   <th>Inventory Date</th>
                   <th>Reason</th>
                 </tr>
-                <tr>
-                  <td>1.</td>
-                  <td>2018-02-08</td>
-                  <td>Stock In</td>
-                  <td>008</td>
-                  <td>Alieu</td>
-                  <td>20</td>
-                  <td>Accra</td>
-                  <td>Tema</td>
-                  <td>2018-01-08</td>
-                  <td>2018-02-09</td>
-                  <td>adding to stock</td>
-                </tr>
-                <tr>
-                  <td>2.</td>
-                  <td>2018-02-18</td>
-                  <td>Stock Out</td>
-                  <td>001</td>
-                  <td>Richard</td>
-                  <td>200</td>
-                  <td>Tema</td>
-                  <td>Tema</td>
-                  <td>2018-01-08</td>
-                  <td>2018-02-09</td>
-                  <td>To process</td>
-                </tr>
-                <tr>
-                  <td>3.</td>
-                  <td>2016-02-08</td>
-                  <td>Stock Adjustment</td>
-                  <td>008</td>
-                  <td>Joseph</td>
-                  <td>280</td>
-                  <td>Berekuso</td>
-                  <td>Tema</td>
-                  <td>2018-01-08</td>
-                  <td>2018-02-09</td>
-                  <td>Theft</td>
-                </tr>
-                <tr>
-                  <td>4.</td>
-                  <td>2018-07-08</td>
-                  <td>Stock Movement</td>
-                  <td>018</td>
-                  <td>Issic</td>
-                  <td>200</td>
-                  <td>Tema</td>
-                  <td>Tema</td>
-                  <td>2018-01-08</td>
-                  <td>2018-02-09</td>
-                  <td>Storage Full</td>
-                </tr>
               </table>
             </div>
             <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&raquo;</a></li>
-              </ul>
+            <div class="box-footer clearfix" id="pagination">
+              <div><a href="#" id="1"></a></div>
             </div>
           </div>
           <!-- /.box -->
