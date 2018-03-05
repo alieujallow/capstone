@@ -91,18 +91,49 @@ elseif ($requestMethod=="POST")
 
             //sets the sql statement
             $sql = "INSERT INTO 
-                    stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,measurement,transaction_date,description) 
-                    VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$measurement','$date','$description');";
+                    stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description) 
+                    VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description');";
 
-            deliverPostResponse($sql,"add_successful","add_failed");
-        } 
+            deliverPostResponse($sql,"add_successful","add_failed","updateStock");
+        }
+        elseif ($action=="move_stock_to_location") 
+        {
+            //get the parameters
+            $source = strip_tags($_POST['source']);
+            $product = strip_tags($_POST['product']);
+            $quantity = strip_tags($_POST['quantity']);
+            $destination = strip_tags($_POST['destination']);
+            $date= date('Y-m-d');
+            $sql=  "INSERT INTO 
+                    stock(product,quantity,supplier,source,storage,transaction_date,tag) 
+                    VALUES('$product','$quantity','16','1', '$source','$date','0'),('$product','$quantity','16','1', '$destination','$date','1');";
+            deliverPostResponse($sql,"movement_successful","movement_failed","multiInsert");
+        }
+        elseif ($action=="adjust_stock") 
+        {
+            //get the parameters
+            $location = strip_tags($_POST['location']);
+            $product = strip_tags($_POST['product']);
+            $quantity = strip_tags($_POST['quantity']);
+            $addDeduct = strip_tags($_POST['addDeduct']);
+            if ($addDeduct=="2")
+            {
+               $addDeduct =0;
+            }
+            $reason = strip_tags($_POST['reason']);
+            $date= date('Y-m-d');
+            $sql =  "INSERT INTO 
+                    stock(product,quantity,supplier,source,storage,transaction_date,description,tag) 
+                    VALUES('$product','$quantity','16','1', '$location','$date',(SELECT name FROM reason WHERE id='$reason'),'$addDeduct');";
+            deliverPostResponse($sql,"adjustment_successful","adjustment_failed","updateStock");
+        }  
     }
 }
 
-function deliverPostResponse($sql,$successMessage,$failMessage)
+function deliverPostResponse($sql,$successMessage,$failMessage,$function)
 {
     $stock = new Stock;
-    $result = $stock->updateStock($sql);
+    $result = $stock->$function($sql);
     if ($result)
     {
         $array=array();

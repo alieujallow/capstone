@@ -80,39 +80,35 @@
                 <div class="col-md-12">
                  <!-- general form elements -->
                     <div class="box box-primary">
-                      <div class="box-header with-border">
-                        <h3 class="box-title">Add Product</h3>
+                      <div class="box-header with-border" style="color:#4F8A10;background-color:#DFF2BF;display:none;" id="message_area">
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
-                      <form role="form" id="add_product_form" name="add_product_form" onsubmit="return validateAddProductForm();">
+                      <form role="form" id="move_stock_to_location_form" name="move_stock_to_location_form" onsubmit="return validateMoveStockToLocation();">
                         <div class="box-body">
                               <div class="form-group">
-                                <label>Select Product</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
-                                  <option>Groundnut</option>
-                                  <option>Cassava</option>
-                                  <option>Yam</option>
+                                <label>Select Source Location</label>
+                                <select onchange="getProduct(this.value)" class="form-control" style="width: 100%;" id="source" name="source">
                                 </select>
                                 <span id="source_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
-                                <label>Select Source Location</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
-                                  <option>Tema</option>
-                                  <option>Accra</option>
-                                  <option>Yam</option>
+                                <label>Select Product</label>
+                                <input type="hidden" id="source_id" value="">
+                                <select onchange="getQunatity(this.value)" class="form-control" style="width: 100%;" id="product_section" name="product_section">
                                 </select>
-                                <span id="source_span" style="color:red;"></span>
+                                <span id="product_span" style="color:red;"></span>
+                              </div>
+                              <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="text" class="form-control" id="quantity" placeholder="Enter Quantity" name="quantity">
+                                <span id="quantity_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Select Distination Location</label>
-                                <select class="form-control" style="width: 100%;" id="source" name="source">
-                                  <option>Tema</option>
-                                  <option>Accra</option>
-                                  <option>Yam</option>
+                                <select class="form-control" style="width: 100%;" id="destination" name="destination">
                                 </select>
-                                <span id="source_span" style="color:red;"></span>
+                                <span id="destination_span" style="color:red;"></span>
                               </div>
                         <!-- /.box-body -->
                         <div class="box-footer">

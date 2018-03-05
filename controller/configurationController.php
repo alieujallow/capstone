@@ -85,6 +85,15 @@ if ($requestMethod=="GET")
             $sql = "SELECT products.id as id, products.name as name FROM products WHERE id IN (SELECT product_id FROM storage_has_product WHERE storage_id='$location_id');";
             deliverGetResponse($sql,0);
         }
+        elseif ($action=="get_quantity")
+        {
+            $location_id= $_GET['location_id'];
+            $product_id= $_GET['product_id'];
+
+            //sets the sql
+            $sql = "SELECT SUM(quantity) as quantity FROM stock WHERE product='$product_id' AND storage ='$location_id' AND tag='1';";
+            deliverGetResponse($sql,0);
+        }
         /////////////////////////////////////////
         //              STORAGE
         ////////////////////////////////////////
@@ -308,6 +317,16 @@ if ($requestMethod=="GET")
             $name= $_GET['name'];
             //sets the sql
             $sql = "SELECT id,name FROM status WHERE name LIKE '%$name%';";
+            deliverGetResponse($sql,0);
+        }
+
+        /////////////////////////////////////////
+        //              REASON
+        ////////////////////////////////////////
+        elseif ($action=="get_reason")
+        {
+            //sets the sql
+            $sql = "SELECT * FROM reason;";
             deliverGetResponse($sql,0);
         }
 

@@ -41,5 +41,15 @@ class Stock extends DatabaseConnection
 			return $row["num"];
 		}
 	}
+
+	function multiInsert($sql)
+	{
+		$result = $this->multiQuery($sql);
+		if ($result)
+		{
+			return $result;
+		}
+		return false;
+	}
 }	
 ?>

@@ -95,8 +95,7 @@
                 <div class="col-md-12">
                  <!-- general form elements -->
                     <div class="box box-primary">
-                      <div class="box-header with-border">
-                        <h3 class="box-title">Adjust Stock</h3>
+                      <div class="box-header with-border" style="color:#4F8A10;background-color:#DFF2BF;display:none;" id="message_area">
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
@@ -110,7 +109,8 @@
                               </div>
                               <div class="form-group">
                                 <label>Select Product</label>
-                                <select class="form-control" style="width: 100%;" id="product_section" name="product_section">
+                                <input type="hidden" id="source_id" value="">
+                                <select onchange="getQunatity(this.value)" class="form-control" style="width: 100%;" id="product_section" name="product_section">
                                 </select>
                                 <span id="product_span" style="color:red;"></span>
                               </div>
@@ -122,16 +122,14 @@
                               <div class="form-group">
                                 <label>Add or Deduct</label>
                                 <select class="form-control" style="width: 100%;" id="addDeduct" name="addDeduct">
-                                  <option>add</option>
-                                  <option>deduct</option>
+                                  <option value="1">add</option>
+                                  <option value="2">deduct</option>
                                 </select>
                                 <span id="addDeduct_span" style="color:red;"></span>
                               </div>
                               <div class="form-group">
                                 <label>Adjustment Reason</label>
                                 <select class="form-control" style="width: 100%;" id="reason" name="reason">
-                                  <option>Theft</option>
-                                  <option>Spillage</option>
                                 </select>
                                 <span id="reason_span" style="color:red;"></span>
                               </div>

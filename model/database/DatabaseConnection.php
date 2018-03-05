@@ -73,6 +73,27 @@ class DatabaseConnection
 		return "connection_error";
 	}
 
+	function multiQuery($sql)
+	{
+		//connects to the database
+		if($this->connect())
+		{
+			//runs query
+			$this->result = mysqli_multi_query($this->connection,$sql);
+
+			//checks if query is successful
+			if($this->result)
+			{
+				//close connection
+				//closeConnection();
+
+				//returns the result
+			    return $this->result;
+			}
+			return false;
+		}
+		return "connection_error";
+	}
 
 
 	/*
@@ -102,10 +123,10 @@ class DatabaseConnection
 	}
 
 }
-	/*$sql = "INSERT INTO users(username,email,role,status,password) VALUES('alieu','sfd','24','pending','good');";
+	/*$sql = "INSERT INTO stock(product,quantity,supplier,source,storage,transaction_date,tag) VALUES('10','79','16','1', '1','','0'), ('10','79','16','1', '1','','1');";
 	//var_dump($this ->connection);
 	$db = new DatabaseConnection;
 
-	var_dump($db -> query($sql));
+	var_dump($db -> multiQuery($sql));
 	//var_dump($db -> connect());*/
 ?>

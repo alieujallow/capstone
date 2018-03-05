@@ -2,7 +2,10 @@
 $('document').ready(function()
 {
   displayReceiveStockSelectOptions();
-  getStorageLocation();
+  getStorageLocation("source");
+  getReason("reason");
+  getStorageLocation("storage_location");
+  getStorageLocation("destination");
   $("#pagination a").trigger('click'); // When page is loaded we trigger a click
 
   //implements the live search here
@@ -294,6 +297,21 @@ function validateAdjustStokcForm()
     return false;
   }
   adjustStock(location,product,quantity,addDeduct,reason);
+  return false;
+}
+
+function validateMoveStockToLocation()
+{
+  var source = validateSelectInputField("move_stock_to_location_form","source","source_span");
+  var product = validateSelectInputField("move_stock_to_location_form","product_section","product_span");
+  var quantity= validateQuantity("move_stock_to_location_form","quantity","quantity_span");
+  var destination= validateSelectInputField("move_stock_to_location_form","destination","destination_span");
+
+  if(source==false ||product==false || quantity==false || destination==false)
+  {
+    return false;
+  }
+  moveStockToLocation(source,product,quantity,destination);
   return false;
 }
 
@@ -2772,6 +2790,57 @@ function constructTransactionHistoryTable(data)
          $("#transaction_history_list").append(list);
 }
 
+function moveStockToLocation(source,product,quantity,destination)
+{
+  var data = {source:source, product:product, quantity:quantity, destination:destination, action:"move_stock_to_location"};
+  var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="movement_successful") 
+        {
+           document.getElementById("move_stock_to_location_form").reset();
+           displayMessage(" Operation is successfully executed.","message_area","");       
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
+function adjustStock(location,product,quantity,addDeduct,reason)
+{
+  var data = {location:location, product:product, quantity:quantity, addDeduct:addDeduct, reason:reason, action:"adjust_stock"};
+  var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="adjustment_successful") 
+        {
+           document.getElementById("adjust_stock_form").reset();
+           displayMessage(" Adjustment is successfully executed.","message_area","");       
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
 //**********************************************************************************************************
 //                                                INVENTORY
 //***********************************************************************************************************
@@ -2868,7 +2937,7 @@ function getStatus()
   });
 }
 
-function getStorageLocation()
+function getStorageLocation(displayAreaId)
 {
   var data = {action:'get_storage'};
   var serverUrl='/capstone/controller/configurationController.php';
@@ -2881,7 +2950,29 @@ function getStorageLocation()
     timeout: 3000,
     success: function(data)
     {
-      constructSelectOptions(data,"storage_location");
+      constructSelectOptions(data,displayAreaId);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+function getReason(displayAreaId)
+{
+  var data = {action:'get_reason'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      constructSelectOptions(data,displayAreaId);
     },
     error: function (request, status, error)
     {
@@ -2937,7 +3028,29 @@ function getmeasurement()
   });
 }
 
-
+//getst the quantity
+function getQunatity(productId)
+{
+  var locationId=document.getElementById("source_id").value;
+  var data = {location_id:locationId, product_id:productId, action:'get_quantity'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      document.getElementById("product_span").innerHTML= "Available: "+data[1].quantity+"kg";
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
 
 
 //construct the role options
@@ -2979,6 +3092,9 @@ function constructSelectOptions(data,displayAreaId)
 
 function getProduct(value)
 {
+  //stores the location id
+  document.getElementById("source_id").value=value;
+
   //checks if the value is not empty
   if (value!="")
   {
