@@ -80,9 +80,7 @@ if ($requestMethod=="GET")
         elseif ($action=="get_product")
         {
             $location_id= $_GET['location_id'];
-
-            //sets the sql
-            $sql = "SELECT products.id as id, products.name as name FROM products WHERE id IN (SELECT product_id FROM storage_has_product WHERE storage_id='$location_id');";
+             $sql = "SELECT products.id as id, products.name as name FROM products WHERE id IN (SELECT product FROM stock WHERE storage='$location_id');";
             deliverGetResponse($sql,0);
         }
         elseif ($action=="get_quantity")
@@ -90,8 +88,7 @@ if ($requestMethod=="GET")
             $location_id= $_GET['location_id'];
             $product_id= $_GET['product_id'];
 
-            //sets the sql
-            $sql = "SELECT SUM(quantity) as quantity FROM stock WHERE product='$product_id' AND storage ='$location_id' AND tag='1';";
+            $sql="SELECT ABS(SUM(quantity)-(SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$product_id' AND storage='$location_id')) as quantity FROM stock WHERE tag='1' AND product='$product_id' AND storage='$location_id';";
             deliverGetResponse($sql,0);
         }
         /////////////////////////////////////////

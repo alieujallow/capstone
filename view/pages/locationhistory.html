@@ -39,7 +39,7 @@
   </script> 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="displayLocationInventory()">
+<body class="hold-transition skin-blue sidebar-mini" onload="displayLocationTranactionHistory()">
 <div class="wrapper">
 
   <header class="main-header" id="header">
@@ -59,7 +59,7 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1 id="inventoryForProductHeader">
+      <h1 id="locationTransactionHistoryHeader">
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -76,15 +76,18 @@
       <div class="col-md-12">
           <div class="box">
             <div class="box-body table-responsive">
-              <table class="table table-bordered" id="location_inventory_list">
+              <table class="table table-bordered" id="location_transaction_history">
                 <tr>
                   <th style="width: 10px">#</th>
-                  <th>Location</th>
+                  <th>Date</th>
+                  <th>Product</th>
+                  <th>Type</th>
                   <th>Quantity(kg)</th>
+                  <th>Location</th>
                   <th>Action</th>
+                  <th>Reason</th>
                 </tr>
               </table>
-              <button class="btn btn-success form-control" id="transaction_history_btn" value="" onclick="openTransactionForProduct(this.value)">Transaction History</button>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix" id="pagination">
@@ -117,6 +120,7 @@
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/custom.js"></script>
+
 <script src="../js/validations.js"></script>
 </body>
 </html>

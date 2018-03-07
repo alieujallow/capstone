@@ -73,15 +73,15 @@ function validateStockForm()
   var inventoryDate = validateDate("stock_form","inventory_date","inventory_date_span");
   var orderNumber = validateQuantity("stock_form","order_number","order_number_span");
   var storage = validateSelectInputField("stock_form","storages","storages_span");
-  var measurement = validateSelectInputField("stock_form","measurements","measurements_span");
+  //var measurement = validateSelectInputField("stock_form","measurements","measurements_span");
   var source= validateSelectInputField("stock_form","sources","sources_span");
   var description=validateDescription("stock_form","description","description_span");
   if (product==false || quantity==false || supplier==false|| orderDate==false || inventoryDate==false 
-    || orderNumber==false || storage==false || measurement==false || source==false || description==false)
+    || orderNumber==false || storage==false || source==false || description==false)
   {
     return false;
   }
-  addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,storage,measurement,source,description);
+  addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,storage,source,description);
   return false;
 }
 
@@ -2556,7 +2556,7 @@ function deletePackage(id)
 //                                                STOCK
 //***********************************************************************************************************
 
-function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,storage,measurement,source,description)
+function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,storage,source,description)
 {
     
     var data = {
@@ -2567,7 +2567,6 @@ function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,
       inventoryDate:inventoryDate,
       orderNumber:orderNumber,
       storage:storage,
-      measurement:measurement,
       source:source,
       description:description,
       action:"add_stock"
@@ -2626,29 +2625,20 @@ function constructStockTable(data)
 {
     var list="";
     var count = 0;
-    var flag = false;
 
     //deletes all table rows except the first one
     $("#stock_list").find("tr:gt(0)").remove();
          
-    $.each(data,function(key,value){
-
-        if (flag) {
-          count++
-          list+="<tr onclick=\"openInventoryForProduct(this.id)\" class=\"test\" id=\""+value.product+"&"+value.name+"\">"+
-                  "<td>"+count+"</td>"+
-                  "<td>"+value.category+"</td>"+
-                  "<td>"+value.name+"</td>"+
-                  "<td>"+value.quantity+"</td>"+
-                  "<td>description</td>"+
-                "</tr>";
-            }
-            else
-            {
-              flag = true;
-            }
-         });
-         $("#stock_list").append(list);
+    $.each(data,function(key,value)
+    {
+      count++
+      list+="<tr onclick=\"openInventoryForProduct(this.id)\" class=\"test\" id=\""+value.productID+"&"+value.productName+"\">"+
+            "<td>"+count+"</td>"+
+            "<td>"+value.productName+"</td>"+
+            "<td>"+value.quantity+"</td>"+
+            "</tr>";    
+    });
+    $("#stock_list").append(list);
 }
 
 //a function that opens the inventory for a particular product
@@ -2662,6 +2652,15 @@ function openTransactionForProduct(id)
 {
    var id = "?id=" +id;
    window.location.href = "/capstone/view/pages/transactionhistory.html" + id;
+}
+
+function openLocationTransactionHistory(id)
+{
+  //gets the title of the page
+   var title = document.getElementById("inventoryForProductHeader").innerHTML;
+   title=title.split(" ");
+   var id = "?id=" +id+"&"+title[2];
+   window.location.href = "/capstone/view/pages/locationhistory.html" + id;
 }
 
 //a function that displays the inventory of a product in all the storage locations
@@ -2696,33 +2695,104 @@ function displayLocationInventory()
 
 }
 
+
+//displays a location's transaction history
+function displayLocationTranactionHistory()
+{
+    var id = decodeURIComponent(window.location.search);
+    id = id.substring(4);
+    id = id.split("&");
+    document.getElementById("locationTransactionHistoryHeader").innerHTML=" Transaction History of "+id[2]+" in "+id[1];
+    
+    var data = {id:id[0], action:'display_location_transaction_history'};
+    var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructLocationTransactionHistory(data);
+        constructPagination(data,current_page);
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+
+}
+
+function constructLocationTransactionHistory(data) 
+{
+    var list="";
+    var count = 0;
+    var action="";
+    var flag = false;
+
+    //deletes all table rows except the first one
+    $("#location_transaction_history").find("tr:gt(0)").remove();
+         
+    $.each(data,function(key,value)
+    { 
+
+      if (flag)
+         {
+           if (value.tag=="1")
+            {
+              action="Received";
+            }
+            else
+            {
+              action="Moved Out";
+            }
+            count++
+            list+="<tr>"+
+                    "<td>"+count+"</td>"+
+                    "<td>"+value.transaction_date+"</td>"+
+                    "<td>"+value.product+"</td>"+
+                    "<td>"+value.type+"</td>"+
+                    "<td>"+value.quantity+"</td>"+
+                    "<td>"+value.location+"</td>"+
+                    "<td>"+action+"</td>"+
+                    "<td>"+value.reason+"</td>"+
+                  "</tr>";
+      }  
+      else
+      {
+        flag = true;
+      }      
+    });
+
+    $("#location_transaction_history").append(list);
+}
+
+
 function constructLocationInventoryTable(data) 
 {
     var list="";
     var count = 0;
-    var flag = false;
 
     //deletes all table rows except the first one
     $("#location_inventory_list").find("tr:gt(0)").remove();
          
-    $.each(data,function(key,value){
-        if (flag)
-         {
+    $.each(data,function(key,value)
+    {  
             count++
             list+="<tr>"+
                     "<td>"+count+"</td>"+
-                    "<td>"+value.name+"</td>"+
+                    "<td>"+value.storageName+"</td>"+
                     "<td>"+value.quantity+"</td>"+
-                  "</tr>";
-          }
-          else
-          {
-            flag = true;
-          }
-         });
-         $("#location_inventory_list").append(list);
+                    "<td>"+
+                          "<button class=\"btn btn-success form-control\" id=\""+value.storageID+"&"+value.storageName+"\" onclick=\"openLocationTransactionHistory(this.id)\">History</button>"
+                    "</td>"+
+                  "</tr>";        
+    });
+    $("#location_inventory_list").append(list);
 }
-
 
 
 function displayTransactionHistory()
@@ -3044,6 +3114,7 @@ function getQunatity(productId)
     success: function(data)
     {
       document.getElementById("product_span").innerHTML= "Available: "+data[1].quantity+"kg";
+      //console.log(data);
     },
     error: function (request, status, error)
     {

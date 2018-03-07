@@ -38,19 +38,69 @@ if ($requestMethod=="GET")
             $start =  $startAndNumPage[0];
             $numPage = $startAndNumPage[1];
 
-            $sql="SELECT product,category.name as category, products.name as name, SUM(quantity) as quantity FROM stock, products,category WHERE product=products.id AND products.category=category.id GROUP BY product;";
-            deliverGetResponse($sql,$numPage);
+            $sql = "SELECT products.name as productName, products.id as productID From products WHERE products.id IN (SELECT Distinct(product) From stock)";  
+              $stock = new Stock; 
+              $storage = $stock->getStock($sql); 
+
+              if (sizeof($storage)>1)
+              {
+                 $responseArray = array();
+                 $array=array();
+                 for ($i=1; $i <sizeof($storage); $i++)
+                 { 
+                    $productID = $storage[$i]["productID"];
+                    $productName = $storage[$i]["productName"];
+
+                    $sql = "SELECT ABS(SUM(quantity) - (SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$productID')) as sum FROM stock WHERE product ='$productID' AND tag='1';";
+
+                     $result=$stock->getStock($sql);
+                     $quantity=$result[1]['sum'];
+                     $array['productID']=$productID;
+                     $array['productName']=$productName;
+                     $array['quantity']= $quantity;
+                     $responseArray[$i-1] =$array; 
+                 }
+                 echo json_encode($responseArray);
+              }
         }
         elseif ($action =="display_location_inventory") 
         {
-             $id = $_GET['id'];
-             $sql = "SELECT storage,storage.name as name, SUM(quantity) as quantity FROM stock,storage WHERE product='$id' AND storage=storage.id GROUP BY storage;";
-             deliverGetResponse($sql,2); 
+              $product_id = $_GET['id'];
+
+              $sql = "SELECT storage.name as storageName, storage.id as storageID FROM storage WHERE storage.id IN (SELECT DISTINCT(storage) FROM stock WHERE product='$product_id')";  
+              $stock = new Stock; 
+              $storage = $stock->getStock($sql); 
+              if (sizeof($storage)>1)
+              {
+                 $responseArray = array();
+                 $array=array();
+                 for ($i=1; $i <sizeof($storage); $i++)
+                 { 
+                    $storageID = $storage[$i]["storageID"];
+                    $storageName = $storage[$i]["storageName"];
+                    $sql = "SELECT ABS(SUM(quantity) - (SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$product_id' AND storage='$storageID' )) as sum FROM stock WHERE product ='$product_id' AND tag='1' AND storage='$storageID';";
+                     $result=$stock->getStock($sql);
+                     $quantity=$result[1]['sum'];
+                     $array['storageID']=$storageID;
+                     $array['storageName']=$storageName;
+                     $array['quantity']= $quantity;
+                     $responseArray[$i-1] =$array; 
+                 }
+                 echo json_encode($responseArray);
+              }
         }
         elseif ($action =="display_transaction_history")
         {
              $id = $_GET['id'];
              $sql = "SELECT *FROM stock WHERE product='$id';";
+             deliverGetResponse($sql,2); 
+        }
+        elseif ($action =="display_location_transaction_history")
+        {
+             $locationID = $_GET['id'];
+
+             $sql = "SELECT transaction_date,products.name as product,type,quantity,storage.name as location,reason,tag FROM transaction,products,storage WHERE products.id=product AND storage.id=transaction.location AND transaction.location='$locationID';";
+
              deliverGetResponse($sql,2); 
         }
        
@@ -84,15 +134,14 @@ elseif ($requestMethod=="POST")
 
             $orderNumber= strip_tags($_POST['orderNumber']);
             $storage= strip_tags($_POST['storage']);
-            $measurement= strip_tags($_POST['measurement']);
             $source= strip_tags($_POST['source']);
             $description= strip_tags($_POST['description']); 
-            $date= date('Y-m-d');
+            $date= date('Y-m-d H:i:s');
 
             //sets the sql statement
             $sql = "INSERT INTO 
-                    stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description) 
-                    VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description');";
+                    stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description,tag) 
+                    VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description','1');";
 
             deliverPostResponse($sql,"add_successful","add_failed","updateStock");
         }
@@ -103,10 +152,13 @@ elseif ($requestMethod=="POST")
             $product = strip_tags($_POST['product']);
             $quantity = strip_tags($_POST['quantity']);
             $destination = strip_tags($_POST['destination']);
-            $date= date('Y-m-d');
+            $date= date('Y-m-d H:i:s');
             $sql=  "INSERT INTO 
                     stock(product,quantity,supplier,source,storage,transaction_date,tag) 
                     VALUES('$product','$quantity','16','1', '$source','$date','0'),('$product','$quantity','16','1', '$destination','$date','1');";
+
+            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','movement','$quantity','$source','testing','0'),('$date','$product','movement','$quantity','$destination','testing','1');";
+
             deliverPostResponse($sql,"movement_successful","movement_failed","multiInsert");
         }
         elseif ($action=="adjust_stock") 
