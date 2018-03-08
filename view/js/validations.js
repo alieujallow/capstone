@@ -1,53 +1,17 @@
-//we have to do this when the page is loaded
-$('document').ready(function()
-{
-  $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+ 
 
-  //implements the live search here
-  $("#search_name").keyup(function(){
-    var name = document.getElementById("search_name").value;
-    if (name=="")
-    {
-      /*
-      displayProducts(1);
-      displaySource(1);
-      displayProcessor(1);
-      displayStorage(1);
-      displayMeasurement(1);
-      displayPackage(1);
-      displayProductsInProcess(1);*/
-    }
-    else
-    {
-      //validate the name before calling search function
-      /*;
-      searchProduct(name);
-      searchSource(name);
-      searchProcessor(name);
-      searchStorage(name);
-      searchMeasurement(name);
-      searchPackage(name);*/
-    }
-  });
-});
 
-//do the the following when a pagination button is clicked 
-$('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
-  var page = this.id; // Page number is the id of the 'a' element
-  //displaySuppliers(page);
-  /*displayCategory(page);
-  displayUsers(page);
-  displayCustomers(page);
-  displayProducts(page);
-  displaySource(page);
-  displayProcessor(page);
-  displayStorage(page);
-  displayMeasurement(page);
-  displayPackage(page);
-  displayStock(page);
-  displayProductsInProcess(page);*/
-  //return false;
-});
+
+
+
+
+
+
+
+
+
+
+
 
 //*****************************************************************************************************
 //				                                FORM VALIDATIONS
@@ -565,6 +529,7 @@ function postUser(username,email,phone,role,status,id)
    }
   
    var serverUrl='/capstone/controller/userController.php';
+  $('#overlay').show(); 
    $.ajax({ // jQuery Ajax
     type: 'POST',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -576,17 +541,19 @@ function postUser(username,email,phone,role,status,id)
       if (data.response=="add_successful")
       {
         document.getElementById("user_form").reset();
-        displayMessage(" User is successfully added.","add_message_area",displayUsers);     
+        displayMessage(" User is successfully added.","add_message_area",displayUsers);   
+        $('#overlay').hide();   
       }
       else if (data.response=="update_successful")
       {
         document.getElementById("user_form").reset();
         displayMessage(" Changes are successfully saved.","add_message_area",displayUsers);   
+        $('#overlay').hide(); 
       }
   	},
   	error: function (request, status, error)
   	{
-    	console.log(error);
+      $('#overlay').hide(); 
       alert("error");
   	}
   });
@@ -600,7 +567,7 @@ function displayUsers(id)
 
   var data = {current_page:current_page, num_items:num_items, action:'display_users'};
   var serverUrl='/capstone/controller/userController.php';
- 
+  $('#overlay').show(); 
   $.ajax({ // jQuery Ajax
     type: 'GET',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -613,10 +580,11 @@ function displayUsers(id)
       constructPagination(data,current_page);
       getRoles();
       getStatus();
-
+      $('#overlay').hide(); 
     },
     error: function (request, status, error)
     {
+      $('#overlay').hide(); 
       alert("error : "+error);
     }
   });
@@ -721,12 +689,25 @@ function constructUsersTable(data)
 {
   var user_list="";
   var count = 0;
+  var color ="label label-success";
   //deletes all table rows except the first one
   $("#user_list").find("tr:gt(0)").remove();
   var flag = false;
   $.each(data, function(key,value){
     if (flag)
     {
+      if (value.statusId=="1")
+      {
+        color ="label label-success";
+      }
+      else if (value.statusId=="3")
+      {
+        color ="label label-danger";
+      }
+      else if (value.statusId=="2")
+      {
+        color ="label label-warning";
+      }
       count++;
       user_list+="<tr>"+
                   "<td>"+count+"</td>"+
@@ -735,7 +716,7 @@ function constructUsersTable(data)
                   "<td>"+value.phone+"</td>"+
                   "<td>"+value.role+"</td>"+
                   "<td>"+value.last_login+"</td>"+
-                  "<td>"+value.status+"</td>"+
+                  "<td><span class=\""+color+"\">"+value.status+"</span></td>"+ 
                   "<td><div class=\"btn-group\">"+
                       "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
                       "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
@@ -824,7 +805,7 @@ function deleteUser(id)
 {
   var data = {id:id, action:'delete_user'};
   var serverUrl='/capstone/controller/userController.php';
- 
+  $('#overlay').show(); 
   $.ajax({ // jQuery Ajax
     type: 'POST',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -837,10 +818,12 @@ function deleteUser(id)
       {
         displayMessage(" User successfully Deleted.","delete_message_area",displayUsers);
         $('#user_delete_modal').modal('hide');
+        $('#overlay').hide(); 
       }
     },
     error: function (request, status, error)
     {
+      $('#overlay').hide(); 
       alert("error paaa : "+error);
     }
   });
@@ -2577,7 +2560,7 @@ function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,
       action:"add_stock"
     };
     var serverUrl='/capstone/controller/stockController.php';
- 
+    $('#overlay').show();
     $.ajax({ // jQuery Ajax
       type: 'POST',
       url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -2589,11 +2572,13 @@ function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,
         if (data.response=="add_successful") 
         {
            document.getElementById("stock_form").reset();
-           displayMessage(" Stock is successfully added.","add_message_area","");       
+           displayMessage(" Stock is successfully added.","add_message_area","");  
+           $('#overlay').hide();     
         }
       },
       error: function (request, status, error)
       {
+        $('#overlay').hide();    
         alert("error : "+error);
       }
     });
@@ -2617,7 +2602,7 @@ function displayStock(id)
       success: function(data)
       {
         constructStockTable(data);
-        constructPagination(data,current_page);
+        //constructPagination(data,current_page);
       },
       error: function (request, status, error)
       {
@@ -2636,12 +2621,15 @@ function constructStockTable(data)
          
     $.each(data,function(key,value)
     {
+      if (value.productID!="")
+      {
       count++
       list+="<tr onclick=\"openInventoryForProduct(this.id)\" class=\"test\" id=\""+value.productID+"&"+value.productName+"\">"+
             "<td>"+count+"</td>"+
             "<td>"+value.productName+"</td>"+
             "<td>"+value.quantity+"</td>"+
-            "</tr>";    
+            "</tr>";
+      }
     });
     $("#stock_list").append(list);
 }
@@ -2690,7 +2678,7 @@ function displayLocationInventory()
         var product = id[1].charAt(0).toUpperCase() + id[1].slice(1);
         document.getElementById("inventoryForProductHeader").innerHTML="Inventory For "+product;
         constructLocationInventoryTable(data);
-        constructPagination(data,current_page);
+        //constructPagination(data,current_page);
       },
       error: function (request, status, error)
       {
@@ -2786,15 +2774,18 @@ function constructLocationInventoryTable(data)
          
     $.each(data,function(key,value)
     {  
+      if (value.storageName!="")
+       {
             count++
             list+="<tr>"+
                     "<td>"+count+"</td>"+
                     "<td>"+value.storageName+"</td>"+
                     "<td>"+value.quantity+"</td>"+
                     "<td>"+
-                          "<button class=\"btn btn-success form-control\" id=\""+value.storageID+"&"+value.storageName+"\" onclick=\"openLocationTransactionHistory(this.id)\">History</button>"
+                          "<button class=\"btn btn-primary\" id=\""+value.storageID+"&"+value.storageName+"\" onclick=\"openLocationTransactionHistory(this.id)\">Transactions in "+value.storageName+"</button>"
                     "</td>"+
-                  "</tr>";        
+                  "</tr>";  
+        }      
     });
     $("#location_inventory_list").append(list);
 }
@@ -2807,7 +2798,7 @@ function displayTransactionHistory()
 
     var data = {id:id[0], action:'display_transaction_history'};
     var serverUrl='/capstone/controller/stockController.php';
-    
+    $('#overlay').show(); 
     $.ajax({ // jQuery Ajax
       type: 'GET',
       url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -2818,16 +2809,16 @@ function displayTransactionHistory()
       {
         var product = id[1].charAt(0).toUpperCase() + id[1].slice(1);
         document.getElementById("transactionHistoryHeader").innerHTML="Transaction History For "+product;
-
         constructTransactionHistoryTable(data);
-        constructPagination(data,current_page);
+        //constructPagination(data,current_page);
+        $('#overlay').hide(); 
       },
       error: function (request, status, error)
       {
+        $('#overlay').hide(); 
         alert("error : "+error);
       }
     });
-
 }
 
 function constructTransactionHistoryTable(data) 
@@ -2943,6 +2934,51 @@ function adjustStock(location,product,quantity,addDeduct,reason)
       }
     });
 }
+
+function searchProductStock(name)
+{
+  var data = {name:name, action:"search_product_stock"};
+  var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructStockTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+function searchLocationStock(name,id)
+{
+   var data = {name:name, id:id, action:"search_location_stock"};
+   var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructLocationInventoryTable(data);
+      },
+      error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
 //**********************************************************************************************************
 //                                                TO PROCESS
 //***********************************************************************************************************
@@ -3162,9 +3198,9 @@ function constructProductInProcessTable(data)
                           "</a>"+
                         "</li>"+
                         "<li>"+
-                          "<a href=\"#\" onclick=\"fillDeleteCustomerModal(this.id);\" id=\"\">"+
-                            "<i class=\"glyphicon glyphicon-trash\"></i>"+
-                           " Delete"+
+                          "<a href=\"#\" onclick=\"fillconfirmFinishProcessModal(this.id);\" id=\""+value.id+"\">"+
+                            "<i class=\"\"></i>"+
+                           " Finish"+
                           "</a>"+
                         "</li>"+
                       "</ul>"+
@@ -3178,6 +3214,42 @@ function constructProductInProcessTable(data)
   }
 });
   $("#inporcess_list").append(list);
+}
+
+
+function fillconfirmFinishProcessModal(id)
+{
+  document.getElementById("finish_process_btn").value=id;
+
+  //triger the modal
+  $('#finish_process_modal').modal('show'); 
+}
+
+function finishProcess(id)
+{
+  var data = {id:id, action:'finish_process'};
+  var serverUrl='/capstone/controller/stockController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'POST',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      if (data.response=="success") 
+      {
+        //displayMessage(" Process finished successfully.","delete_message_area",displayProductsInProcess);
+        $('#finish_process_modal').modal('hide');
+        window.location.href="/capstone/view/pages/receivestock.html";
+      }
+    },
+    error: function (request, status, error)
+    {
+      alert("error paaa : "+error);
+    }
+  });
 }
 //**********************************************************************************************************
 //                                                INVENTORY

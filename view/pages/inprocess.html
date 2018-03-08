@@ -111,6 +111,27 @@
     <!-- footer is displayed here -->
   </div>
 </div>
+        <div class="modal fade" id="finish_process_modal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="glyphicon"></i>Finish Process</h4>
+              </div>
+              <div class="modal-body">
+                <p>Are your sure you want to finish this Process?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="finish_process_btn" value="" onclick="finishProcess(this.value);">Finish</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
 
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
@@ -120,5 +141,32 @@
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/custom.js"></script>
 <script src="../js/validations.js"></script>
+<script>
+  $('document').ready(function()
+  {
+    $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+
+    //implements the live search here
+    $("#search_name").keyup(function(){
+      var name = document.getElementById("search_name").value;
+      if (name=="")
+      {
+        displayProductsInProcess(1);
+      }
+      else
+      {
+        //validate the name before calling search function
+        searchProductInProcess(name);
+      }
+    });
+  });
+
+  //do the the following when a pagination button is clicked 
+  $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
+    var page = this.id; // Page number is the id of the 'a' element
+    displayProductsInProcess(page);
+    return false;
+  });
+</script>
 </body>
 </html>

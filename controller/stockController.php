@@ -78,7 +78,9 @@ if ($requestMethod=="GET")
                  { 
                     $storageID = $storage[$i]["storageID"];
                     $storageName = $storage[$i]["storageName"];
+
                     $sql = "SELECT ABS(SUM(quantity) - (SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$product_id' AND storage='$storageID' )) as sum FROM stock WHERE product ='$product_id' AND tag='1' AND storage='$storageID';";
+
                      $result=$stock->getStock($sql);
                      $quantity=$result[1]['sum'];
                      $array['storageID']=$storageID;
@@ -120,6 +122,85 @@ if ($requestMethod=="GET")
             deliverGetResponse($sql,$numPage);
             
         }
+        elseif ($action=="search_product_stock")
+        {
+            //gets the name
+            $name= $_GET['name'];
+            $sql="SELECT id,name FROM products WHERE products.name like '%$name%'";
+            $stock = new Stock; 
+            $storage = $stock->getStock($sql); 
+              if (sizeof($storage)>1)
+              {
+                 $responseArray = array();
+                 $array=array();
+                 for ($i=1; $i <sizeof($storage); $i++)
+                 { 
+                    $productID = $storage[$i]["id"];
+                    $productName = $storage[$i]["name"];
+
+                    $sql = "SELECT ABS(SUM(quantity) - (SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$productID')) as sum FROM stock WHERE product ='$productID' AND tag='1';";
+
+                     $result=$stock->getStock($sql);
+                     $quantity=$result[1]['sum'];
+                     $array['productID']=$productID;
+                     $array['productName']=$productName;
+                     $array['quantity']= $quantity;
+                     $responseArray[$i-1] =$array; 
+                 }
+                 echo json_encode($responseArray);
+              }
+              else
+              {
+                $responseArray = array();
+                $array=array();
+
+                $array['productID']="";
+                $array['productName']="";
+                $array['quantity']= "";
+                $responseArray[0] =$array; 
+                echo json_encode($responseArray);
+              }
+        }
+        elseif ($action=="search_location_stock") 
+        {
+            $name= $_GET['name'];
+            $product_id = $_GET['id'];
+
+            $sql = "SELECT name,id FROM storage WHERE storage.name like '%$name%';";  
+            $stock = new Stock; 
+            $storage = $stock->getStock($sql); 
+
+              if (sizeof($storage)>1)
+              {
+                 $responseArray = array();
+                 $array=array();
+                 for ($i=1; $i <sizeof($storage); $i++)
+                 { 
+                    $storageID = $storage[$i]["id"];
+                    $storageName = $storage[$i]["name"];
+
+                    $sql = "SELECT ABS(SUM(quantity) - (SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$product_id' AND storage='$storageID' )) as sum FROM stock WHERE product ='$product_id' AND tag='1' AND storage='$storageID';";
+                    $result=$stock->getStock($sql);
+                    $quantity=$result[1]['sum'];
+                    $array['storageID']=$storageID;
+                    $array['storageName']=$storageName;
+                    $array['quantity']= $quantity;
+                    $responseArray[$i-1] =$array; 
+                 }
+                 echo json_encode($responseArray);
+              }
+              else
+              {
+                $responseArray = array();
+                $array=array();
+
+                $array['storageID']="";
+                $array['storageName']="";
+                $array['quantity']= "";
+                $responseArray[0] =$array; 
+                echo json_encode($responseArray);
+              }
+        }
        
     } 
 }
@@ -159,8 +240,9 @@ elseif ($requestMethod=="POST")
             $sql = "INSERT INTO 
                     stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description,tag) 
                     VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description','1');";
+            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','Stock Receipt','$quantity','$storage','adding','1');";
 
-            deliverPostResponse($sql,"add_successful","add_failed","updateStock");
+            deliverPostResponse($sql,"add_successful","add_failed","multiInsert");
         }
         elseif ($action=="move_stock_to_location") 
         {
@@ -220,6 +302,12 @@ elseif ($requestMethod=="POST")
                     stock(product,quantity,supplier,source,storage,transaction_date,description,tag) 
                     VALUES('$product','$quantity','16','1', '$location','$date',(SELECT name FROM reason WHERE id='$reason'),'$addDeduct');";
             deliverPostResponse($sql,"adjustment_successful","adjustment_failed","updateStock");
+        }
+        elseif ($action=="finish_process")
+        {
+            $processID = strip_tags($_POST['id']);
+            $sql="UPDATE processing SET status='0' WHERE id='$processID'";
+            deliverPostResponse($sql,"success","failed","updateStock");
         }  
     }
 }

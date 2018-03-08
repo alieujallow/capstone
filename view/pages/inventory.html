@@ -39,7 +39,7 @@
   </script> 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('products_menu');">
+<body class="hold-transition skin-blue sidebar-mini" onload="">
 <div class="wrapper">
 
   <header class="main-header" id="header">
@@ -78,6 +78,18 @@
       <div class="col-md-12">
           <div class="box">
             <!-- /.box-header -->
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 300px;">
+                  <input type="text" name="table_search" id="search_name" class="form-control pull-right" placeholder="Search">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default" onclick=""><i class="glyphicon glyphicon-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="box-body table-responsive">
               <table class="table table-bordered" id="stock_list">
                 <tr>
@@ -179,14 +191,38 @@
 
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
-
 <!-- Bootstrap 3.3.7 -->
 <script src="../js/bootstrap/bootstrap.min.js"></script>
-
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/custom.js"></script>
-
 <script src="../js/validations.js"></script>
+<script>
+  $('document').ready(function()
+  {
+    $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+
+    //implements the live search here
+    $("#search_name").keyup(function(){
+      var name = document.getElementById("search_name").value;
+      if (name=="")
+      {
+        displayStock(1);
+      }
+      else
+      {
+        //validate the name before calling search function
+        searchProductStock(name);
+      }
+    });
+  });
+
+  //do the the following when a pagination button is clicked 
+  $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
+    var page = this.id; // Page number is the id of the 'a' element
+    displayStock(page);
+    return false;
+  });
+</script>
 </body>
 </html>

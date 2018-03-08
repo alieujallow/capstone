@@ -3,12 +3,6 @@
     content: "";
 }
 
-
-
-
-
-
-
 .test:hover
  {
     background-color: #ffff99;
@@ -40,4 +34,17 @@
 .treeview .nav li a:active
  {
   background: transparent;
+}
+
+#overlay
+{
+	background: rgba(0,0,0,.8) url('/capstone/view/img/loader.gif') no-repeat 50% 50%;
+	background-size: 10% 21%;
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	z-index:999;
+	display:none;
 }

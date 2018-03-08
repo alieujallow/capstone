@@ -39,7 +39,7 @@
   </script> 
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="displayLocationInventory()">
+<body class="hold-transition skin-blue sidebar-mini" onload="">
 <div class="wrapper">
 
   <header class="main-header" id="header">
@@ -75,16 +75,28 @@
         <!-- left column -->
       <div class="col-md-12">
           <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 400px;">
+                  <input type="text" name="table_search" id="search_name" class="form-control pull-right" placeholder="Search">
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                    </button>
+                    <button class="btn btn-success" id="transaction_history_btn" value="" onclick="openTransactionForProduct(this.value)">View All Transactions</button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="box-body table-responsive">
               <table class="table table-bordered" id="location_inventory_list">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Location</th>
                   <th>Quantity(kg)</th>
-                  <th>Action</th>
+                  <th style="width:100px">Action</th>
                 </tr>
               </table>
-              <button class="btn btn-success form-control" id="transaction_history_btn" value="" onclick="openTransactionForProduct(this.value)">Transaction History</button>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix" id="pagination">
@@ -107,16 +119,36 @@
   </div>
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
-
 <!-- Bootstrap 3.3.7 -->
 <script src="../js/bootstrap/bootstrap.min.js"></script>
-
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/custom.js"></script>
 <script src="../js/validations.js"></script>
+<script>
+  $('document').ready(function()
+  {
+     displayLocationInventory();
+  
+    $("#search_name").keyup(function(){
+      var name = document.getElementById("search_name").value;
+      if (name=="")
+      {
+        displayLocationInventory();
+      }
+      else
+      {
+        var id = decodeURIComponent(window.location.search);
+        id = id.substring(4);
+        id = id.split("&");
+
+        //validate the name before calling search function
+        searchLocationStock(name,id[0]);
+      }
+    });
+  });
+</script>
 </body>
 </html>

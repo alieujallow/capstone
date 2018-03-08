@@ -225,14 +225,39 @@
 
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
-
 <!-- Bootstrap 3.3.7 -->
 <script src="../js/bootstrap/bootstrap.min.js"></script>
-
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
 <script src="../js/validations.js"></script>
 <script src="../js/custom.js"></script>
+<script>
+  $('document').ready(function()
+  {
+    $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+
+    //implements the live search here
+    $("#search_name").keyup(function(){
+      var name = document.getElementById("search_name").value;
+      if (name=="")
+      {
+        displayProcessor(1);
+      }
+      else
+      {
+        //validate the name before calling search function
+        searchProcessor(name);
+      }
+    });
+  });
+
+  //do the the following when a pagination button is clicked 
+  $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
+    var page = this.id; // Page number is the id of the 'a' element
+    displayProcessor(page);
+    return false;
+  });
+</script>
 
 </body>
 </html>
