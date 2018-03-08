@@ -147,6 +147,12 @@ if ($requestMethod=="GET")
             $sql = "SELECT id,name,phone,address FROM processor WHERE name LIKE '%$name%';";
             deliverGetResponse($sql,0);
         }
+        elseif ($action=="get_processor")
+        {
+            //sets the sql
+            $sql = "SELECT * FROM processor;";
+            deliverGetResponse($sql,0);
+        }
 
         /////////////////////////////////////////
         //              SOURCE

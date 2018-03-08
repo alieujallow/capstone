@@ -103,6 +103,23 @@ if ($requestMethod=="GET")
 
              deliverGetResponse($sql,2); 
         }
+        elseif ($action =="display_products_in_process")
+        {
+            
+           //gets the current page and the number of items per page
+            $currentPage = $_GET['current_page'];
+            $numItemsPerPage = $_GET['num_items'];
+
+            $startAndNumPage = getStartAndNumPage($currentPage,$numItemsPerPage,"processing");
+            $start =  $startAndNumPage[0];
+            $numPage = $startAndNumPage[1];
+           
+            //sets the sql
+            $sql = "SELECT processing.id as id,products.name as product,quantity,processor.name as processor,storage.name as location, transaction_date,status FROM processing,products,processor,storage WHERE product=products.id AND processor=processor.id AND product_from=storage.id ORDER BY processing.id DESC LIMIT $start,$numItemsPerPage;";
+
+            deliverGetResponse($sql,$numPage);
+            
+        }
        
     } 
 }
@@ -161,6 +178,31 @@ elseif ($requestMethod=="POST")
 
             deliverPostResponse($sql,"movement_successful","movement_failed","multiInsert");
         }
+        elseif ($action=="move_stock_to_processor")
+        {
+            //get the parameters
+            $source = strip_tags($_POST['source']);
+            $product = strip_tags($_POST['product']);
+            $quantity = strip_tags($_POST['quantity']);
+            $processor = strip_tags($_POST['processor']);
+            $date= date('Y-m-d H:i:s');
+
+            //moves out of stock
+            $sql=  "INSERT INTO 
+                    stock(product,quantity,supplier,source,storage,transaction_date,tag) 
+                    VALUES('$product','$quantity','16','1', '$source','$date','0');";
+
+            //moves into processor
+            $sql .=  "INSERT INTO 
+                    processing(product,quantity,processor,product_from,transaction_date,status) 
+                    VALUES('$product','$quantity','$processor','$source', '$date','1');";
+
+            //records the transaction
+            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','processing','$quantity','$source','to a processing plant','0')";
+
+            deliverPostResponse($sql,"movement_successful","movement_failed","multiInsert");
+        }
+
         elseif ($action=="adjust_stock") 
         {
             //get the parameters

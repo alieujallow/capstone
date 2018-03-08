@@ -1,11 +1,6 @@
 //we have to do this when the page is loaded
 $('document').ready(function()
 {
-  displayReceiveStockSelectOptions();
-  getStorageLocation("source");
-  getReason("reason");
-  getStorageLocation("storage_location");
-  getStorageLocation("destination");
   $("#pagination a").trigger('click'); // When page is loaded we trigger a click
 
   //implements the live search here
@@ -13,30 +8,25 @@ $('document').ready(function()
     var name = document.getElementById("search_name").value;
     if (name=="")
     {
-      displaySuppliers(1);
-      displayCategory(1);
-      displayUsers(1);
-      displayCustomers(1);
+      /*
       displayProducts(1);
       displaySource(1);
       displayProcessor(1);
       displayStorage(1);
       displayMeasurement(1);
       displayPackage(1);
+      displayProductsInProcess(1);*/
     }
     else
     {
       //validate the name before calling search function
-      searchSupplier(name);
-      searchCategory(name);
-      searchUser(name);
-      searchCustomer(name);
+      /*;
       searchProduct(name);
       searchSource(name);
       searchProcessor(name);
       searchStorage(name);
       searchMeasurement(name);
-      searchPackage(name);
+      searchPackage(name);*/
     }
   });
 });
@@ -44,8 +34,8 @@ $('document').ready(function()
 //do the the following when a pagination button is clicked 
 $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
   var page = this.id; // Page number is the id of the 'a' element
-  displaySuppliers(page);
-  displayCategory(page);
+  //displaySuppliers(page);
+  /*displayCategory(page);
   displayUsers(page);
   displayCustomers(page);
   displayProducts(page);
@@ -55,9 +45,9 @@ $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element o
   displayMeasurement(page);
   displayPackage(page);
   displayStock(page);
-  return false;
+  displayProductsInProcess(page);*/
+  //return false;
 });
-
 
 //*****************************************************************************************************
 //				                                FORM VALIDATIONS
@@ -312,6 +302,21 @@ function validateMoveStockToLocation()
     return false;
   }
   moveStockToLocation(source,product,quantity,destination);
+  return false;
+}
+
+function validateProcessStock()
+{
+  var source = validateSelectInputField("move_stock_to_processor_form","source","source_span");
+  var product = validateSelectInputField("move_stock_to_processor_form","product_section","product_span");
+  var quantity= validateQuantity("move_stock_to_processor_form","quantity","quantity_span");
+  var processor= validateSelectInputField("move_stock_to_processor_form","processor","processor_span");
+
+  if(source==false ||product==false || quantity==false || processor==false)
+  {
+    return false;
+  }
+  moveStockToProcessor(source,product,quantity,processor);
   return false;
 }
 
@@ -2886,6 +2891,33 @@ function moveStockToLocation(source,product,quantity,destination)
     });
 }
 
+//moves stock to a processor for processing
+function moveStockToProcessor(source,product,quantity,processor)
+{
+  var data = {source:source, product:product, quantity:quantity, processor:processor, action:"move_stock_to_processor"};
+  var serverUrl='/capstone/controller/stockController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="movement_successful") 
+        {
+           document.getElementById("move_stock_to_processor_form").reset();
+           displayMessage(" Operation is successfully executed.","message_area","");       
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
+}
+
 function adjustStock(location,product,quantity,addDeduct,reason)
 {
   var data = {location:location, product:product, quantity:quantity, addDeduct:addDeduct, reason:reason, action:"adjust_stock"};
@@ -2910,6 +2942,242 @@ function adjustStock(location,product,quantity,addDeduct,reason)
         alert("error : "+error);
       }
     });
+}
+//**********************************************************************************************************
+//                                                TO PROCESS
+//***********************************************************************************************************
+
+function addRow()
+{
+  var row="";
+  row="<div class=\"row\">"+
+                              "<div class=\"col-md-3\">"+
+                                  "<div class=\"form-group\">"+
+                                    "<label>Select Source Location</label>"+
+                                    "<select onchange=\"getMultipleProducts(this.value)\" class=\"form-control source\" style=\"width: 100%;\" id=\"source\" name=\"source\">"+
+                                    "</select>"+
+                                    "<span id=\"source_span\" style=\"color:red;\"></span>"+
+                                  "</div>"+
+                              "</div>"+
+                              "<div class=\"col-md-3\">"+
+                                  "<div class=\"form-group\">"+
+                                    "<label>Select Product</label>"+
+                                    "<input type=\"hidden\" id=\"source_id\" value=\"\">"+
+                                    "<select onchange=\"getQunatity(this.value)\" class=\"form-control product_section\" style=\"width: 100%;\" id=\"product_section\" name=\"product_section\">"+
+                                    "</select>"+
+                                    "<span id=\"product_span\" style=\"color:red;\"></span>"+
+                                  "</div>"+
+                              "</div>"+
+                              "<div class=\"col-md-3\">"+
+                                  "<div class=\"form-group\">"+
+                                    "<label>Quantity</label>"+
+                                    "<input type=\"text\" class=\"form-control\" id=\"quantity\" placeholder=\"Enter Quantity\" name=\"quantity\">"+
+                                    "<span id=\"quantity_span\" style=\"color:red;\"></span>"+
+                                  "</div>"+
+                              "</div>"+
+                              "<div class=\"col-md-3\">"+
+                                    "<div></div><br>"+
+                                    "<button type=\"button\" class=\"btn btn-danger\">"+
+                                      "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                                      "Delete"+
+                                    "</button>"+
+                              "</div>"+
+                              "</div>" ;
+  $("#rowsHolder").append(row);
+  getMultipleStorageLocations("source");
+}
+
+
+function getMultipleStorageLocations(displayAreaId)
+{
+  var data = {action:'get_storage'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      constructMultipleSelectOptions(data,displayAreaId);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+function getMultipleProducts(value)
+{
+  //stores the location id
+  document.getElementById("source_id").value=value;
+
+  //checks if the value is not empty
+  if (value!="")
+  {
+    var data = {location_id:value, action:'get_product'};
+    var serverUrl='/capstone/controller/configurationController.php';
+ 
+    $.ajax({ // jQuery Ajax
+      type: 'GET',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        constructMultipleSelectOptions(data,"product_section");
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+
+      }
+    });
+  }
+}
+
+function constructMultipleSelectOptions(data,displayAreaId)
+{
+  var list="<option value=\"\" id=\"first_option\">Select...</option>";
+  var flag = false;
+  $.each(data, function(key,value){
+    if (flag)
+    {
+      list+="<option value=\""+value.id+"\">"+value.name+"</option>";
+    }
+   else
+   {
+     flag=true;
+   }
+  });
+
+  //appends the list to all sources available
+  var source = document.getElementsByClassName(displayAreaId);
+  var i;
+  for (i = 0; i < source.length; i++)
+  {
+    if (source[i].value=="")
+    {
+      source[i].innerHTML=list;
+    }
+  }
+}
+
+//lists the processors
+function getProcessor(displayAreaId)
+{
+  var data = {action:'get_processor'};
+  var serverUrl='/capstone/controller/configurationController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      constructSelectOptions(data,displayAreaId);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+function displayProductsInProcess(id)
+{
+  var current_page = id// Page number is the id of the 'a' element
+  var num_items=6;
+
+  var data = {current_page:current_page, num_items:num_items, action:'display_products_in_process'};
+  var serverUrl='/capstone/controller/stockController.php';
+ 
+  $.ajax({ // jQuery Ajax
+    type: 'GET',
+    url: serverUrl, // URL to the PHP file which will insert new value in the database
+    data: data, // We send the data string
+    dataType: 'json', // Json format
+    timeout: 3000,
+    success: function(data)
+    {
+      constructProductInProcessTable(data);
+      constructPagination(data,current_page);
+    },
+    error: function (request, status, error)
+    {
+      alert("error : "+error);
+    }
+  });
+}
+
+function constructProductInProcessTable(data)
+{
+  var list="";
+  var count = 0;
+  var status ="processing";
+  var color ="label label-success";
+
+  //deletes all table rows except the first one
+  $("#inporcess_list").find("tr:gt(0)").remove();
+  var flag = false;
+  $.each(data, function(key,value){
+    if (flag)
+    {
+      if (value.status!="1")
+      {
+        status="finished"
+        color ="label label-success";
+      }
+      else
+      {
+        status="processing"
+        color ="label label-danger";
+      }
+      count++;
+      list+="<tr>"+
+      "<td>"+count+"</td>"+
+      "<td>"+value.transaction_date+"</td>"+
+      "<td>"+value.product+"</td>"+
+      "<td>"+value.quantity+"</td>"+
+      "<td>"+value.processor+"</td>"+
+      "<td>"+value.location+"</td>"+
+      "<td><span class=\""+color+"\">"+status+"</span></td>"+ 
+      "<td><div class=\"btn-group\">"+
+                      "<button type=\"button\" class=\"btn btn-default\">Action</button>"+
+                      "<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\">"+
+                        "<span class=\"caret\"></span>"+
+                        "<span class=\"sr-only\">Toggle Dropdown</span>"+
+                      "</button>"+
+                      "<ul class=\"dropdown-menu\" role=\"menu\">"+
+                        "<li>"+
+                          "<a href=\"#\" onclick=\"fillEditCustomerForm(this.id);\" id=\"\">"+
+                            "<i class=\"glyphicon glyphicon-edit\"></i>"+
+                            "Edit"+
+                          "</a>"+
+                        "</li>"+
+                        "<li>"+
+                          "<a href=\"#\" onclick=\"fillDeleteCustomerModal(this.id);\" id=\"\">"+
+                            "<i class=\"glyphicon glyphicon-trash\"></i>"+
+                           " Delete"+
+                          "</a>"+
+                        "</li>"+
+                      "</ul>"+
+                    "</div>"+
+                    "</td>"+
+                   "</tr>";
+  }
+  else
+  {
+    flag=true;
+  }
+});
+  $("#inporcess_list").append(list);
 }
 //**********************************************************************************************************
 //                                                INVENTORY
@@ -3157,6 +3425,7 @@ function constructSelectOptions(data,displayAreaId)
      flag=true;
    }
   });
+
   document.getElementById(displayAreaId).innerHTML=list;
 }
 

@@ -58,7 +58,7 @@
   </script> 
  
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="">
+<body class="hold-transition skin-blue sidebar-mini" onload="getProcessor('processor');getStorageLocation('source')">
 <div class="wrapper">
 
   <header class="main-header" id="header">
@@ -99,7 +99,7 @@
                       </div>
                       <!-- /.box-header -->
                       <!-- form start -->
-                      <form role="form" id="move_stock_to_location_form" name="move_stock_to_location_form" onsubmit="return validateMoveStockToLocation();">
+                      <form role="form" id="move_stock_to_processor_form" name="move_stock_to_processor_form" onsubmit="return validateProcessStock();">
                         <div class="box-body">
                               <div class="form-group">
                                 <label>Select Source Location</label>
@@ -121,9 +121,9 @@
                               </div>
                               <div class="form-group">
                                 <label>Select Processor</label>
-                                <select class="form-control" style="width: 100%;" id="destination" name="destination">
+                                <select class="form-control" style="width: 100%;" id="processor" name="processor">
                                 </select>
-                                <span id="destination_span" style="color:red;"></span>
+                                <span id="processor_span" style="color:red;"></span>
                               </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
