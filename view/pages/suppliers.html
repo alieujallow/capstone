@@ -48,7 +48,7 @@
   <script src="../js/jQuery/jquery.min.js"></script>
   <script src="../js/validations.js"></script>
   <script> 
-    //checkUserLogin();
+    isLoggedIn();
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -58,7 +58,7 @@
   </script> 
  
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('operation_menu');activateMenu('people_menu');"">
 <div class="wrapper">
 
  <header class="main-header" id="header">
@@ -91,8 +91,8 @@
 
     <!-- Main content -->
     <section class="content">
+      <div id="overlay"></div>
       <div class="row">
-
         <!-- left column -->
       <div class="col-md-12">
           <div class="box">
@@ -242,15 +242,12 @@
 
 <!-- jQuery 3 -->
 <script src="../js/jQuery/jquery.min.js"></script>
-<script src="../js/jQuery/jquery-ui.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="../js/bootstrap/bootstrap.min.js"></script>
-
-<script src="../js/custom.js"></script>
-<script src="../js/validations.js"></script>
 <!-- AdminLTE App -->
 <script src="../js/adminlte.min.js"></script>
-
+<script src="../js/custom.js"></script>
+<script src="../js/validations.js"></script>
 <script>
   $('document').ready(function()
   {

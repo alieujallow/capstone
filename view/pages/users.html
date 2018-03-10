@@ -30,7 +30,7 @@
   <script src="../js/jQuery/jquery.min.js"></script>
   <script src="../js/validations.js"></script>
   <script> 
-    //checkUserLogin();
+    isLoggedIn();
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -95,6 +95,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
+              <input type="hidden" name="" id="itemCounter" value="0">
               <table class="table table-bordered" id="user_list">
                 <tr>
                   <th style="width: 10px">#</th>

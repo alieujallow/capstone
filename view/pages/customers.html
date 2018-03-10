@@ -46,8 +46,9 @@
   <link rel="stylesheet" href="../css/customStyle.css">
 
   <script src="../js/jQuery/jquery.min.js"></script>
-
-  <script> 
+  <script src="../js/validations.js"></script>
+  <script>
+    isLoggedIn();
     $(function()
     {
       $("#header").load("../layout/header.html"); 
@@ -57,7 +58,7 @@
   </script> 
  
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('people_menu');">
+<body class="hold-transition skin-blue sidebar-mini" onload="activateMenu('operation_menu');activateMenu('people_menu');"">
 <div class="wrapper">
 
  <header class="main-header" id="header">

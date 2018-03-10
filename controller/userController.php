@@ -77,7 +77,7 @@ elseif ($requestMethod=="POST")
             $user = new User;
 
             //sets the sql
-            $sql = "SELECT id, username, password, role FROM users WHERE username='$username';";
+            $sql = "SELECT id, username, password, role FROM users WHERE username='$username' AND status='1';";
             $result = $user->loginUser($sql);
 
             if ($result)
@@ -93,12 +93,18 @@ elseif ($requestMethod=="POST")
                     //verifies the password
                     if (password_verify($password, $row['password'])) 
                     {
+                        date_default_timezone_set('GMT');
                         //password is correct
                         //creating sessions
                         session_start();
                         $_SESSION['user_id'] = $row['id'];
                         $_SESSION['username'] = $row['username'];
                         $_SESSION['role'] = $row['role'];
+                        $date= date('Y-m-d H:i:s');
+                        $userId= $row['id'];
+
+                        $sql = "UPDATE users SET last_login='$date' WHERE id='$userId';";
+                        $result = $user->updateUser($sql);
 
                         echo loginResponse("success",$row['username'],$row['role'],$row['id'],"correct credentials");
                     }

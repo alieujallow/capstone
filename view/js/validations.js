@@ -1,17 +1,3 @@
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //*****************************************************************************************************
 //				                                FORM VALIDATIONS
@@ -585,7 +571,7 @@ function displayUsers(id)
     error: function (request, status, error)
     {
       $('#overlay').hide(); 
-      alert("error : "+error);
+      //alert("user display error");
     }
   });
 }
@@ -652,11 +638,17 @@ function checkUserLogin()
           window.location.href="/capstone/view/pages/login/login.html";
        }
     },
-    error: function (request, status, error)
+    error: function(request, status, error)
     {
-      alert("error : "+error);
+      //alert("user Check login error");
     }
   });
+}
+
+function isLoggedIn()
+{
+  checkUserLogin();
+  return false;
 }
 
 //logs out the user from the system
@@ -690,6 +682,7 @@ function constructUsersTable(data)
   var user_list="";
   var count = 0;
   var color ="label label-success";
+  var itemCounter=document.getElementById("itemCounter");
   //deletes all table rows except the first one
   $("#user_list").find("tr:gt(0)").remove();
   var flag = false;
@@ -869,7 +862,7 @@ function postSupplier(name,phone,email,address,id)
   }
  
   var serverUrl='/capstone/controller/supplierController.php';
- 
+    $('#overlay').show(); 
   	$.ajax({ // jQuery Ajax
 	    type: 'POST',
 	    url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -881,16 +874,18 @@ function postSupplier(name,phone,email,address,id)
 	       if (data.response=="add_successful") 
          {
            document.getElementById("supplier_form").reset();
-           displayMessage(" Supplier is successfully added.","add_message_area",displaySuppliers);       
+           displayMessage(" Supplier is successfully added.","add_message_area",displaySuppliers);
+           $('#overlay').hide();        
          }
          else if (data.response=="update_successful")
          {
-          displayMessage(" Chnanges are successfully saved.","add_message_area",displaySuppliers);
+           displayMessage(" Chnanges are successfully saved.","add_message_area",displaySuppliers);
+           $('#overlay').hide(); 
          }
 	  	},
 	  	error: function (request, status, error)
 	  	{
-	    	
+	    	 $('#overlay').hide(); 
 	  	}
   	});
 }
@@ -916,7 +911,7 @@ function displaySuppliers(id)
 
   var data = {current_page:current_page, num_items:num_items, action:'display_suppliers'};
   var serverUrl='/capstone/controller/supplierController.php';
- 
+  $('#overlay').show(); 
   $.ajax({ // jQuery Ajax
     type: 'GET',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -927,10 +922,12 @@ function displaySuppliers(id)
     {
       constructSuppliersTable(data);
       constructPagination(data,current_page);
+      $('#overlay').hide(); 
     },
     error: function (request, status, error)
     {
-      alert("error : "+error);
+      $('#overlay').hide(); 
+      //alert(" display supplier error : "+error);
     }
   });
 }
@@ -1074,7 +1071,7 @@ function deleteSupplier(id)
 {
   var data = {id:id, action:'delete_supplier'};
   var serverUrl='/capstone/controller/supplierController.php';
- 
+  $('#overlay').show(); 
   $.ajax({ // jQuery Ajax
     type: 'POST',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -1086,11 +1083,13 @@ function deleteSupplier(id)
       if (data.response=="delete_successful") 
       {
         displayMessage(" Supplier successfully Deleted.","delete_message_area",displaySuppliers);
-        $('#supplier_delete_modal').modal('hide'); 
+        $('#supplier_delete_modal').modal('hide');
+        $('#overlay').hide(); 
       }
     },
     error: function (request, status, error)
     {
+      $('#overlay').hide(); 
       alert("error paaa : "+error);
     }
   });
@@ -1182,7 +1181,7 @@ function displayCustomers(id)
     },
     error: function (request, status, error)
     {
-      alert("error : "+error);
+      //alert("error : "+error);
     }
   });
 }
@@ -2592,7 +2591,7 @@ function displayStock(id)
 
     var data = {current_page:current_page, num_items:num_items, action:'display_stocks'};
     var serverUrl='/capstone/controller/stockController.php';
- 
+    $('#overlay').show(); 
     $.ajax({ // jQuery Ajax
       type: 'GET',
       url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -2603,9 +2602,11 @@ function displayStock(id)
       {
         constructStockTable(data);
         //constructPagination(data,current_page);
+        $('#overlay').hide(); 
       },
       error: function (request, status, error)
       {
+        $('#overlay').hide(); 
         alert("error : "+error);
       }
     });
@@ -2666,7 +2667,7 @@ function displayLocationInventory()
     
     var data = {id:id[0], action:'display_location_inventory'};
     var serverUrl='/capstone/controller/stockController.php';
- 
+    $('#overlay').show(); 
     $.ajax({ // jQuery Ajax
       type: 'GET',
       url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -2679,9 +2680,11 @@ function displayLocationInventory()
         document.getElementById("inventoryForProductHeader").innerHTML="Inventory For "+product;
         constructLocationInventoryTable(data);
         //constructPagination(data,current_page);
+        $('#overlay').hide(); 
       },
       error: function (request, status, error)
       {
+        $('#overlay').hide(); 
         alert("error : "+error);
       }
     });
@@ -2699,7 +2702,7 @@ function displayLocationTranactionHistory()
     
     var data = {id:id[0], action:'display_location_transaction_history'};
     var serverUrl='/capstone/controller/stockController.php';
- 
+    $('#overlay').show(); 
     $.ajax({ // jQuery Ajax
       type: 'GET',
       url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -2709,10 +2712,12 @@ function displayLocationTranactionHistory()
       success: function(data)
       {
         constructLocationTransactionHistory(data);
-        constructPagination(data,current_page);
+        //constructPagination(data,current_page);
+        $('#overlay').hide(); 
       },
       error: function (request, status, error)
       {
+        $('#overlay').hide(); 
         alert("error : "+error);
       }
     });
@@ -3133,7 +3138,7 @@ function displayProductsInProcess(id)
 
   var data = {current_page:current_page, num_items:num_items, action:'display_products_in_process'};
   var serverUrl='/capstone/controller/stockController.php';
- 
+  $('#overlay').show(); 
   $.ajax({ // jQuery Ajax
     type: 'GET',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
@@ -3144,9 +3149,11 @@ function displayProductsInProcess(id)
     {
       constructProductInProcessTable(data);
       constructPagination(data,current_page);
+      $('#overlay').hide(); 
     },
     error: function (request, status, error)
     {
+      $('#overlay').hide(); 
       alert("error : "+error);
     }
   });
@@ -3318,8 +3325,7 @@ function getRoles()
   	},
   	error: function (request, status, error)
   	{
-    	alert("error : "+error);
-
+    	//alert("get roles error");
   	}
   });
 }
@@ -3341,8 +3347,7 @@ function getStatus()
     },
     error: function (request, status, error)
     {
-      alert("error : "+error);
-
+      //alert("status error ");
     }
   });
 }

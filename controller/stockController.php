@@ -236,10 +236,14 @@ elseif ($requestMethod=="POST")
             $description= strip_tags($_POST['description']); 
             $date= date('Y-m-d H:i:s');
 
+            session_start();
+            $userID= $_SESSION['user_id'];
+
             //sets the sql statement
             $sql = "INSERT INTO 
-                    stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description,tag) 
-                    VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description','1');";
+                    stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description,tag,user_id) 
+                    VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description','1','$userID');";
+
             $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','Stock Receipt','$quantity','$storage','adding','1');";
 
             deliverPostResponse($sql,"add_successful","add_failed","multiInsert");
@@ -252,9 +256,13 @@ elseif ($requestMethod=="POST")
             $quantity = strip_tags($_POST['quantity']);
             $destination = strip_tags($_POST['destination']);
             $date= date('Y-m-d H:i:s');
+
+            session_start();
+            $userID= $_SESSION['user_id'];
+
             $sql=  "INSERT INTO 
-                    stock(product,quantity,supplier,source,storage,transaction_date,tag) 
-                    VALUES('$product','$quantity','16','1', '$source','$date','0'),('$product','$quantity','16','1', '$destination','$date','1');";
+                    stock(product,quantity,supplier,source,storage,transaction_date,tag,user_id) 
+                    VALUES('$product','$quantity','16','1', '$source','$date','0','$userID'),('$product','$quantity','16','1', '$destination','$date','1','$userID');";
 
             $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','movement','$quantity','$source','testing','0'),('$date','$product','movement','$quantity','$destination','testing','1');";
 
@@ -269,10 +277,13 @@ elseif ($requestMethod=="POST")
             $processor = strip_tags($_POST['processor']);
             $date= date('Y-m-d H:i:s');
 
+            session_start();
+            $userID= $_SESSION['user_id'];
+
             //moves out of stock
             $sql=  "INSERT INTO 
-                    stock(product,quantity,supplier,source,storage,transaction_date,tag) 
-                    VALUES('$product','$quantity','16','1', '$source','$date','0');";
+                    stock(product,quantity,supplier,source,storage,transaction_date,tag,user_id) 
+                    VALUES('$product','$quantity','16','1', '$source','$date','0','$userID');";
 
             //moves into processor
             $sql .=  "INSERT INTO 
@@ -298,9 +309,13 @@ elseif ($requestMethod=="POST")
             }
             $reason = strip_tags($_POST['reason']);
             $date= date('Y-m-d');
+
+            session_start();
+            $userID= $_SESSION['user_id'];
+
             $sql =  "INSERT INTO 
-                    stock(product,quantity,supplier,source,storage,transaction_date,description,tag) 
-                    VALUES('$product','$quantity','16','1', '$location','$date',(SELECT name FROM reason WHERE id='$reason'),'$addDeduct');";
+                    stock(product,quantity,supplier,source,storage,transaction_date,description,tag,user_id) 
+                    VALUES('$product','$quantity','16','1', '$location','$date',(SELECT name FROM reason WHERE id='$reason'),'$addDeduct','$userID');";
             deliverPostResponse($sql,"adjustment_successful","adjustment_failed","updateStock");
         }
         elseif ($action=="finish_process")
