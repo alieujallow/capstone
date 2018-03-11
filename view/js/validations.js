@@ -270,6 +270,78 @@ function validateProcessStock()
   return false;
 }
 
+function validateChangePasswordForm()
+{
+  var currentPassword = validatePassword("change_password_form","current_password","current_password_span");
+  var newPassword = validatePassword("change_password_form","new_password","new_password_span");
+  var confirmPassword = validatePassword("change_password_form","confirm_password","confirm_password_span");
+  if (currentPassword==false || newPassword ==false || confirmPassword==false)
+   {
+    return false;
+   }
+   else
+   {
+      //checks if the two passwords are equal
+      if (newPassword==confirmPassword)
+      {
+        document.getElementById("error_span").innerHTML="";
+        document.getElementById("new_password").style.border= "";
+        document.getElementById("confirm_password").style.border= "";
+        //verifies the current password
+        changePassword(currentPassword,newPassword);
+      }
+      else
+      {
+        document.getElementById("error_span").innerHTML="Passwords are Not equal";
+        document.getElementById("new_password").style.border= "1px solid red";
+        document.getElementById("confirm_password").style.border= "1px solid red";
+      }
+   }
+   return false;
+}
+
+function validateChangeUsernameForm()
+{
+  var username = validateName("change_username_form","new_username","new_username_span");
+  if (username==false)
+   {
+    return false;
+   }
+   return false;
+}
+//verifies the users pasword
+function changePassword(currentPassword,newPassword)
+{
+   var data={current_password:currentPassword, new_password:newPassword, action:"change_password"};
+   var serverUrl='/capstone/controller/userController.php';
+    $("#overlay").show();
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      timeout: 3000,
+      success: function(data)
+      {
+        if (data.response=="success") 
+        {
+          displayMessage("Password Changed Successfully.","message_area","");  
+          document.getElementById("current_password_span").innerHTML="";
+          $("#overlay").hide();
+        }
+        else if (data.response=="fail")
+        {
+           document.getElementById("current_password_span").innerHTML="Wrong Password";
+            $("#overlay").hide();
+        }
+      },
+      error: function (request, status, error)
+      {
+        //alert(error);
+        $("#overlay").hide();
+      }
+    });
+}
 //*********************************************************************************************************
 //                                              CATEGORY
 //*********************************************************************************************************
@@ -494,11 +566,12 @@ function searchUser(name)
       success: function(data)
       {
         constructUsersTable(data);
+        document.getElementById("pagination").innerHTML="";
       },
       error: function (request, status, error)
-    {
+     {
       alert("error : "+error);
-    }
+     }
   });
 }
 
@@ -2757,6 +2830,7 @@ function constructLocationTransactionHistory(data)
                     "<td>"+value.location+"</td>"+
                     "<td>"+action+"</td>"+
                     "<td>"+value.reason+"</td>"+
+                    "<td>"+value.username+"</td>"+
                   "</tr>";
       }  
       else
@@ -2851,6 +2925,7 @@ function constructTransactionHistoryTable(data)
                     "<td>"+value.order_date+"</td>"+
                     "<td>"+value.inventory_date+"</td>"+
                     "<td>"+value.description+"</td>"+
+                    "<td>"+value.user+"</td>"+
                   "</tr>";
           }
           else

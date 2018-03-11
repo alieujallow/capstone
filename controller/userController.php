@@ -225,6 +225,50 @@ elseif ($requestMethod=="POST")
                 echo json_encode($array);
             }
         }
+        elseif ($action=="change_password")
+        {
+            //gets the username and password
+            $currentPassword= strip_tags($_POST['current_password']);
+            $newPassword= strip_tags($_POST['new_password']);
+            $newPassword= password_hash($newPassword,PASSWORD_DEFAULT);
+
+            session_start();
+            $username=  $_SESSION['username'];
+
+            $sql = "SELECT password FROM users WHERE username='$username';";
+
+            $user = new User;
+            $result = $user->loginUser($sql);
+
+            if ($result)
+            {
+                $row=$result[0];
+                if (password_verify($currentPassword, $row['password'])) 
+                {
+                    //change the password
+                    $sql = "UPDATE users SET password='$newPassword' WHERE username='$username';";
+                    $result = $user->updateUser($sql);
+                    if ($result)
+                    {
+                        $array=array();
+                        $array["response"]="success";
+                        echo json_encode($array);
+                    }
+                    else
+                    {
+                        $array=array();
+                        $array["response"]="fail";
+                        echo json_encode($array);
+                    }
+                }
+                else
+                {
+                    $array=array();
+                    $array["response"]="fail";
+                    echo json_encode($array);
+                }  
+            }   
+        }
     }
 }
 

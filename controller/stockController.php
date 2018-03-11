@@ -94,15 +94,14 @@ if ($requestMethod=="GET")
         elseif ($action =="display_transaction_history")
         {
              $id = $_GET['id'];
-             $sql = "SELECT *FROM stock WHERE product='$id';";
+             $sql = "SELECT stock.id, product,quantity,suppliers.name as supplier,source.name as source,order_date,inventory_date,order_number,storage.name as storage,transaction_date,description,tag,users.username as user FROM stock,suppliers,users,source,storage WHERE product='$id' AND stock.supplier=suppliers.id AND stock.source=source.id AND stock.storage=storage.id AND stock.user_id=users.id;";
              deliverGetResponse($sql,2); 
         }
         elseif ($action =="display_location_transaction_history")
         {
              $locationID = $_GET['id'];
 
-             $sql = "SELECT transaction_date,products.name as product,type,quantity,storage.name as location,reason,tag FROM transaction,products,storage WHERE products.id=product AND storage.id=transaction.location AND transaction.location='$locationID';";
-
+             $sql = "SELECT transaction_date,products.name as product,type,quantity,storage.name as location,reason,tag,username FROM transaction,products,storage,users WHERE products.id=product AND storage.id=transaction.location AND transaction.location='$locationID' AND users.id=transaction.user_id;";
              deliverGetResponse($sql,2); 
         }
         elseif ($action =="display_products_in_process")
