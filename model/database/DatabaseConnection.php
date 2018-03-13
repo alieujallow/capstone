@@ -26,7 +26,7 @@ class DatabaseConnection
 	{
 		//connects to the database
 		$this ->connection = mysqli_connect(SERVER,USERNAME,PASSWORD,DATABASE_NAME);
-
+		//$this ->connection = mysqli_connect("sql211.epizy.com","epiz_21492273","Ayaka76fame","epiz_21492273_dzigua");
 		//checks if the connection is successful
 		if ($this ->connection) 
 		{

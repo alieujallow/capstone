@@ -2771,7 +2771,7 @@ function displayLocationTranactionHistory()
     var id = decodeURIComponent(window.location.search);
     id = id.substring(4);
     id = id.split("&");
-    document.getElementById("locationTransactionHistoryHeader").innerHTML=" Transaction History of "+id[2]+" in "+id[1];
+    document.getElementById("locationTransactionHistoryHeader").innerHTML=" Transaction History of "+id[1];
     
     var data = {id:id[0], action:'display_location_transaction_history'};
     var serverUrl='/capstone/controller/stockController.php';

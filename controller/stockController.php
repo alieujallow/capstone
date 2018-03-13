@@ -200,6 +200,52 @@ if ($requestMethod=="GET")
                 echo json_encode($responseArray);
               }
         }
+        else if ($action=="get_dashboard_ifo")
+        {
+          //gets the current page and the number of items per page
+            $currentPage = $_GET['current_page'];
+            $numItemsPerPage = $_GET['num_items'];
+
+            $startAndNumPage = getStartAndNumPage($currentPage,$numItemsPerPage,"stock");
+            $start =  $startAndNumPage[0];
+            $numPage = $startAndNumPage[1];
+
+            $sql = "SELECT products.name as productName, products.id as productID From products WHERE products.id IN (SELECT Distinct(product) From stock)";  
+              $stock = new Stock; 
+              $storage = $stock->getStock($sql); 
+
+              if (sizeof($storage)>1)
+              {
+                 $responseArray = array();
+                 $array=array();
+                 for ($i=1; $i <sizeof($storage); $i++)
+                 { 
+                    $productID = $storage[$i]["productID"];
+                    $productName = $storage[$i]["productName"];
+
+                    $sql = "SELECT ABS(SUM(quantity) - (SELECT COALESCE(SUM(quantity),0) FROM stock WHERE tag='0' AND product='$productID')) as sum FROM stock WHERE product ='$productID' AND tag='1';";
+
+                     $result=$stock->getStock($sql);
+                     $quantity=$result[1]['sum'];
+                     $array['productID']=$productID;
+                     $array['productName']=$productName;
+                     $array['quantity']= $quantity;
+                     $responseArray[$i-1] =$array; 
+                 }
+
+                 //echo json_encode($responseArray); 
+                 //gets the total suppliers, products, customers, products in proces
+                 $sql="SELECT ( SELECT COUNT(*) FROM suppliers) AS totalSuppliers,(SELECT COUNT(*) FROM customers) AS totalCustomers, (SELECT COUNT(DISTINCT(product)) FROM stock) AS totalProducts, (SELECT COUNT(*) FROM processing WHERE status='1') AS productsInProcess FROM products LIMIT 1";
+
+                 $stock = new Stock; 
+                 $totals = $stock->getStock($sql); 
+
+                 $dataBack= array();
+                 $dataBack[0]=$responseArray;
+                 $dataBack[1]=$totals;
+                 echo json_encode($dataBack); 
+              }
+        }
        
     } 
 }
