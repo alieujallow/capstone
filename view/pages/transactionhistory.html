@@ -59,12 +59,11 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1 id="transactionHistoryHeader">
-      </h1>
+      <h1 id="transactionHistoryHeader"></h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Forms</a></li>
-        <li class="active">General Elements</li>
+        <li>
+          <a href="#"><i class="ion fion-ios-minus-empty"></i></a>
+        </li>
       </ol>
     </section>
 
@@ -81,13 +80,9 @@
                   <th style="width: 10px">#</th>
                   <th>Date</th>
                   <th>Type</th>
-                  <th>Order#</th>
-                  <th>Supplier</th>
                   <th>Quantity(kg)</th>
                   <th>Source</th>
                   <th>Destination</th>
-                  <th>Order Date</th>
-                  <th>Inventory Date</th>
                   <th>Reason</th>
                   <th>By</th>
                 </tr>
@@ -126,7 +121,12 @@
 <script>
   $('document').ready(function()
   {
-    displayTransactionHistory();
+    $("#pagination a").trigger('click'); // When page is loaded we trigger a click
+  });
+  //do the the following when a pagination button is clicked 
+  $('#pagination').on('click', 'a', function(e) { // When click on a 'a' element of the pagination div
+    var page = this.id; // Page number is the id of the 'a' element
+    displayTransactionHistory(page);
     return false;
   });
 </script>

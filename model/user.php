@@ -1,41 +1,19 @@
 <?php	
-	
+/**
+*@author Alieu Jallow
+*@version 1.0.0
+*/	
+
 //requires the database connection file
 require('database/DatabaseConnection.php');
 
 class User extends DatabaseConnection
 {
-	//delete user
-	function deleteUser()
-	{
-
-	}
-
-	
-	//adds a user
-	//takes sql and returns either true or false
-	function updateUser($sql)
-	{
-		$result = $this->query($sql);
-		if ($result)
-		{
-			return $result;
-		}
-		return false;
-	}
-	
-	//edit user
-	function editUser()
-	{
-
-	}
-	//get user
-	function getUser()
-	{
-
-	}
-	
-	//get users
+	/**
+	*This function is used for get a user or users from the database
+	*@param $sql
+	*@return result
+	*/
 	function getUsers($sql)
 	{
 		$result = $this->query($sql);
@@ -51,6 +29,21 @@ class User extends DatabaseConnection
 		}
 	}
 
+	/**
+	*This function is used for updating, inserting and deleting a user from the database
+	*@param $sql
+	*@return result or bool
+	*/
+	function updateUser($sql)
+	{
+		$result = $this->query($sql);
+		if ($result)
+		{
+			return $result;
+		}
+		return false;
+	}
+	
 
 	//login
 	function loginUser($sql)
@@ -74,6 +67,5 @@ class User extends DatabaseConnection
 			return $row["num"];
 		}
 	}
-	//logout
 }	
 ?>

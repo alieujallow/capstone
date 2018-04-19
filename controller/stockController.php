@@ -93,16 +93,40 @@ if ($requestMethod=="GET")
         }
         elseif ($action =="display_transaction_history")
         {
-             $id = $_GET['id'];
-             $sql = "SELECT stock.id, product,quantity,suppliers.name as supplier,source.name as source,order_date,inventory_date,order_number,storage.name as storage,transaction_date,description,tag,users.username as user FROM stock,suppliers,users,source,storage WHERE product='$id' AND stock.supplier=suppliers.id AND stock.source=source.id AND stock.storage=storage.id AND stock.user_id=users.id;";
+            $id = $_GET['id'];
+
+            $currentPage = $_GET['current_page'];
+            $numItemsPerPage = $_GET['num_items'];
+
+            $startAndNumPage = getStartAndNumPage($currentPage,$numItemsPerPage,"transaction");
+            $start =  $startAndNumPage[0];
+            $numPage = $startAndNumPage[1];
+
+             $sql = "SELECT transaction_date,products.name as product,type,quantity,source,destination,tag,username as user,reason FROM transaction,products,users WHERE product='$id' AND products.id='$id' AND users.id=transaction.user_id ORDER BY transaction_date DESC LIMIT $start,$numItemsPerPage;";
+
              deliverGetResponse($sql,2); 
         }
         elseif ($action =="display_location_transaction_history")
         {
-             $locationID = $_GET['id'];
+            $sourceID = $_GET['id'];
 
-             $sql = "SELECT transaction_date,products.name as product,type,quantity,storage.name as location,reason,tag,username FROM transaction,products,storage,users WHERE products.id=product AND storage.id=transaction.location AND transaction.location='$locationID' AND users.id=transaction.user_id;";
-             deliverGetResponse($sql,2); 
+            //gets the current page and the number of items per page
+            $currentPage = $_GET['current_page'];
+            $numItemsPerPage = $_GET['num_items'];
+
+            $startAndNumPage = getStartAndNumPage($currentPage,$numItemsPerPage,"transaction");
+            $start =  $startAndNumPage[0];
+            $numPage = $startAndNumPage[1];
+           
+
+            $sql="SELECT name FROM storage WHERE id='$sourceID';";
+            $stock = new Stock;
+            $storage = $stock->getStock($sql);
+            $sourceName = $storage[1]["name"];
+
+            $sql = "SELECT transaction_date,products.name as product,type,quantity,source,destination,tag,username,reason FROM transaction,products,users WHERE products.id=product AND (transaction.source='$sourceName' OR transaction.destination='$sourceName') AND users.id=transaction.user_id ORDER BY transaction_date DESC LIMIT $start,$numItemsPerPage;";
+
+             deliverGetResponse($sql,2);
         }
         elseif ($action =="display_products_in_process")
         {
@@ -289,7 +313,7 @@ elseif ($requestMethod=="POST")
                     stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description,tag,user_id) 
                     VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description','1','$userID');";
 
-            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','Stock Receipt','$quantity','$storage','adding','1');";
+           $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,source,destination,reason,tag,user_id) VALUES('$date','$product','stock receipt','$quantity',(SELECT name FROM source WHERE id='$source'),(SELECT name FROM storage WHERE id='$storage'),'refiling stock level','0','$userID');";
 
             deliverPostResponse($sql,"add_successful","add_failed","multiInsert");
         }
@@ -300,6 +324,7 @@ elseif ($requestMethod=="POST")
             $product = strip_tags($_POST['product']);
             $quantity = strip_tags($_POST['quantity']);
             $destination = strip_tags($_POST['destination']);
+            $reason = strip_tags($_POST['reason']);
             $date= date('Y-m-d H:i:s');
 
             session_start();
@@ -309,7 +334,7 @@ elseif ($requestMethod=="POST")
                     stock(product,quantity,supplier,source,storage,transaction_date,tag,user_id) 
                     VALUES('$product','$quantity','16','1', '$source','$date','0','$userID'),('$product','$quantity','16','1', '$destination','$date','1','$userID');";
 
-            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','movement','$quantity','$source','testing','0'),('$date','$product','movement','$quantity','$destination','testing','1');";
+            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,source,destination,reason,tag,user_id) VALUES('$date','$product','Movement','$quantity',(SELECT name FROM storage WHERE id='$source'),(SELECT name FROM storage WHERE id='$destination'),'$reason','0','$userID');";
 
             deliverPostResponse($sql,"movement_successful","movement_failed","multiInsert");
         }
@@ -336,7 +361,7 @@ elseif ($requestMethod=="POST")
                     VALUES('$product','$quantity','$processor','$source', '$date','1');";
 
             //records the transaction
-            $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,location,reason,tag) VALUES('$date','$product','processing','$quantity','$source','to a processing plant','0')";
+             $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,source,destination,reason,tag,user_id) VALUES('$date','$product','Movement','$quantity',(SELECT name FROM storage WHERE id='$source'),(SELECT name FROM processor WHERE id='$processor'),'for processing','0','$userID');";
 
             deliverPostResponse($sql,"movement_successful","movement_failed","multiInsert");
         }

@@ -123,10 +123,4 @@ class DatabaseConnection
 	}
 
 }
-	/*$sql = "INSERT INTO stock(product,quantity,supplier,source,storage,transaction_date,tag) VALUES('10','79','16','1', '1','','0'), ('10','79','16','1', '1','','1');";
-	//var_dump($this ->connection);
-	$db = new DatabaseConnection;
-
-	var_dump($db -> multiQuery($sql));
-	//var_dump($db -> connect());*/
 ?>

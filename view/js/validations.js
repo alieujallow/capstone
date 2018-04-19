@@ -246,12 +246,13 @@ function validateMoveStockToLocation()
   var product = validateSelectInputField("move_stock_to_location_form","product_section","product_span");
   var quantity= validateQuantity("move_stock_to_location_form","quantity","quantity_span");
   var destination= validateSelectInputField("move_stock_to_location_form","destination","destination_span");
+  var reason= validateDescription("move_stock_to_location_form","reason","reason_span");
 
   if(source==false ||product==false || quantity==false || destination==false)
   {
     return false;
   }
-  moveStockToLocation(source,product,quantity,destination);
+  moveStockToLocation(source,product,quantity,destination,reason);
   return false;
 }
 
@@ -689,12 +690,12 @@ function checkUserLogin()
 {
   var data = {action:'checklogin'};
   var serverUrl='/capstone/controller/userController.php';
+
   $.ajax({ // jQuery Ajax
     type: 'POST',
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.status=="success")
@@ -708,12 +709,12 @@ function checkUserLogin()
        else if (data.status=="fail")
        {
           //redirects user to the login page
-          window.location.href="/capstone/view/pages/login/login.html";
+          window.location.href="/capstone/view/pages/login/";
        }
     },
     error: function(request, status, error)
     {
-      //alert("user Check login error");
+      //alert(error);
     }
   });
 }
@@ -734,13 +735,12 @@ function logoutUser()
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.status=="success")
        {
           //redirects user to the login page
-          window.location.href="/capstone/view/pages/login/login.html";
+          window.location.href="/capstone/view/pages/login/";
        }
     },
     error: function (request, status, error)
@@ -2766,14 +2766,17 @@ function displayLocationInventory()
 
 
 //displays a location's transaction history
-function displayLocationTranactionHistory()
+function displayLocationTranactionHistory(pageId)
 {
     var id = decodeURIComponent(window.location.search);
     id = id.substring(4);
     id = id.split("&");
     document.getElementById("locationTransactionHistoryHeader").innerHTML=" Transaction History of "+id[1];
     
-    var data = {id:id[0], action:'display_location_transaction_history'};
+    var current_page = pageId;// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {id:id[0], current_page:current_page,num_items:num_items,action:'display_location_transaction_history'};
     var serverUrl='/capstone/controller/stockController.php';
     $('#overlay').show(); 
     $.ajax({ // jQuery Ajax
@@ -2785,7 +2788,7 @@ function displayLocationTranactionHistory()
       success: function(data)
       {
         constructLocationTransactionHistory(data);
-        //constructPagination(data,current_page);
+        constructPagination(data,current_page);
         $('#overlay').hide(); 
       },
       error: function (request, status, error)
@@ -2827,8 +2830,9 @@ function constructLocationTransactionHistory(data)
                     "<td>"+value.product+"</td>"+
                     "<td>"+value.type+"</td>"+
                     "<td>"+value.quantity+"</td>"+
-                    "<td>"+value.location+"</td>"+
-                    "<td>"+action+"</td>"+
+                    "<td>"+value.source+"</td>"+
+                    "<td>"+value.destination+"</td>"+
+                    //"<td>"+action+"</td>"+
                     "<td>"+value.reason+"</td>"+
                     "<td>"+value.username+"</td>"+
                   "</tr>";
@@ -2870,12 +2874,15 @@ function constructLocationInventoryTable(data)
 }
 
 
-function displayTransactionHistory()
+function displayTransactionHistory(pageid)
 {
     var id = decodeURIComponent(window.location.search);
     id = id.substring(4).split("&");
 
-    var data = {id:id[0], action:'display_transaction_history'};
+    var current_page = pageid// Page number is the id of the 'a' element
+    var num_items=6;
+
+    var data = {id:id[0], num_items:num_items, current_page:current_page,action:'display_transaction_history'};
     var serverUrl='/capstone/controller/stockController.php';
     $('#overlay').show(); 
     $.ajax({ // jQuery Ajax
@@ -2886,10 +2893,11 @@ function displayTransactionHistory()
       timeout: 3000,
       success: function(data)
       {
+        console.log(data);
         var product = id[1].charAt(0).toUpperCase() + id[1].slice(1);
         document.getElementById("transactionHistoryHeader").innerHTML="Transaction History For "+product;
         constructTransactionHistoryTable(data);
-        //constructPagination(data,current_page);
+        constructPagination(data,current_page);
         $('#overlay').hide(); 
       },
       error: function (request, status, error)
@@ -2916,15 +2924,15 @@ function constructTransactionHistoryTable(data)
             list+="<tr>"+
                     "<td>"+count+"</td>"+
                     "<td>"+value.transaction_date+"</td>"+
-                    "<td>"+value.quantity+"</td>"+
-                    "<td>"+value.order_number+"</td>"+
-                    "<td>"+value.supplier+"</td>"+
+                    "<td>"+value.type+"</td>"+
+                    //"<td>"+value.order_number+"</td>"+
+                    //"<td>"+value.supplier+"</td>"+
                     "<td>"+value.quantity+"</td>"+
                     "<td>"+value.source+"</td>"+
-                    "<td>"+value.source+"</td>"+
-                    "<td>"+value.order_date+"</td>"+
-                    "<td>"+value.inventory_date+"</td>"+
-                    "<td>"+value.description+"</td>"+
+                    "<td>"+value.destination+"</td>"+
+                    //"<td>"+value.order_date+"</td>"+
+                    //"<td>"+value.inventory_date+"</td>"+
+                    "<td>"+value.reason+"</td>"+
                     "<td>"+value.user+"</td>"+
                   "</tr>";
           }
@@ -2936,9 +2944,9 @@ function constructTransactionHistoryTable(data)
          $("#transaction_history_list").append(list);
 }
 
-function moveStockToLocation(source,product,quantity,destination)
+function moveStockToLocation(source,product,quantity,destination,reason)
 {
-  var data = {source:source, product:product, quantity:quantity, destination:destination, action:"move_stock_to_location"};
+  var data = {source:source, product:product, quantity:quantity, destination:destination, reason:reason, action:"move_stock_to_location"};
   var serverUrl='/capstone/controller/stockController.php';
  
     $.ajax({ // jQuery Ajax

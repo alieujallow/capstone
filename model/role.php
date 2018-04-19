@@ -2,16 +2,6 @@
 //requires the database connection file
 require('database/DatabaseConnection.php');
 
-
-
-
-
-
-
-
-
-
-
 /**
 * 
 */
@@ -36,10 +26,5 @@ class Role extends DatabaseConnection
 		return false;
 	}
 }
-
-
-/*$sql= "SELECT * FROM role;";
-$role = new Role;
-var_dump($role->getRoles($sql));*/
 
 ?>

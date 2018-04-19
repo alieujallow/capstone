@@ -79,14 +79,13 @@
     <section class="content-header">
       <h1>
         Stock Movement
-        <small>Preview</small>
       </h1>
       <div style="color:#4F8A10;background-color:#DFF2BF;display:none; height:40px; margin-top: 5px;" id="delete_message_area">
       </div>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Forms</a></li>
-        <li class="active">Advanced Elements</li>
+        <li>
+          <a href="#"><i class="ion fion-ios-minus-empty"></i></a>
+        </li>
       </ol>
     </section>
 
@@ -127,10 +126,15 @@
                                 </select>
                                 <span id="destination_span" style="color:red;"></span>
                               </div>
+                              <div class="form-group">
+                                <label>Reason</label>
+                                <input class="form-control" style="width: 100%;" id="reason" name="reason">
+                                <span id="reason_span" style="color:red;"></span>
+                              </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
                           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary pull-right">Save changes</button>
+                          <button type="submit" class="btn btn-primary pull-right">Move to Destination</button>
                         </div>
                       </form>
                     </div>
