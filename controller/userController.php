@@ -158,9 +158,9 @@ elseif ($requestMethod=="POST")
 
             //encrypts the password
             $hashedPassword = password_hash($password,PASSWORD_DEFAULT);
-
+                                                                                                                                                                                                                                                                    
             //sets the sql statement
-            $sql = "INSERT INTO users(username,email,phone,role,status,password) VALUES('$username','$email','$phone','$role','1','$hashedPassword');";
+            $sql = "INSERT INTO users(username,email,phone,role,status,password,flag) VALUES('$username','$email','$phone','$role','1','$hashedPassword','0');";
 
             //creates an object of the user class
             $user = new User;

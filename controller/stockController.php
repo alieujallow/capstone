@@ -140,7 +140,7 @@ if ($requestMethod=="GET")
             $numPage = $startAndNumPage[1];
            
             //sets the sql
-            $sql = "SELECT processing.id as id,products.name as product,quantity,processor.name as processor,storage.name as location, transaction_date,status FROM processing,products,processor,storage WHERE product=products.id AND processor=processor.id AND product_from=storage.id ORDER BY processing.id DESC LIMIT $start,$numItemsPerPage;";
+            $sql = "SELECT processing.id as id,products.name as product,quantity,processor.name as processor,storage.name as location, transaction_date,status FROM processing,products,processor,storage WHERE product=products.id AND processor=processor.id AND product_from=storage.id AND status='1' ORDER BY processing.id DESC LIMIT $start,$numItemsPerPage;";
 
             deliverGetResponse($sql,$numPage);
             
@@ -305,17 +305,30 @@ elseif ($requestMethod=="POST")
             $description= strip_tags($_POST['description']); 
             $date= date('Y-m-d H:i:s');
 
-            session_start();
-            $userID= $_SESSION['user_id'];
+            $sql = "SELECT * FROM stock WHERE order_number='$orderNumber'";
+            $stock = new Stock;
+            $result = $stock->get($sql);
 
-            //sets the sql statement
-            $sql = "INSERT INTO 
+            if (sizeof($result)>0)
+            {
+                $array=array();
+                $array["response"]="orderNumberExists";
+                echo json_encode($array);
+            }
+            else
+            {
+                session_start();
+                $userID= $_SESSION['user_id'];
+
+                //sets the sql statement
+                $sql = "INSERT INTO 
                     stock(product,quantity,supplier,source,order_date,inventory_date,order_number,storage,transaction_date,description,tag,user_id) 
                     VALUES('$product','$quantity','$supplier','$source','$orderDate','$inventoryDate','$orderNumber','$storage','$date','$description','1','$userID');";
 
-           $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,source,destination,reason,tag,user_id) VALUES('$date','$product','stock receipt','$quantity',(SELECT name FROM source WHERE id='$source'),(SELECT name FROM storage WHERE id='$storage'),'refiling stock level','0','$userID');";
+                 $sql .="INSERT INTO transaction(transaction_date,product,type,quantity,source,destination,reason,tag,user_id) VALUES('$date','$product','stock receipt','$quantity',(SELECT name FROM source WHERE id='$source'),(SELECT name FROM storage WHERE id='$storage'),'refiling stock level','0','$userID');";
 
-            deliverPostResponse($sql,"add_successful","add_failed","multiInsert");
+                 deliverPostResponse($sql,"add_successful","add_failed","multiInsert");
+            }
         }
         elseif ($action=="move_stock_to_location") 
         {
@@ -373,6 +386,7 @@ elseif ($requestMethod=="POST")
             $product = strip_tags($_POST['product']);
             $quantity = strip_tags($_POST['quantity']);
             $addDeduct = strip_tags($_POST['addDeduct']);
+
             if ($addDeduct=="2")
             {
                $addDeduct =0;
@@ -393,6 +407,37 @@ elseif ($requestMethod=="POST")
             $processID = strip_tags($_POST['id']);
             $sql="UPDATE processing SET status='0' WHERE id='$processID'";
             deliverPostResponse($sql,"success","failed","updateStock");
+        }
+        elseif ($action=="abort") 
+        {
+            //get the parameters
+            $location = strip_tags($_POST['location']);
+            $product = strip_tags($_POST['product']);
+            $quantity = strip_tags($_POST['quantity']);
+            $transactionID = strip_tags($_POST['transactionID']);
+            $date= date('Y-m-d');
+
+            //gets the location and product ids
+            $sql = "SELECT products.id as productID, storage.id as storageID FROM products, storage WHERE storage.name='$location' AND products.name='$product'";
+
+            $stock = new Stock; 
+            $locationProductIDs = $stock->get($sql);
+            $locationProductIDs = $locationProductIDs[0];
+            $location = $locationProductIDs["storageID"];
+            $product = $locationProductIDs["productID"];
+                
+            //updates the processing table
+            $sql =  "UPDATE processing SET status='0' WHERE id='$transactionID'";
+            $result = $stock->updateStock($sql);
+
+            //updates the stock table
+            session_start();
+            $userID= $_SESSION['user_id'];
+
+            $sql =  "INSERT INTO 
+                    stock(product,quantity,supplier,source,storage,transaction_date,description,tag,user_id) 
+                    VALUES('$product','$quantity','16','1', '$location','$date','adjustment','1','$userID');";
+            deliverPostResponse($sql,"abort_successful","abort_failed","updateStock");
         }  
     }
 }

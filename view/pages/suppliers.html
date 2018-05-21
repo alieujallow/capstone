@@ -53,7 +53,7 @@
     $(function()
     {
       $("#header").load("../layout/header.html"); 
-      $("#left_sidebar").load("../layout/leftSideBar.html"); 
+      //$("#left_sidebar").load("../layout/leftSideBar.html"); 
       $("#footer").load("../layout/footer.html"); 
     });
   </script> 
@@ -68,7 +68,71 @@
  <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <section class="sidebar" id="left_sidebar">
-    
+      
+     <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">MAIN NAVIGATION</li>
+          <li class="treeview" id="operation_menu">
+          <a href="#">
+            <i class="glyphicon glyphicon-user"></i>
+            <span>Operations</span>
+            <span class="pull-right-container">
+              <i class="glyphicon glyphicon-menu-down pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="treeview" id="inventory_menu">
+              <a href="#">
+                 <i class="icon"><img src="/capstone/view/img/icons/boxes.png"></i>
+                <span>Inventory</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/inventory.html"><i class=""></i>View Stocks</a></li>
+                <li><a href="/capstone/view/pages/inprocess.html"><i class=""></i>Products in Process</a></li>
+                <li><a href="/capstone/view/pages/receivestock.html"><i class=""></i>Receive Stock</a></li>
+                <li><a href="/capstone/view/pages/adjuststock.html"><i class=""></i>Adjust Stock</a></li>
+                <li><a href="/capstone/view/pages/location.html"><i class=""></i>Move Stock (Locations)</a></li>
+                <li><a href="/capstone/view/pages/toprocess.html"><i class=""></i>Move Stock (To Process)</a></li>
+              </ul>
+            </li>
+            <li class="treeview" id="people_menu">
+              <a href="#">
+                <i class="icon"><img src="/capstone/view/img/icons/collaboration.png"></i>
+                <span>People</span>
+                <span class="pull-right-container">
+                  <i class="glyphicon glyphicon-menu-down pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="/capstone/view/pages/suppliers.html"><i class=""></i>Suppliers</a></li>
+                <li><a href="/capstone/view/pages/Customers.html"><i class=""></i>Customers</a></li>
+                <li><a href="/capstone/view/pages/users.html"><i class=""></i>Users</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="treeview" id="configuration_menu">
+          <a href="#">
+            <i class="glyphicon glyphicon-cog"></i> <span>Configuration</span>
+            <span class="pull-right-container">
+              <i class="glyphicon glyphicon-menu-down pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/capstone/view/pages/category.html"><i class=""></i>Category</a></li>
+            <li><a href="/capstone/view/pages/products.html"><i class=""></i>Products</a></li>
+            <li><a href="/capstone/view/pages/source.html"><i class=""></i>Source</a></li>
+            <li><a href="/capstone/view/pages/packagetype.html"><i class=""></i>Package Type</a></li>
+            <li><a href="/capstone/view/pages/unitofmeasurement.html"><i class=""></i>Unit of Measurement</a></li>
+            <li><a href="/capstone/view/pages/storage.html"><i class=""></i>Storage</a></li>
+            <li><a href="/capstone/view/pages/processor.html"><i class=""></i>Processor</a></li>
+          </ul>
+        </li>
+      </ul>
+
     </section>
   </aside>
   <!-- /.sidebar ends here-->

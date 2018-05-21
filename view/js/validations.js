@@ -321,7 +321,6 @@ function changePassword(currentPassword,newPassword)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="success") 
@@ -390,7 +389,6 @@ function postCategory(name,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -424,7 +422,6 @@ function displayCategory(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructCategoryTable(data);
@@ -511,7 +508,6 @@ function searchCategory(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructCategoryTable(data);
@@ -534,7 +530,6 @@ function deleteCategory(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -563,7 +558,6 @@ function searchUser(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructUsersTable(data);
@@ -595,7 +589,6 @@ function postUser(username,email,phone,role,status,id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="add_successful")
@@ -633,7 +626,6 @@ function displayUsers(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructUsersTable(data);
@@ -660,7 +652,6 @@ function loginUser(username, password)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       $.each(data,function(key,value){
@@ -877,7 +868,6 @@ function deleteUser(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -911,7 +901,6 @@ function searchSupplier(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructSuppliersTable(data);
@@ -941,7 +930,6 @@ function postSupplier(name,phone,email,address,id)
 	    url: serverUrl, // URL to the PHP file which will insert new value in the database
 	    data: data, // We send the data string
 	    dataType: 'json', // Json format
-	    timeout: 3000,
 	    success: function(data)
 	    {
 	       if (data.response=="add_successful") 
@@ -990,7 +978,6 @@ function displaySuppliers(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructSuppliersTable(data);
@@ -1150,7 +1137,6 @@ function deleteSupplier(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -1182,7 +1168,6 @@ function searchCustomer(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructCustomersTable(data);
@@ -1212,7 +1197,6 @@ function postCustomer(name,phone,email,address,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
          if (data.response=="add_successful") 
@@ -1246,7 +1230,6 @@ function displayCustomers(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructCustomersTable(data);
@@ -1361,7 +1344,6 @@ function deleteCustomer(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -1427,7 +1409,6 @@ function postProduct(name,category,order_point,warning_point,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -1461,7 +1442,6 @@ function displayProducts(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructProductTable(data);
@@ -1549,7 +1529,6 @@ function searchProduct(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructProductTable(data);
@@ -1572,7 +1551,6 @@ function deleteProduct(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -1635,7 +1613,6 @@ function postSource(name,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -1669,7 +1646,6 @@ function displaySource(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructSourceTable(data);
@@ -1755,7 +1731,6 @@ function searchSource(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructSourceTable(data);
@@ -1778,7 +1753,6 @@ function deleteSource(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -1842,7 +1816,6 @@ function postProcessor(name,phone,address,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -1876,7 +1849,6 @@ function displayProcessor(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructProcessorTable(data);
@@ -1962,7 +1934,6 @@ function searchProcessor(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructProcessorTable(data);
@@ -1985,7 +1956,6 @@ function deleteProcessor(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -2049,7 +2019,6 @@ function postStorage(name,phone,address,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -2083,7 +2052,6 @@ function displayStorage(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructStorageTable(data);
@@ -2169,7 +2137,6 @@ function searchStorage(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructStorageTable(data);
@@ -2191,7 +2158,6 @@ function deleteStorage(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -2252,7 +2218,6 @@ function postMeasurement(name,symbol,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -2286,7 +2251,6 @@ function displayMeasurement(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructMeasurementTable(data);
@@ -2370,7 +2334,6 @@ function searchMeasurement(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructMeasurementTable(data);
@@ -2392,7 +2355,6 @@ function deleteMeasurement(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -2453,7 +2415,6 @@ function postPackage(name,measurement_unit,value,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
@@ -2487,7 +2448,6 @@ function displayPackage(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructPackageTable(data);
@@ -2575,7 +2535,6 @@ function searchPackage(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructPackageTable(data);
@@ -2597,7 +2556,6 @@ function deletePackage(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="delete_successful") 
@@ -2631,6 +2589,10 @@ function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,
       description:description,
       action:"add_stock"
     };
+
+    var orderNumberObject=document.getElementById("order_number");
+    var orderNumberSpan=document.getElementById("order_number_span");
+
     var serverUrl='/capstone/controller/stockController.php';
     $('#overlay').show();
     $.ajax({ // jQuery Ajax
@@ -2638,14 +2600,22 @@ function addStock(product,quantity,supplier,orderDate,inventoryDate,orderNumber,
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="add_successful") 
         {
+           orderNumberObject.style.border= "";
+           orderNumberSpan.innerHTML="";
+
            document.getElementById("stock_form").reset();
-           displayMessage(" Stock is successfully added.","add_message_area","");  
-           $('#overlay').hide();     
+           displayMessage(" Stock is successfully added.","add_message_area","");
+           $('#overlay').hide();       
+        }
+        else if (data.response=="orderNumberExists")
+        {
+          orderNumberObject.style.border= "1px solid red";
+          orderNumberSpan.innerHTML="Order Number Exits! Please Try a Different One";
+          $('#overlay').hide();    
         }
       },
       error: function (request, status, error)
@@ -2670,7 +2640,6 @@ function displayStock(id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructStockTable(data);
@@ -2746,7 +2715,6 @@ function displayLocationInventory()
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         var product = id[1].charAt(0).toUpperCase() + id[1].slice(1);
@@ -2784,7 +2752,6 @@ function displayLocationTranactionHistory(pageId)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructLocationTransactionHistory(data);
@@ -2890,7 +2857,6 @@ function displayTransactionHistory(pageid)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         console.log(data);
@@ -2954,7 +2920,6 @@ function moveStockToLocation(source,product,quantity,destination,reason)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="movement_successful") 
@@ -2981,7 +2946,6 @@ function moveStockToProcessor(source,product,quantity,processor)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="movement_successful") 
@@ -3007,7 +2971,6 @@ function adjustStock(location,product,quantity,addDeduct,reason)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         if (data.response=="adjustment_successful") 
@@ -3033,7 +2996,6 @@ function searchProductStock(name)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructStockTable(data);
@@ -3055,7 +3017,6 @@ function searchLocationStock(name,id)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructLocationInventoryTable(data);
@@ -3122,7 +3083,6 @@ function getMultipleStorageLocations(displayAreaId)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructMultipleSelectOptions(data,displayAreaId);
@@ -3150,7 +3110,6 @@ function getMultipleProducts(value)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
         constructMultipleSelectOptions(data,"product_section");
@@ -3202,7 +3161,6 @@ function getProcessor(displayAreaId)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructSelectOptions(data,displayAreaId);
@@ -3227,7 +3185,6 @@ function displayProductsInProcess(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructProductInProcessTable(data);
@@ -3282,14 +3239,14 @@ function constructProductInProcessTable(data)
                       "</button>"+
                       "<ul class=\"dropdown-menu\" role=\"menu\">"+
                         "<li>"+
-                          "<a href=\"#\" onclick=\"fillEditCustomerForm(this.id);\" id=\"\">"+
-                            "<i class=\"glyphicon glyphicon-edit\"></i>"+
-                            "Edit"+
+                          "<a href=\"#\" onclick=\"abortTransaction(this.id);\" id=\""+value.id+"&"+value.product+"&"+value.quantity+"&"+value.location+"\">"+
+                            "<i class=\"ion ion-arrow-return-left\"></i>"+
+                            "Abort"+
                           "</a>"+
                         "</li>"+
                         "<li>"+
                           "<a href=\"#\" onclick=\"fillconfirmFinishProcessModal(this.id);\" id=\""+value.id+"\">"+
-                            "<i class=\"\"></i>"+
+                            "<i class=\" ion ion-checkmark-circled\"></i>"+
                            " Finish"+
                           "</a>"+
                         "</li>"+
@@ -3325,7 +3282,6 @@ function finishProcess(id)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       if (data.response=="success") 
@@ -3354,7 +3310,6 @@ function displayReceiveStockSelectOptions()
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       var suppliers="";
@@ -3401,7 +3356,6 @@ function getRoles()
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
      constructSelectOptions(data,"user_role");
@@ -3423,7 +3377,6 @@ function getStatus()
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
      constructSelectOptions(data,"user_status");
@@ -3445,7 +3398,6 @@ function getStorageLocation(displayAreaId)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructSelectOptions(data,displayAreaId);
@@ -3467,7 +3419,6 @@ function getReason(displayAreaId)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       constructSelectOptions(data,displayAreaId);
@@ -3489,7 +3440,6 @@ function getCategory()
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
      constructSelectOptions(data,"product_category");
@@ -3513,7 +3463,6 @@ function getmeasurement()
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
      constructMeasurementOptions(data);
@@ -3538,7 +3487,6 @@ function getQunatity(productId)
     url: serverUrl, // URL to the PHP file which will insert new value in the database
     data: data, // We send the data string
     dataType: 'json', // Json format
-    timeout: 3000,
     success: function(data)
     {
       document.getElementById("product_span").innerHTML= "Available: "+data[1].quantity+"kg";
@@ -3606,7 +3554,6 @@ function getProduct(value)
       url: serverUrl, // URL to the PHP file which will insert new value in the database
       data: data, // We send the data string
       dataType: 'json', // Json format
-      timeout: 3000,
       success: function(data)
       {
        constructSelectOptions(data,"product_section");
@@ -3969,4 +3916,32 @@ function userResponse(xhttp)
 {
   var response = xhttp.responseText;
   alert(response);
+}
+
+
+
+function abortTransaction(id)
+{
+  idData=id.split("&");
+
+  var data = {transactionID:idData[0],product:idData[1],quantity:idData[2], location:idData[3], action:"abort"};
+  var serverUrl='/capstone/controller/stockController.php';
+    $.ajax({ // jQuery Ajax
+      type: 'POST',
+      url: serverUrl, // URL to the PHP file which will insert new value in the database
+      data: data, // We send the data string
+      dataType: 'json', // Json format
+      success: function(data)
+      {
+        if (data.response=="abort_successful") 
+        {
+          displayMessage(" Procesing is successfully aborted.","message_area","");  
+          displayProductsInProcess(1);     
+        }
+      },
+      error: function (request, status, error)
+      {
+        alert("error : "+error);
+      }
+    });
 }
